@@ -14,9 +14,9 @@
     <PackageReference Include="AWSSDK.GameLift" Version="3.7.402.8" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.205" />
     <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.1.23" />
-    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.11.1" />
-    <PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.11.1" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.1" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.34.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.34.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.34.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
