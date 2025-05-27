@@ -1,0 +1,46 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+@import '../../common.uss';
+
+.vertical-progress-bar {
+    flex-direction: column;
+    align-items: center;
+    top: 20;
+    bottom: 0;
+}
+
+.progress-bar {
+    position: absolute;
+    top: 23;
+    bottom: 0;
+    width: 3px;
+}
+
+.progress-bar.progress-bar--empty {
+    background-color: rgba(170, 183, 184, 1);
+}
+
+.progress-bar.progress-bar--full {
+    background-color: var(--color-font-link);
+}
+
+Image.progress-indicator--not-started {
+    --unity-image: resource("Images/Icons/ProgressBarEmpty");
+}
+
+Image.progress-indicator--in-progress {
+    --unity-image: resource("Images/Icons/ProgressBarProgress");
+}
+
+Image.progress-indicator--successful {
+    --unity-image: resource("Images/Icons/ProgressBarFull");
+}
+
+Image.progress-indicator--warning {
+    --unity-image: resource("Images/Icons/ProgressBarWarning");
+}
+
+Image.progress-indicator--failure {
+    --unity-image: resource("Images/Icons/ProgressBarFailure");
+}

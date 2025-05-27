@@ -9,6 +9,7 @@ namespace AmazonGameLift.Editor
     public class HelpAndDocumentationPage
     {
         private readonly VisualElement _container;
+        private readonly HelpfulResources _helpfulResources;
 
         public HelpAndDocumentationPage(VisualElement container)
         {
@@ -18,7 +19,11 @@ namespace AmazonGameLift.Editor
 
             container.Add(uxml);
             ApplyText();
-            
+
+            var helpfulResourcesContainer = _container.Q<Foldout>("HelpfulResourcesFoldout");
+            _helpfulResources = new HelpfulResources(helpfulResourcesContainer);
+            helpfulResourcesContainer.value = false;
+
             _container.Q<VisualElement>("HelpPageEstimatingPriceLinkParent").RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.GameLiftPricingCalculator));
             _container.Q<VisualElement>("HelpPageFlexMatchLinkParent").RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.AwsFlexMatchDocumentation));
         }

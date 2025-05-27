@@ -1,0 +1,38 @@
+﻿/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+@import "../common.uss";
+
+.launchbar {
+    border-width: 10px;
+    border-left-width: 15px;
+    border-right-width: 15px;
+    align-self: stretch;
+    background-color: var(--color-text-input-background);
+    margin-left: -24px;
+    margin-right: -24px;
+    margin-bottom: -25px;
+    overflow: hidden;
+}
+
+.launchbar--flex {
+    flex-direction: row;
+}
+
+.launchbar__client-label {
+    -unity-text-align: middle-left;
+}
+
+.controlbar {
+    flex-direction: row;
+    align-self: stretch;
+    justify-content: flex-end;
+}
+
+.controlbar > * {
+    margin-left: 10px;
+}
+
+.toggle {
+    margin-top: 4px;
+}

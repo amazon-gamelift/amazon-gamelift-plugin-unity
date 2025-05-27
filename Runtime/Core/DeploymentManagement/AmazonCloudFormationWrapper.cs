@@ -35,6 +35,11 @@ namespace AmazonGameLiftPlugin.Core.DeploymentManagement
             return _amazonCloudFormation.DescribeStacks(request);
         }
 
+        public DescribeStackResourceResponse DescribeStackResource(DescribeStackResourceRequest request)
+        {
+            return _amazonCloudFormation.DescribeStackResource(request);
+        }
+
         public ValidateTemplateResponse ValidateTemplate(ValidateTemplateRequest request)
         {
             return _amazonCloudFormation.ValidateTemplate(request);

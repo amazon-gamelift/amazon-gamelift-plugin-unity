@@ -1,0 +1,51 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor" class="separator separator--vertical">
+    <Style src="../../ProgressBar.uss"/>
+    <ui:VisualElement class="separator separator--horizontal separator--small">
+        <!-- Progress bar -->
+        <gl:VerticalProgressBar/>
+        
+        <ui:VisualElement class="progress-step separator separator--vertical separator--small">
+            <ui:Label name="ContainerPushImageManualStepTitle" class="child__title" text="%%Build image and push to Amazon ECR%%"/>
+            <!-- Section that show when docker is not installed -->
+            <ui:Label name="ContainerPushImageManualStepDescription" class="child__description" text="%%We couldn't find WSL or Docker on your system...%%"/>
+            <ui:VisualElement class="separator separator--horizontal separator--small">
+                <ui:VisualElement class="external-link">
+                    <ui:Label name="ECRUserGuide" class="child__link" text="Amazon ECR User Guide"/>
+                    <ui:Image name="ExternalLinkIcon" class="icon--tiny"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="divider--vertical"/>
+                <ui:VisualElement class="external-link">
+                    <ui:Label name="InstallDocker" class="child__link" text="Install Docker Engine"/>
+                    <ui:Image name="ExternalLinkIcon" class="icon--tiny"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <gl:StatusBox name="StatusBox"/>
+
+            <ui:Foldout name="CommandFoldout" class="foldout--indent separator separator--vertical" text="View CLI push commands">
+
+                <ui:Label name="ContainerPushImageManualLoginCommandLabel" text="%%1. Retrieve an authentication token and authenticate...%%"/>
+                <gl:CopyCommandField name="LoginCommand"/>
+
+                <ui:Label name="ContainerPushImageManualBuildCommandLabel" text="%%2. Build your Docker image using the following...%%"/>
+                <gl:CopyCommandField name="BuildCommand"/>
+
+                <ui:Label name="ContainerPushImageManualTagCommandLabel" text="%%3. After the build is completed, tag your image...%%"/>
+                <gl:CopyCommandField name="TagCommand"/>
+
+                <ui:Label name="ContainerPushImageManualPushCommandLabel" text="%%4. Run the following command to push this image...%%"/>
+                <gl:CopyCommandField name="PushCommand"/>
+
+            </ui:Foldout>
+
+            <ui:VisualElement name="ContinueSection" class="separator separator--vertical">
+                <ui:Label name="ContainerPushImageManualStepCallToActionLabel" text="%%When you've successfully pushed your container image...%%"/>
+                <ui:Button name="ContinueButton" class="button button--primary" text="Continue"/>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="spacer"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

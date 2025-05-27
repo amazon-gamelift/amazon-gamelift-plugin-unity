@@ -2,29 +2,26 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
-    <ui:Style src="../common.uss"/>
-    <ui:VisualElement class="separator separator--vertical separator--large">
-        <gl:StatusBox name="AnywherePageComputeStatusBox"/>
-        <ui:VisualElement class="separator separator--vertical">
-            <ui:VisualElement class="form-row">
-                <ui:Label name="AnywherePageComputeNameLabel" class="form-row__label" text="Compute Name"/>
-                <ui:TextField name="AnywherePageComputeNameInput" class="form-row__input text-input" value="ComputerName-ProfileName"/>
-            </ui:VisualElement>
-            <ui:VisualElement class="form-row">
-                <ui:Label name="AnywherePageComputeIPLabel" class="form-row__label" text="IP Address"/>
-                <ui:Label name="AnywherePageComputeIPDescription" class="form-row__label" text="127.0.0.1"/>            
-            </ui:VisualElement>
-            <ui:VisualElement name="AnywherePageComputeStatus" class="form-row">
-                <ui:Label name="AnywherePageComputeStatusLabel" class="form-row__label" text="Status"/>
-                <gl:StatusIndicator/>
-            </ui:VisualElement>
-            <ui:VisualElement class="form-row">
-                <ui:VisualElement class="form-row__input form-row__input--no-label separator separator--horizontal">
-                    <ui:Button name="AnywherePageComputeRegisterButton" class="button button--primary" text="Register Compute"/>
-                    <ui:Button name="AnywherePageComputeReplaceComputeButton" class="button" text="Register new Compute"/>
-                    <ui:Button name="AnywherePageComputeCancelReplaceButton" class="button" text="Cancel Compute"/>
-                </ui:VisualElement>
+    <ui:Template src="../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
+        <ui:VisualElement class="form-row">
+            <ui:Label name="AnywherePageComputeNameLabel" class="form-row__label" text="Compute Name"/>
+            <ui:TextField name="AnywherePageComputeNameInput" class="form-row__input text-input" value="ComputerName-ProfileName"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="AnywherePageComputeIPLabel" class="form-row__label" text="IP Address"/>
+            <ui:Label name="AnywherePageComputeIPDescription" class="form-row__label" text="127.0.0.1"/> 
+        </ui:VisualElement>
+        <ui:VisualElement name="AnywherePageComputeStatus" class="form-row">
+            <ui:Label name="AnywherePageComputeStatusLabel" class="form-row__label" text="Status"/>
+            <gl:StatusIndicator/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:VisualElement class="form-row__input form-row__input--no-label separator separator--horizontal">
+                <ui:Button name="AnywherePageComputeRegisterButton" class="button button--primary" text="Register Compute"/>
+                <ui:Button name="AnywherePageComputeReplaceComputeButton" class="button" text="Register new Compute"/>
+                <ui:Button name="AnywherePageComputeCancelReplaceButton" class="button" text="Cancel Compute"/>
             </ui:VisualElement>
         </ui:VisualElement>
-    </ui:VisualElement>
+    </ui:Instance>
 </ui:UXML>

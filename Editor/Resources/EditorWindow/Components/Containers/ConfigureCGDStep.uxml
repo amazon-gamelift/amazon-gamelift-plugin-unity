@@ -1,0 +1,30 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Template src="../../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
+        <ui:VisualElement class="form-row">
+            <ui:Label name="ContainerFleetDeployStatusLabel" class="form-row__label--small" text="Group definition status"/>
+            <ui:VisualElement class="separator separator--horizontal separator--centered">
+                <gl:StatusIndicator/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="CGDNameLabel" class="form-row__label--small" text="Group definition name"/>
+            <ui:Label name="CGDNameValue" class="form-row__text-display"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="CGDVersionLabel" class="form-row__label--small" text="Group definition version"/>
+            <ui:Label name="CGDVersionValue" class="form-row__text-display"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="MemoryLimitLabel" class="form-row__label--small" text="Total memory limit"/>
+            <ui:Label name="MemoryLimitValue" class="form-row__text-display"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="VcpuLimitLabel" class="form-row__label--small" text="Total vCPU limit"/>
+            <ui:Label name="VcpuLimitValue" class="form-row__text-display"/>
+        </ui:VisualElement>
+    </ui:Instance>
+</ui:UXML>

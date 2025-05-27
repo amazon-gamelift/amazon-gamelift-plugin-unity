@@ -23,6 +23,8 @@ namespace AmazonGameLiftPlugin.Core
         Task<SearchGameSessionsResponse> SearchGameSessions(SearchGameSessionsRequest request);
 
         Task<DescribeGameSessionsResponse> DescribeGameSessions(DescribeGameSessionsRequest request);
+
+        Task<DescribeContainerGroupDefinitionResponse> DescribeContainerGroupDefinition(DescribeContainerGroupDefinitionRequest request);
         #endregion
 
         /// <summary>

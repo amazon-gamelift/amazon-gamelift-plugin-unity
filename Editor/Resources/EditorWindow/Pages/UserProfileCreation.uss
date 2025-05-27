@@ -1,0 +1,48 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+@import "../common.uss";
+
+.credentials-box__icon {
+    background-image: resource("Images/Icons/InfoIcon");
+    width: var(--icon-size-small);
+    height: var(--icon-size-small);
+    margin-right: var(--spacing-small);
+}
+
+.credentials-box__close-button {
+    background-image: resource("Images/Icons/CloseIcon");
+    width: var(--icon-size-tiny);
+    height: var(--icon-size-tiny);
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    position: absolute;
+    right: var(--spacing-small);
+}
+
+.credentials-box {
+    flex-direction: row;
+    padding: var(--spacing-small);
+    background-color: var(--color-text-input-background);
+    border-width: 1px;
+    border-color: var(--color-text-input-border);
+}
+
+.credentials-box__content {
+    flex-direction: column;
+}
+
+.credentials-box__content > *,
+.credentials-box__content #unity-content {
+    margin-bottom: var(--spacing-tiny);
+}
+
+.credential-step {
+    font-size: var(--font-size-small);
+    margin-top: var(--spacing-tiny);
+}
+
+.credential-step--numbered {
+    /* Add a small indent for each item in the list */
+    margin-left: var(--spacing-small);
+}

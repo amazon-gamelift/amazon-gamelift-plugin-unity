@@ -14,5 +14,7 @@ namespace AmazonGameLiftPlugin.Core.CredentialManagement
         UpdateAwsCredentialsResponse UpdateAwsCredentials(UpdateAwsCredentialsRequest request);
 
         GetProfilesResponse GetProfiles(GetProfilesRequest request);
+
+        GetCredentialsFileResponse GetCredentialsFile(GetCredentialsFileRequest request);
     }
 }

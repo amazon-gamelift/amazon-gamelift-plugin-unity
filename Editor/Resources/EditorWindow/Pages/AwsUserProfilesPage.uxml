@@ -5,57 +5,54 @@
     <Style src="./AwsUserProfilesPage.uss"/>
     <ui:VisualElement class="separator separator--vertical separator--large">
         <ui:VisualElement class="separator separator--vertical">
-            <ui:Label name="UserProfilePageTitle" class="page__title" text="Configure your AWS Account"/>
-            <ui:Label name="UserProfilePageDescription" text="AWS Account Credentials are used for any account bootstrapping and CloudFormation deployments."/>
-            <gl:InfoLinks/>
+            <ui:Label name="UserProfilePageTitle" class="page__title" text="%%Set up your AWS user profile%%"/>
+            <ui:Label name="UserProfilePageDescription" text="%%AWS Account Credentials are used for any account bootstrapping and CloudFormation deployments.%%"/>
         </ui:VisualElement>
         <ui:VisualElement class="divider"/>
-        <gl:StatusBox name="UserProfilePageStatusBox"/>
+        <gl:StatusBox name="UserProfilePageStatusBox" class="status-box--full-width"/>
         <ui:VisualElement name="UserProfilePageNoAccountMenu" class="separator separator--large separator--horizontal">
             <ui:VisualElement class="card card--large card--centered separator separator--vertical">
                 <ui:Image name="UserProfilePageAccountCardNoAccountIcon" class="card__icon card__icon--large"/>
-                <ui:Label name="UserProfilePageAccountCardNoAccountTitle" class="card__title" text="I don’t have an AWS account"/>
-                <ui:Label name="UserProfilePageAccountCardNoAccountDescription" text="[text about needing an AWS account and it can take a maximum of two sentences]"/>
-                <ui:VisualElement name="UserProfilePageAccountCardNoAccountParent" class="external-link">
-                    <ui:Label name="UserProfilePageAccountCardNoAccountLink" text="Learn More"/>
-                    <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
-                </ui:VisualElement>
+                <ui:Label name="UserProfilePageAccountCardNoAccountTitle" class="card__title bold" text="%%I don’t have an AWS account%%"/>
+                <ui:Label name="UserProfilePageAccountCardNoAccountDescription" text="%%text about needing an AWS account and it can take a maximum of two sentences%%"/>
                 <ui:Button name="UserProfilePageAccountCardNoAccountButton" class="button">
-                    <ui:Label name="UserProfilePageAccountCardNoAccountButtonLabel" text="Create an AWS Account"/>
+                    <ui:Label name="UserProfilePageAccountCardNoAccountButtonLabel" text="%%Create an AWS Account%%"/>
                     <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
                 </ui:Button>
             </ui:VisualElement>
             <ui:VisualElement class="card card--large card--centered separator separator--vertical">
-                <ui:Image name="UserProfilePageAccountCardNewAccountIcon" class="card__icon card__icon--large"/>
-                <ui:Label name="UserProfilePageAccountCardNewAccountTitle" class="card__title" text="I have an AWS account"/>
-                <ui:Label name="UserProfilePageAccountCardNewAccountDescription" text="[text about having an AWS account and it can take a maximum of two sentences]"/>
-                <ui:Button name="UserProfilePageAccountCardHasAccountButton" class="button button--primary" text="Add New Profile"/>
+                <ui:Image name="UserProfilePageAccountCardHasAccountIcon" class="card__icon card__icon--large"/>
+                <ui:Label name="UserProfilePageAccountCardHasAccountTitle" class="card__title bold" text="%%I have an AWS account%%"/>
+                <ui:Label name="UserProfilePageAccountCardHasAccountDescription" text="%%text about having an AWS account and it can take a maximum of two sentences%%"/>
+                <ui:Button name="UserProfilePageAccountCardHasAccountButton" class="button button--primary" text="%%Add New Profile%%"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="UserProfilePageCreateMenu"/>
-        <ui:VisualElement name="UserProfilePageBootstrapMenu" class="separator separator--vertical separator--large">
-            <ui:Label name="UserProfilePageBootstrapTitle" class="page__subtitle" text="AWS Account Details"/>
-            <ui:Label name="UserProfilePageBootstrapDescription" text="Bootstrapping refers to the creation of an Amazon S3 bucket, which stores all GameLift build artifacts and Lambda function source code, allowing you to effortlessly deploy with ease.&#10;This action incurs a charge unless you’re eligible for AWS Free Tier usage."/>
-            <gl:ProfileSelector/>
-            <ui:VisualElement class="separator separator--horizontal separator--centered">
-                <ui:Button name="UserProfilePageBootstrapStartButton" class="button button--primary" text="Bootstrap Profile"/>
-                <ui:Button name="UserProfilePageBootstrapAnotherProfileButton" class="button" text="Add another Profile"/>
-                <ui:VisualElement name="UserProfilePageBootstrapHelpLinkParent" class="external-link float-right">
-                    <ui:Label name="UserProfilePageBootstrapHelpLink" text="What is bootstrapping?"/>
-                    <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
+        <ui:VisualElement name="UserProfilesTableMenu" class="separator separator--vertical separator--medium">
+            <ui:Label name="UserProfilePageTableTitle" class="card__title" text="%%AWS Profiles%%"/>
+            <ui:Label name="UserProfilePageTableDescription" text="%%These AWS profiles are configured for use with...%%"/>
+           <ui:VisualElement class="separator separator--horizontal separator--right">
+                <ui:Button name="UserProfilePageSetProfileButton" class="button button--primary" text="%%Set profile as selected%%"/>
+                <ui:Button name="UserProfilePageBootstrapButton" class="button button--primary" text="%%Bootstrap selected profile%%"/>
+                <ui:VisualElement name="WhatIsBootstrappingLink" class="external-link margin__tiny">
+                    <ui:Label name="UserProfilePageCompletedBootstrapHelpLink" class="child__link" text="%%What is bootstrapping?%%"/>
+                    <ui:Image name="ExternalLinkIcon" class="icon--tiny"/>
                 </ui:VisualElement>
+
+            </ui:VisualElement>
+            <gl:ProfileTable showRadioButtons="true" />
+            <ui:VisualElement name="UserProfilePageAwsConfigurationFile" class="form-row separator separator--horizontal">
+                <ui:Label name="UserProfilePageAwsConfigurationFileLabel" class="form-row__label" text="%%AWS configuration file%%"/>
+                <ui:TextField name="UserProfilePageAwsConfigurationFileInput" class="form-row__input text-input" value="C:\Users\username\.aws\credentials"/>
+                <ui:Button name="UserProfilePageAwsConfigurationFileButton" class="button float-right">
+                    <ui:Label name="UserProfilePageAwsConfigurationFileButtonLabel" text="Open file"/>
+                    <ui:Image name="ExternalLinkIcon" class="icon--tiny"/>
+                </ui:Button>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="UserProfilePageCompletedMenu" class="separator separator--vertical separator--large">
-            <gl:ProfileSelector/>
-            <ui:VisualElement class="form-row separator separator--horizontal">
-                <ui:Button name="UserProfilePageBootstrapAnotherBucketButton" class="button" text="Bootstrap to new S3 Bucket"/>
-                <ui:Button name="UserProfilePageAccountAddNewProfileButton" class="button" text="Add another Profile"/>
-                <ui:VisualElement name="UserProfilePageCompletedBootstrapHelpLinkParent" class="external-link float-right">
-                    <ui:Label name="UserProfilePageCompletedBootstrapHelpLink" text="What is bootstrapping?"/>
-                    <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
-                </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:VisualElement>
+        <ui:VisualElement class="divider"/>
+
+        <ui:Foldout name="HelpfulResourcesFoldout" class="foldout separator separator--vertical" text="Helpful Resources"/>
+
     </ui:VisualElement>
 </ui:UXML>

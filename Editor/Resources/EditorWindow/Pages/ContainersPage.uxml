@@ -1,0 +1,100 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <Style src="./ContainersPage.uss"/>
+    <ui:VisualElement class="separator separator--vertical separator--large">
+        <ui:VisualElement class="separator separator--vertical">
+            <ui:Label name="ContainerPageTitle" class="page__title" text="Host with Managed Containers"/>
+            <ui:Label name="ContainerPageDescription" text="Amazon GameLift managed container fleets offer a cloud-based platform for hosting your containerized game server software. With a container fleet, you get the flexibility, security, and reliability of AWS Cloud resources, which are further optimized for multiplayer game hosting."/>
+            <gl:InfoLinks/>
+        </ui:VisualElement>
+        <ui:VisualElement class="divider"/>
+        <gl:StatusBox name="ContainersStatusBox"/>
+
+        <!-- Profile table foldout -->
+        <ui:VisualElement name="ProfileTableFoldoutContainer" class="separator separator--vertical">
+            <ui:Foldout name="ProfileTableFoldout" text="Step 0" class="separator separator--vertical">
+                <ui:Label name="ProfileTableFoldoutInnerTitle" class="child__title" text="AWS Credential Profile"/>
+                <gl:ProfileTable name="ProfileTable"/>
+            </ui:Foldout>
+            <ui:Label name="ProfileTableFoldoutTitle" class="child__title unity-foldout__content" text="AWS Credential Profile"/>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="ProfileTableContainer" class="separator separator--vertical">
+            <ui:Label text="Step 0"/>
+            <ui:Label class="child__title" text="AWS Credential Profile"/>
+            <gl:StatusBox class="status-box--full-width" name="RegionUnsupportedStatusBox"/>
+            <gl:ProfileTable name="ProfileTable"/>
+            <ui:Label text="This credential profile will be used to create your fleet, change your active profile in AWS Access Credentials."/>
+            <ui:Button name="ManageCredentialsButton" class="button button--default button--small button--part-width" text="Manage Credentials"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="divider"/>
+
+        <!-- Questionnaire foldout -->
+        <ui:VisualElement name="ContainerQuestionnaireFoldoutContainer" class="separator separator--vertical">
+            <ui:Foldout name="ContainerQuestionnaireFoldout" text="Step 1" class="separator separator--vertical">
+                <ui:Label name="QuestionnaireFoldoutInnerTitle" class="child__title" text="Assess Container Readiness"/>
+            </ui:Foldout>
+            <ui:Label name="QuestionnaireFoldoutTitle" class="child__title unity-foldout__content" text="Assess Container Readiness"/>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="ContainerQuestionnaireContainer" class="separator separator--vertical">
+            <ui:Label text="Step 1"/>
+            <ui:Label class="child__title" text="Assess Container Readiness"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="divider"/>
+
+        <!-- User input foldout -->
+        <ui:VisualElement name="ContainerUserInputFoldoutContainer" class="separator separator--vertical">
+            <ui:Foldout name="ContainerUserInputFoldout" text="Step 2" class="separator separator--vertical">
+                <ui:Label name="UserInputFoldoutInnerTitle" class="child__title" text="Configure Image Deployment"/>
+            </ui:Foldout>
+            <ui:Label name="UserInputFoldoutTitle" class="child__title unity-foldout__content" text="Configure Image Deployment"/>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="ConfigureImageDeploymentContainer" class="separator separator--vertical">
+            <ui:Label text="Step 2"/>
+            <ui:Label class="child__title" text="Configure Image Deployment"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="divider"/>
+
+        <!-- Deployment alerts -->
+        <ui:VisualElement class="separator separator--vertical">
+            <gl:StatusBox class="status-box--full-width" name="MissingWslDockerStatusBox"/>
+            <gl:StatusBox class="status-box---full-width" name="DeploymentNoticeStatusBox"/>
+        </ui:VisualElement>
+
+        <!-- Control Bar -->
+        <ui:VisualElement name="ContainerControlBar" class="controlbar">
+            <ui:Button name="AWSConsoleButton" class="button button--default button--full-height">
+                <ui:Label name="AWSConsoleLabel" text="View on AWS Console"/>
+            </ui:Button>
+            <ui:Button name="DeployContainerFleetButton" class="button button--primary button--maintain-color button--full-height" text="Deploy Container Fleet" />
+            <ui:Button name="ResetDeploymentButton" class="button button--red button--full-height" text="Reset Deployment" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- Steps -->
+    <ui:VisualElement name="ConfigureDCIStep"/>
+    <ui:VisualElement name="CreateECRRepoStep"/>
+    <ui:VisualElement name="PushImageStep"/>
+    <ui:VisualElement name="ConfigureCGDStep"/>
+    <ui:VisualElement name="CreateContainerFleetStep"/>
+
+    <!-- Launch Bar -->
+    <ui:VisualElement name="ContainersLaunchBar" class="launchbar launchbar--flex separator--split separator separator--top separator--large">
+        <!-- Left justified items -->
+        <ui:Button name="UpdateDeploymentButton" class="button">
+            <ui:Image name="Reset" class="icon--tiny separator__single--tiny separator--horizontal"/>
+            <ui:Label name="UpdateDeploymentLabel" text="Update Deployment"/>
+        </ui:Button>
+
+        <!-- Right justified items -->
+        <ui:Button name="StartClientButton" class="button button--primary">
+            <ui:Image name="Start" class="icon--tiny separator__single--tiny separator--horizontal"/>
+            <ui:Label name="StartClientLabel" text="Start Client"/>
+        </ui:Button>
+    </ui:VisualElement>
+
+</ui:UXML>

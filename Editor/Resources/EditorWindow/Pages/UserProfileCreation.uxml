@@ -2,36 +2,56 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <Style src="../common.uss"/>
+    <Style src="./UserProfileCreation.uss"/>
     <ui:VisualElement class="separator separator--vertical separator--large">
-        <ui:Label name="UserProfilePageAccountNewProfileTitle" class="page__subtitle" text="AWS Account Details"/>
+         <ui:VisualElement class="separator separator--vertical">
+            <ui:Label name="UserProfilePageAccountNewProfileTitle" class="card__title" text="%%AWS Account Details%%"/>
+            <ui:Label name="UserProfilePageAccountNewProfileDescription" text="%%Provide the requested information to create an AWS profile for use with Amazon GameLift.%%"/>
+        </ui:VisualElement>
         <ui:VisualElement class="separator separator--vertical">
-            <ui:VisualElement name="UserProfilePageAccountNewProfileName" class="form-row">
-                <ui:Label name="UserProfilePageAccountNewProfileName" class="form-row__label" text="AWS Account Profile"/>
+            <ui:VisualElement name="UserProfilePageAccountNewProfileName" class="form-row separator--vertical">
+                <ui:Label name="UserProfilePageAccountNewProfileName" class="form-row__label" text="%%AWS Account Profile%%"/>
                 <ui:TextField name="UserProfilePageAccountNewProfileNameInput" class="form-row__input text-input"/>
             </ui:VisualElement>
+            <ui:VisualElement name="CredentialsBox" class="credentials-box">
+                <ui:Image name="StatusBoxImage" class="credentials-box__icon"/>
+                <ui:VisualElement class="credentials-box__content">
+                    <ui:Label name="CredentialsBoxTitle" class="page__content" text="AWS access credentials"/>
+                    <ui:Label name="CredentialsBoxDescription" class="child__description" text="AWS uses two-part security credentials to authenticate your user and verify that you have permission to access the AWS resources that you're requesting."/>
+                    <ui:Foldout name="CredentialsBoxFoldout" text="Need your access key ID and secret access key?">
+                        <ui:Label class="credential-step" text="If you have security credentials for your AWS user, you should have them secured. Hint: you might have downloaded them as a .csv file or created an AWS CLI profile (look for the .aws folder on your local machine). If you don't have them available, create a new set."/>
+                        <ui:Label class="credential-step" text="To create new security credentials:"/>
+                        <ui:Label class="credential-step credential-step--numbered" text="1. Sign in to the AWS Management console with your IAM user."/>
+                        <ui:Label class="credential-step credential-step--numbered" text="2. In the console's upper right corner, choose your user name and select the dropdown item 'Security credentials'."/>
+                        <ui:Label class="credential-step credential-step--numbered" text="3. In the 'Access keys' section, choose 'Create access key'. If asked for a use case, choose 'Other'."/>
+                        <ui:Label class="credential-step credential-step--numbered" text="4. Take note of the two-part credentials or download as a .csv file."/>
+                        <ui:Label class="credential-step" text="Keep your secret access key safe--don't share it! If you lose it, create a new one."/>
+                    </ui:Foldout>
+                    <ui:VisualElement name="UserProfilePageAccountNewProfileHelpLinkParent" class="external-link external-link--small">
+                        <ui:Label name="UserProfilePageAccountNewProfileHelpLink" text="%%Go to IAM Console%%"/>
+                        <ui:Image name="ExternalLinkIcon" class="icon--tiny"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Button name="CredentialsBoxCloseButton" class="credentials-box__close-button"/>
+            </ui:VisualElement>
             <ui:VisualElement name="UserProfilePageAccountNewProfileAccessKey" class="form-row">
-                <ui:Label name="UserProfilePageAccountNewProfileAccessKeyInput" text="AWS Access Key" class="form-row__label"/>
+                <ui:Label name="UserProfilePageAccountNewProfileAccessKeyInput" text="%%AWS Access Key%%" class="form-row__label"/>
                 <ui:TextField name="UserProfilePageAccountNewProfileAccessKeyInput" class="text-input form-row__input separator__single--small separator--horizontal" password="true"/>
                 <ui:Button name="UserProfilePageAccountNewProfileAccessKeyToggleReveal" class="button button--narrow form-row__reveal-button" text="Show"/>
             </ui:VisualElement>
             <ui:VisualElement name="UserProfilePageAccountNewProfileSecretKey" class="form-row">
-                <ui:Label name="UserProfilePageAccountNewProfileSecretKeyLabel" class="form-row__label" text="AWS Secret Key"/>
+                <ui:Label name="UserProfilePageAccountNewProfileSecretKeyLabel" class="form-row__label" text="%%AWS Secret Key%%"/>
                 <ui:TextField name="UserProfilePageAccountNewProfileSecretKeyInput" class="text-input form-row__input separator__single--small separator--horizontal" password="true"/>
                 <ui:Button name="UserProfilePageAccountNewProfileSecretKeyToggleReveal" class="button button--narrow form-row__reveal-button" text="Show"/>
             </ui:VisualElement>
             <ui:VisualElement name="UserProfilePageAccountNewProfileRegion" class="form-row">
-                <ui:Label name="UserProfilePageAccountNewProfileRegionLabel" class="form-row__label" text="AWS Region"/>
+                <ui:Label name="UserProfilePageAccountNewProfileRegionLabel" class="form-row__label" text="%%AWS Region%%"/>
                 <ui:DropdownField name="UserProfilePageAccountNewProfileRegionDropdown" tooltip="Choose a region" class="form-row__input dropdown"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement class="separator separator--horizontal">
-            <ui:Button name="UserProfilePageAccountNewProfileCreateButton" class="button button--primary" text="Create Profile"/>
-            <ui:Button name="UserProfilePageAccountNewProfileCancelButton" class="button" text="Cancel"/>
-            <ui:VisualElement name="UserProfilePageAccountNewProfileHelpLinkParent" class="external-link float-right">
-                <ui:Label name="UserProfilePageAccountNewProfileHelpLink" text="How do I create AWS credentials?"/>
-                <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
-            </ui:VisualElement>
+            <ui:Button name="UserProfilePageAccountNewProfileCancelButton" class="button" text="%%Cancel%%"/>
+            <ui:Button name="UserProfilePageAccountNewProfileCreateButton" class="button button--primary" text="%%Create new profile%%"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

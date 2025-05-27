@@ -1,0 +1,8 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" class="vertical-progress-bar">
+    <ui:Style src="./VerticalProgressBar.uss"/>
+    <ui:Image name="Indicator" class="card__icon icon--small progress-indicator--successful"/>
+    <ui:VisualElement name="ProgressBar" class="progress-bar progress-bar--full"/>
+</ui:UXML>

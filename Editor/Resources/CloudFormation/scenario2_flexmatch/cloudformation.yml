@@ -124,6 +124,10 @@ Parameters:
     Default: ticket-id-index
     Description: Name of the global secondary index on MatchmakingRequest table with partition key TicketId
 
+  UnityEngineVersionParameter:
+    Type: String
+    Description: "Unity engine version being used by the plugin"
+
 Resources:
   ApiGatewayCloudWatchRole:
     Type: "AWS::IAM::Role"
@@ -637,7 +641,7 @@ Resources:
       BuildId: !Ref ServerBuild
       CertificateConfiguration:
         CertificateType: GENERATED
-      Description: !Ref FleetDescriptionParameter
+      Description: !Sub ${FleetDescriptionParameter} Using Unity Engine Version ${UnityEngineVersionParameter}
       DesiredEC2Instances: 1
       EC2InboundPermissions:
         - FromPort: !Ref FleetTcpFromPortParameter
@@ -673,7 +677,7 @@ Resources:
       BuildId: !Ref ServerBuild
       CertificateConfiguration:
         CertificateType: GENERATED
-      Description: !Ref FleetDescriptionParameter
+      Description: !Sub ${FleetDescriptionParameter} Using Unity Engine Version ${UnityEngineVersionParameter}
       DesiredEC2Instances: 1
       EC2InboundPermissions:
         - FromPort: !Ref FleetTcpFromPortParameter
@@ -709,7 +713,7 @@ Resources:
       BuildId: !Ref ServerBuild
       CertificateConfiguration:
         CertificateType: GENERATED
-      Description: !Ref FleetDescriptionParameter
+      Description: !Sub ${FleetDescriptionParameter} Using Unity Engine Version ${UnityEngineVersionParameter}
       DesiredEC2Instances: 1
       EC2InboundPermissions:
         - FromPort: !Ref FleetTcpFromPortParameter

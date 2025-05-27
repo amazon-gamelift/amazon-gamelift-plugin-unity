@@ -1,0 +1,11 @@
+﻿<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" class="separator separator--horizontal copy-command-field">
+    <ui:Style src="./CopyCommandField.uss"/>
+    <ui:Image name="CopyIcon" class="copy-icon"/>
+    <ui:VisualElement class="text-box separator separator--horizontal">
+        <ui:Label name="CommandTextLabel" class="command-text__label"/>
+    </ui:VisualElement>
+
+</ui:UXML>

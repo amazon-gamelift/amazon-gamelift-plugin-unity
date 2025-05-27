@@ -3,19 +3,22 @@
 
 using System;
 using System.Linq;
+using OperatingSystem = Amazon.GameLift.OperatingSystem;
 
 namespace AmazonGameLiftPlugin.Core.DeploymentManagement
 {
     public sealed class DeploymentFormatter
     {
-        public string GetServerGamePath(string gameFilePathInBuild)
+        public string GetServerGamePath(string gameFilePathInBuild, string operatingSystem)
         {
             if (gameFilePathInBuild is null)
             {
                 throw new ArgumentNullException(nameof(gameFilePathInBuild));
             }
 
-            return $"C:\\game\\{gameFilePathInBuild}";
+            if (operatingSystem.Equals(OperatingSystem.WINDOWS_2016.ToString()))
+                return $"C:\\game\\{gameFilePathInBuild}";
+            return $"/local/game/{gameFilePathInBuild.Replace("\\", "/")}";
         }
 
         public string GetBuildS3Key()
@@ -26,12 +29,23 @@ namespace AmazonGameLiftPlugin.Core.DeploymentManagement
 
         public string GetStackName(string gameName)
         {
-            if (gameName is null)
+            if (string.IsNullOrEmpty(gameName))
             {
                 throw new ArgumentNullException(nameof(gameName));
             }
 
             return $"GameLiftPluginForUnity-{gameName}";
+        }
+
+        public string GetStackNameContainers(string gameName)
+        {
+            if (string.IsNullOrEmpty(gameName))
+            {
+                throw new ArgumentNullException(nameof(gameName));
+            }
+
+            return $"GameLiftPluginForUnity-{gameName}-Containers";
+
         }
 
         public string GetChangeSetName() => $"changeset-{Guid.NewGuid()}";

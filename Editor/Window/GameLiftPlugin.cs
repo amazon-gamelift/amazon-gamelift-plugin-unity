@@ -18,13 +18,15 @@ namespace AmazonGameLift.Editor
         private VisualTreeAsset _visualTreeAsset;
         private VisualElement _root;
         private VisualElement _currentTab;
+        private VisualElement _containersTab;
+        private Button _landingButton;
         private List<Button> _tabButtons;
         private List<VisualElement> _tabContent;
 
         private const string MainContentClassName = "main__content";
         private const string TabContentSelectedClassName = "tab__content--selected";
-        private const string TabButtonSelectedClassName = "tab__button--selected";
-        private const string TabButtonClassName = "tab__button";
+        private const string TabButtonSelectedClassName = "tab__button__default--selected";
+        private const string TabButtonClassName = "tab__button__default";
         private const string TabContentClassName = "tab__content";
 
         private GameLiftPlugin()
@@ -51,10 +53,14 @@ namespace AmazonGameLift.Editor
             var credentialsPage = new AwsUserProfilesPage(CreateContentContainer(Pages.Credentials, tabContentContainer), StateManager);
             var anywherePage = new AnywherePage(CreateContentContainer(Pages.Anywhere, tabContentContainer), StateManager);
             var ec2Page = new ManagedEC2Page(CreateContentContainer(Pages.ManagedEC2, tabContentContainer), StateManager);
+            var containersPage = new ContainersPage(CreateContentContainer(Pages.Containers, tabContentContainer), StateManager);
             var helpPage = new HelpAndDocumentationPage(CreateContentContainer(Pages.Help, tabContentContainer));
 
+            _landingButton = _root.Query<Button>(className: "tab__button__large__bold");
             _tabButtons = _root.Query<Button>(className: TabButtonClassName).ToList();
+            _tabButtons.Add(_landingButton);
             _tabContent = _root.Query(className: TabContentClassName).ToList();
+            _containersTab = _root.Query<VisualElement>("Containers");
 
             _tabButtons.ForEach(button => button.RegisterCallback<ClickEvent>(_ => { OpenTab(button.name); }));
 
@@ -75,6 +81,7 @@ namespace AmazonGameLift.Editor
             l.SetElementText(GetPageName(Pages.Credentials), Strings.TabCredentials);
             l.SetElementText(GetPageName(Pages.Anywhere), Strings.TabAnywhere);
             l.SetElementText(GetPageName(Pages.ManagedEC2), Strings.TabManagedEC2);
+            l.SetElementText(GetPageName(Pages.Containers), Strings.TabContainers);
             l.SetElementText(GetPageName(Pages.Help), Strings.TabHelp);
         }
 
@@ -124,6 +131,7 @@ namespace AmazonGameLift.Editor
         internal enum Pages
         {
             Landing,
+            Containers,
             Credentials,
             Anywhere,
             ManagedEC2,

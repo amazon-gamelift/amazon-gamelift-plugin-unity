@@ -3,10 +3,50 @@
 
 @import "../common.uss";
 
+.divider--vertical {
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 1px;
+    flex: 0 0 auto;
+}
+
+.resource {
+    flex-direction: row; 
+    align-items: flex-start;
+    padding: 8px;
+}
+
+.resource--documentation {
+    -unity-font-style: bold; 
+    background-color: #FF4081;
+}
+
+.resource--awsguidance {
+    -unity-font-style: bold; 
+    background-color: #3949AB;
+}
+
+.resource--whitepaper {
+    -unity-font-style: bold; 
+    background-color: #C62828;
+}
+
+.card__container__resource {
+    width: 32%;
+    margin: 0px 2px;
+}
+
+.link__text {
+    color: var(--color-font-link-light);
+}
+
+.link__text:hover {
+    color: var(--color-font-link-light-hover);
+}
+
 Image#UserProfilePageAccountCardNoAccountIcon {
     --unity-image: resource("Images/Icons/NoAccountIcon");
 }
 
-Image#UserProfilePageAccountCardNewAccountIcon {
+Image#UserProfilePageAccountCardHasAccountIcon {
     --unity-image: resource("Images/Icons/AccountIcon");
 }

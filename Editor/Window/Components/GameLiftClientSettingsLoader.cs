@@ -14,7 +14,7 @@ namespace AmazonGameLift.Editor
         private StatusBox _statusBox;
         private TextProvider _textProvider;
 
-        public GameLiftClientSettingsLoader(StatusBox statusBox)
+        public GameLiftClientSettingsLoader(StatusBox statusBox = null)
         {
             this._statusBox = statusBox;
             this._textProvider = TextProviderFactory.Create();
@@ -24,11 +24,11 @@ namespace AmazonGameLift.Editor
         {
             string[] guids = AssetDatabase.FindAssets("t:GameLiftClientSettings");
 
-            _statusBox.Close();
+            _statusBox?.Close();
 
             if (guids.Length <= 0 || string.IsNullOrWhiteSpace(guids[0]))
             {
-                _statusBox.Show(StatusBox.StatusBoxType.Error, _textProvider.GetError(ErrorCode.GameLiftClientSettingsNotFoundText));
+                _statusBox?.Show(StatusBox.StatusBoxType.Error, _textProvider.GetError(ErrorCode.GameLiftClientSettingsNotFoundText));
                 return null;
             }
 
@@ -36,7 +36,7 @@ namespace AmazonGameLift.Editor
 
             if (guids.Length > 1)
             {
-                _statusBox.Show(StatusBox.StatusBoxType.Warning,
+                _statusBox?.Show(StatusBox.StatusBoxType.Warning,
                     String.Format(_textProvider.GetError(ErrorCode.GameLiftClientSettingsMoreThanOneFoundTemplate), assetPath));
             }
 

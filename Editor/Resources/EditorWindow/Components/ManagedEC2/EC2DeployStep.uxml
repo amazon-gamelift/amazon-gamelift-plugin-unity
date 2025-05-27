@@ -1,0 +1,25 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Template src="../../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
+        <ui:VisualElement name="ManagedEC2DeployContainer" class="form-row">
+            <ui:Label name="ManagedEC2DeployStatusLabel" class="form-row__label" text="Deployment status"/>
+            <ui:VisualElement class="separator separator--horizontal separator--centered">
+                <gl:StatusIndicator/>
+                <ui:VisualElement name="ManagedEC2DeployStatusLink" class="external-link external-link--centered">
+                    <ui:Label name="ManagedEC2DeployStatusLinkLabel" text="Learn More"/>
+                    <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="ManagedEC2ButtonContainer" class="form-row">
+            <ui:Label name="ManagedEC2DeployActionsLabel" class="form-row__label" text="AWS resource actions"/>
+            <ui:VisualElement class="form-row__input form-row__input--inline separator separator--horizontal">
+                <ui:Button name="ManagedEC2CreateStackButton" class="button button--primary" text="Deploy scenario"/>
+                <ui:Button name="ManagedEC2DeleteStackButton" class="button" text="Stop deployment"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:Instance>
+</ui:UXML>

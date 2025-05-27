@@ -1,0 +1,30 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor" class="separator separator--vertical">
+    <Style src="../../ProgressBar.uss"/>
+    <ui:VisualElement class="separator separator--horizontal separator--small">
+        <!-- Progress bar -->
+        <gl:VerticalProgressBar/>
+        <ui:VisualElement class="progress-step separator separator--vertical">
+            <ui:Label name="CreateECRRepoTitle" class="child__title" text="Creating an Amazon ECR repository"/>
+            <ui:Label name="CreateECRRepoDescription"  class="child__description" text="We're setting up a new private repository to store your container image. Amazon ECR is an AWS-managed container image registry service that provides a centralized hub for securely storing, managing, and deploying your container images."/>
+            <ui:VisualElement class="separator separator--horizontal separator--small">
+                <ui:VisualElement name="ECRUserGuideLinkParent" class="external-link">
+                    <ui:Label name="WhatIsContainerImage" class="child__link" text="Amazon ECR User Guide"/>
+                    <ui:Image name="ExternalLinkIcon" class="icon--tiny"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="RepoNameField" class="form-row">
+                <ui:Label name="RepoNameLabel" class="form-row__label--small" text="Repository name"/>
+                <ui:Label name="RepoNameValue" class="form-row__input text-input separator__single--tiny separator--horizontal" value="..."/>
+            </ui:VisualElement>
+            <gl:StatusBox name="StatusBox"/>
+            <ui:VisualElement name="ButtonsWhenFailed" class="form-row__input form-row__input--inline separator separator--horizontal">
+                <ui:Button name="ProceedButton" class="button button--primary" text="Proceed anyway"/>
+                <ui:Button name="TryAgainButton" class="button" text="Try again"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="spacer"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

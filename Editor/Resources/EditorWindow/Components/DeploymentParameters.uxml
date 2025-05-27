@@ -4,34 +4,34 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" class="separator separator--vertical">
     <Style src="../common.uss"/>
     <ui:VisualElement class="form-row">
-        <ui:Label name="ManagedEC2ParametersGameNameLabel" class="form-row__label" text="Game Name"/>
+        <ui:Label name="ManagedEC2ParametersGameNameLabel" class="form-row__label" text="Game name"/>
         <ui:TextField name="ManagedEC2ParametersGameNameInput" class="form-row__input text-input" value="GameName"/>
     </ui:VisualElement>
     <ui:VisualElement class="form-row">
-        <ui:Label name="ManagedEC2ParametersFleetNameLabel" class="form-row__label" text="Fleet Name"/>
+        <ui:Label name="ManagedEC2ParametersFleetNameLabel" class="form-row__label" text="Fleet name"/>
         <ui:TextField name="ManagedEC2ParametersFleetNameInput" class="form-row__input text-input" value="GameName-ManagedFleet"/>
     </ui:VisualElement>
     <ui:VisualElement class="form-row">
-        <ui:Label name="ManagedEC2ParametersBuildNameLabel" class="form-row__label" text="Build Name"/>
+        <ui:Label name="ManagedEC2ParametersBuildNameLabel" class="form-row__label" text="Server build name"/>
         <ui:TextField name="ManagedEC2ParametersBuildNameInput" class="form-row__input text-input" value="GameName-SingleRegion-Build"/>
     </ui:VisualElement>
     <ui:VisualElement class="form-row">
-        <ui:Label name="ManagedEC2ParametersLaunchParametersLabel" class="form-row__label" text="Launch Parameters"/>
+        <ui:Label name="ManagedEC2ParametersLaunchParametersLabel" class="form-row__label" text="Launch parameters"/>
         <ui:TextField name="ManagedEC2ParametersLaunchParametersInput" class="form-row__input text-input" value="-debug -logFile \&quot;c:\game\\\server.log\"/>
     </ui:VisualElement>
     <ui:VisualElement class="form-row">
-        <ui:Label name="ManagedEC2ParametersOperatingSystemLabel" class="form-row__label" text="Build Operating System"/>
+        <ui:Label name="ManagedEC2ParametersOperatingSystemLabel" class="form-row__label" text="Server build OS"/>
         <ui:DropdownField name="ManagedEC2ParametersOperatingSystemInput" class="dropdown form-row__input" index="-1"/>
     </ui:VisualElement>
     <ui:VisualElement class="form-row">
-        <ui:Label name="ManagedEC2ParametersGameServerFolderLabel" class="form-row__label" text="Game Server Folder"/>
+        <ui:Label name="ManagedEC2ParametersGameServerFolderLabel" class="form-row__label" text="Server build folder"/>
         <ui:TextField name="ManagedEC2ParametersGameServerFolderInput" class="form-row__input text-input separator__single--tiny separator--horizontal" value="..."/>
         <ui:Button name="ManagedEC2ParametersGameServerFolderButton" class="button button--icon button--full-height">
             <ui:Image name="FolderIcon" class="icon--fill" />
         </ui:Button>
     </ui:VisualElement>
     <ui:VisualElement class="form-row">
-        <ui:Label name="ManagedEC2ParametersGameServerFileLabel" class="form-row__label" text="Game Server file (.exe)"/>
+        <ui:Label name="ManagedEC2ParametersGameServerFileLabel" class="form-row__label" text="Server build executable"/>
         <ui:TextField name="ManagedEC2ParametersGameServerFileInput" class="form-row__input text-input separator__single--tiny separator--horizontal" value="..."/>
         <ui:Button name="ManagedEC2ParametersGameServerFileButton" class="button button--icon button--full-height">
             <ui:Image name="FolderIcon" class="icon--fill" />

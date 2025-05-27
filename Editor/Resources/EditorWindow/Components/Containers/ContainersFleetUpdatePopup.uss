@@ -1,0 +1,16 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+@import "../../Popup.uss";
+
+:root {
+    /* Give a little room for the scrollbars */
+    padding: 0;
+    padding-right: var(--spacing-mini);
+}
+
+.scroll-content {
+    padding: var(--spacing-large);
+    padding-bottom: var(--spacing-mini);
+    height: 100%;
+}

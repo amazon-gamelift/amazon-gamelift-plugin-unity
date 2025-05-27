@@ -8,7 +8,7 @@ namespace AmazonGameLift.Editor
     /// </summary>
     public static class Strings
     {
-        public const string LabelPasswordShow = "LabelPasswordShow";
+        public const string LabelPasswordShow = "LabelPasswordShow"; 
         public const string LabelPasswordHide = "LabelPasswordHide";
         public const string LabelBootstrapS3Console = "LabelBootstrapS3Console";
         public const string LabelBootstrapCreateMode = "LabelBootstrapCreateMode";
@@ -47,6 +47,7 @@ namespace AmazonGameLift.Editor
         public const string LifecycleNone = "LifecycleNone";
         public const string LifecycleSevenDays = "LifecycleSevenDays";
         public const string LifecycleThirtyDays = "LifecycleThirtyDays";
+        public const string LoremIpsum = "LoremIpsum";
         public const string StatusDeploymentExePathInvalid = "StatusDeploymentExePathInvalid";
         public const string StatusDeploymentFailure = "StatusDeploymentFailure";
         public const string StatusDeploymentStarting = "StatusDeploymentStarting";
@@ -132,6 +133,7 @@ namespace AmazonGameLift.Editor
         public const string LabelOpenSdkApiDoc = "LabelOpenSdkApiDoc";
 
         public const string TabLanding = "TabLanding";
+        public const string TabContainers = "TabContainers";
         public const string TabCredentials = "TabCredentials";
         public const string TabAnywhere = "TabAnywhere";
         public const string TabManagedEC2 = "TabManagedEC2";
@@ -149,16 +151,28 @@ namespace AmazonGameLift.Editor
         public const string LandingPageInfoStatusBoxText = "LandingPageInfoStatusBoxText";
         public const string LandingPageWarningStatusBoxText = "LandingPageWarningStatusBoxText";
 
+        public const string LandingPageComputeHeader = "LandingPageComputeHeader";
+        public const string LandingPageComputeDescription = "LandingPageComputeDescription";
+        public const string LandingPageAnywhereTitle = "LandingPageAnywhereTitle";
+        public const string LandingPageAnywhereDescription = "LandingPageAnywhereDescription";
+        public const string LandingPageAnywhereButton = "LandingPageAnywhereButton";
+        public const string LandingPageManagedTitle = "LandingPageManagedTitle";
+        public const string LandingPageManagedDescription = "LandingPageManagedDescription";
+        public const string LandingPageManagedButton = "LandingPageManagedButton";
+        public const string LandingPageContainerTitle = "LandingPageContainerTitle";
+        public const string LandingPageContainerDescription = "LandingPageContainerDescription";
+        public const string LandingPageContainerButton = "LandingPageContainerButton";
+
         public const string UserProfilePageTitle = "UserProfilePageTitle";
         public const string UserProfilePageDescription = "UserProfilePageDescription";
         public const string UserProfilePageAccountCardNoAccountTitle = "UserProfilePageAccountCardNoAccountTitle";
         public const string UserProfilePageAccountCardNoAccountDescription = "UserProfilePageAccountCardNoAccountDescription";
-        public const string UserProfilePageAccountCardNoAccountLink = "UserProfilePageAccountCardNoAccountLink";
-        public const string UserProfilePageAccountCardNoAccountButtonLabel = "UserProfilePageAccountCardNoAccountButton";
-        public const string UserProfilePageAccountCardNewAccountTitle = "UserProfilePageAccountCardNewAccountTitle";
-        public const string UserProfilePageAccountCardNewAccountDescription = "UserProfilePageAccountCardNewAccountDescription";
+        public const string UserProfilePageAccountCardNoAccountButtonLabel = "UserProfilePageAccountCardNoAccountButtonLabel";
+        public const string UserProfilePageAccountCardHasAccountTitle = "UserProfilePageAccountCardHasAccountTitle";
+        public const string UserProfilePageAccountCardHasAccountDescription = "UserProfilePageAccountCardHasAccountDescription";
         public const string UserProfilePageAccountCardHasAccountButton = "UserProfilePageAccountCardHasAccountButton";
         public const string UserProfilePageAccountNewProfileTitle = "UserProfilePageAccountNewProfileTitle";
+        public const string UserProfilePageAccountNewProfileDescription = "UserProfilePageAccountNewProfileDescription";
         public const string UserProfilePageAccountNewProfileName = "UserProfilePageAccountNewProfileName";
         public const string UserProfilePageAccountNewProfileAccessKeyInput = "UserProfilePageAccountNewProfileAccessKeyInput";
         public const string UserProfilePageAccountNewProfileSecretKeyLabel = "UserProfilePageAccountNewProfileSecretKeyLabel";
@@ -168,19 +182,18 @@ namespace AmazonGameLift.Editor
         public const string UserProfilePageAccountNewProfileHelpLink = "UserProfilePageAccountNewProfileHelpLink";
         public const string UserProfilePageCompletedBootstrapHelpLink = "UserProfilePageCompletedBootstrapHelpLink";
         
-        public const string UserProfilePageBootstrapTitle = "UserProfilePageBootstrapTitle";
-        public const string UserProfilePageBootstrapDescription = "UserProfilePageBootstrapDescription";
-        public const string UserProfilePageBootstrapStartButton = "UserProfilePageBootstrapStartButton";
-        public const string UserProfilePageBootstrapAnotherProfileButton = "UserProfilePageBootstrapAnotherProfileButton";
-        public const string UserProfilePageBootstrapHelpLink = "UserProfilePageBootstrapHelpLink";
-        public const string UserProfilePageBootstrapAnotherBucketButton = "UserProfilePageBootstrapAnotherBucketButton";
+        public const string UserProfilePageTableTitle = "UserProfilePageTableTitle";
+        public const string UserProfilePageTableDescription = "UserProfilePageTableDescription";
+        public const string UserProfilePageAwsConfigurationFileLabel = "UserProfilePageAwsConfigurationFileLabel";
+        public const string UserProfilePageAwsConfigurationFileTooltip = "UserProfilePageAwsConfigurationFileTooltip";
+        public const string UserProfilePageBootstrapButton = "UserProfilePageBootstrapButton";
         public const string UserProfilePageBootstrapErrorText = "UserProfilePageBootstrapErrorText";
+        public const string UserProfilePageSetProfileButton = "UserProfilePageSetProfileButton";
         
         public const string UserProfilePageBootstrapPopupWindowTitle = "UserProfilePageBootstrapPopupWindowTitle";
-        public const string UserProfilePageBootstrapPopupTitle = "UserProfilePageBootstrapPopupTitle";
+        public const string UserProfilePageBootstrapPopupNoticeStatusBox = "UserProfilePageBootstrapPopupNoticeStatusBox";
         public const string UserProfilePageBootstrapPopupDescription = "UserProfilePageBootstrapPopupDescription";
         public const string UserProfilePageBootstrapPopupBucketText = "UserProfilePageBootstrapPopupBucketText";
-        public const string UserProfilePageBootstrapPopupFreeTierLink = "UserProfilePageBootstrapPopupFreeTierLink";
         public const string UserProfilePageBootstrapPopupCancelButton = "UserProfilePageBootstrapPopupCancelButton";
         public const string UserProfilePageBootstrapPopupContinueButton = "UserProfilePageBootstrapPopupContinueButton";
         
@@ -201,22 +214,26 @@ namespace AmazonGameLift.Editor
         public const string AnywherePageCreateFleetButton = "AnywherePageCreateFleetButton";
         public const string AnywherePageCreateFleetCancelButton = "AnywherePageCreateFleetCancelButton";
         public const string AnywherePageConnectFleetTitle = "AnywherePageConnectFleetTitle";
+        public const string AnywherePageConnectFleetDescription = "AnywherePageConnectFleetDescription";
         public const string AnywherePageConnectFleetNameLabel = "AnywherePageConnectFleetNameLabel";
         public const string AnywherePageConnectFleetIDLabel = "AnywherePageConnectFleetIDLabel";
         public const string AnywherePageConnectFleetStatusLabel = "AnywherePageConnectFleetStatusLabel";
         public const string AnywherePageConnectFleetStatusError = "AnywherePageConnectFleetStatusError";
         public const string AnywherePageConnectFleetStatusActive = "AnywherePageConnectFleetStatusActive";
-        public const string AnywherePageConnectFleetNewButton = "AnywherePageConnectFleetNewButton";
+        public const string AnywherePageModifyFleetButton = "AnywherePageModifyFleetButton";
+        public const string AnywherePageConnectFleetViewOnConsoleButton = "AnywherePageConnectFleetViewOnConsoleButton";
         public const string AnywherePageComputeTitle = "AnywherePageComputeTitle";
+        public const string AnywherePageComputeDescription = "AnywherePageComputeDescription";
         public const string AnywherePageComputeNameLabel = "AnywherePageComputeNameLabel";
         public const string AnywherePageComputeIPLabel = "AnywherePageComputeIPLabel";
-        public const string AnywherePageComputeIPDescription = "AnywherePageComputeStatusDescription";
+        public const string AnywherePageComputeIPDescription = "AnywherePageComputeIPDescription";
         public const string AnywherePageComputeStatusLabel = "AnywherePageComputeStatusLabel";
         public const string AnywherePageComputeStatusRegistered = "AnywherePageComputeStatusRegistered";
         public const string AnywherePageComputeRegisterButton = "AnywherePageComputeRegisterButton";
         public const string AnywherePageComputeReplaceComputeButton = "AnywherePageComputeReplaceComputeButton";
         public const string AnywherePageComputeCancelReplaceButton = "AnywherePageComputeCancelReplaceButton";
         public const string AnywherePageLaunchTitle = "AnywherePageLaunchTitle";
+        public const string AnywherePageLaunchDescription = "AnywherePageLaunchDescription";
         public const string AnywherePageLaunchServerLabel = "AnywherePageLaunchServerLabel";
         public const string AnywherePageLaunchServerButton = "AnywherePageLaunchServerButton";
         public const string AnywherePageConfigureClientLabel = "AnywherePageConfigureClientLabel";
@@ -234,21 +251,31 @@ namespace AmazonGameLift.Editor
         public const string ManagedEC2IntegrateDescription = "ManagedEC2IntegrateDescription";
         public const string ManagedEC2IntegrateServerLink = "ManagedEC2IntegrateServerLink";
         public const string ManagedEC2IntegrateClientLink = "ManagedEC2IntegrateClientLink";
-        public const string ManagedEC2ScenarioTitle = "ManagedEC2ScenarioTitle";
-        public const string ManagedEC2ScenarioSingleFleetLabel = "ManagedEC2ScenarioSingleFleetLabel";
-        public const string ManagedEC2ScenarioSingleFleetRadio = "ManagedEC2ScenarioSingleFleetRadio";
-        public const string ManagedEC2ScenarioSingleFleetLink = "ManagedEC2ScenarioSingleFleetLink";
-        public const string ManagedEC2ScenarioFlexMatchLabel = "ManagedEC2ScenarioFlexMatchLabel";
-        public const string ManagedEC2ScenarioFlexMatchRadio = "ManagedEC2ScenarioFlexMatchRadio";
-        public const string ManagedEC2ScenarioFlexMatchLink = "ManagedEC2ScenarioFlexMatchLink";
-        public const string ManagedEC2ScenarioShowMoreButton = "ManagedEC2ScenarioShowMoreButton";
+        public const string DeploymentScenarioTitle = "DeploymentScenarioTitle";
+        public const string DeploymentScenarioDescription = "DeploymentScenarioDescription";
+        public const string DeploymentScenarioHelpLinkScenarios = "DeploymentScenarioHelpLinkScenarios";
+        public const string DeploymentScenarioHelpLinkLocations = "DeploymentScenarioHelpLinkLocations";
+        public const string DeploymentScenarioHelpLinkPricing = "DeploymentScenarioHelpLinkPricing";
+        public const string DeploymentScenarioSingleFleetLabel = "DeploymentScenarioSingleFleetLabel";
+        public const string DeploymentScenarioSingleFleetLabelEc2 = "DeploymentScenarioSingleFleetLabelEc2";
+        public const string DeploymentScenarioSingleFleetLabelContainers = "DeploymentScenarioSingleFleetLabelContainers";
+        public const string DeploymentScenarioSingleFleetRadio = "DeploymentScenarioSingleFleetRadio";
+        public const string DeploymentScenarioSingleFleetLink = "DeploymentScenarioSingleFleetLink";
+        public const string DeploymentScenarioFlexMatchLabel = "DeploymentScenarioFlexMatchLabel";
+        public const string DeploymentScenarioFlexMatchLabelEc2 = "DeploymentScenarioFlexMatchLabelEc2";
+        public const string DeploymentScenarioFlexMatchLabelContainers = "DeploymentScenarioFlexMatchLabelContainers";
+        public const string DeploymentScenarioFlexMatchRadio = "DeploymentScenarioFlexMatchRadio";
+        public const string DeploymentScenarioFlexMatchLink = "DeploymentScenarioFlexMatchLink";
+        public const string DeploymentScenarioShowMoreButton = "DeploymentScenarioShowMoreButton";
         public const string ManagedEC2ParametersTitle = "ManagedEC2ParametersTitle";
+        public const string ManagedEC2ParametersDescription = "ManagedEC2ParametersDescription";
         public const string ManagedEC2ParametersGameNameLabel = "ManagedEC2ParametersGameNameLabel";
         public const string ManagedEC2ParametersFleetNameLabel = "ManagedEC2ParametersFleetNameLabel";
         public const string ManagedEC2ParametersBuildNameLabel = "ManagedEC2ParametersBuildNameLabel";
         public const string ManagedEC2ParametersLaunchParametersLabel = "ManagedEC2ParametersLaunchParametersLabel";
         public const string ManagedEC2ParametersOperatingSystemLabel = "ManagedEC2ParametersOperatingSystemLabel";
         public const string ManagedEC2ParametersGameServerFolderLabel = "ManagedEC2ParametersGameServerFolderLabel";
+        public const string ManagedEC2ParametersGameServerFolderPath = "ManagedEC2ParametersGameServerFolderPath";
         public const string ManagedEC2ParametersGameServerFileLabel = "ManagedEC2ParametersGameServerFileLabel";
         public const string ManagedEC2ParametersGameServerFilePath = "ManagedEC2ParametersGameServerFilePath";
         public const string ManagedEC2DeployTitle = "ManagedEC2DeployTitle";
@@ -292,6 +319,23 @@ namespace AmazonGameLift.Editor
         public const string HelpPageFlexMatchDescription = "HelpPageFlexMatchDescription";
         public const string HelpPageFlexMatchLink = "HelpPageFlexMatchLink";
 
+        public const string HelpfulResourceSetupAccountTitle = "HelpfulResourceSetupAccountTitle";
+        public const string HelpfulResourceSetupAccountDescription = "HelpfulResourceSetupAccountDescription";
+        public const string HelpfulResourcePluginGuideTitle = "HelpfulResourcePluginGuideTitle";
+        public const string HelpfulResourcePluginGuideDescription = "HelpfulResourcePluginGuideDescription";
+        public const string HelpfulResourceGettingStartedTitle = "HelpfulResourceGettingStartedTitle";
+        public const string HelpfulResourceOrganizingEnvTitle = "HelpfulResourceOrganizingEnvTitle";
+        public const string HelpfulResourceGetAccessKeysTitle = "HelpfulResourceGetAccessKeysTitle";
+        public const string HelpfulResourceGetAccessKeysDescription = "HelpfulResourceGetAccessKeysDescription";
+        public const string HelpfulResourceServiceLocationsTitle = "HelpfulResourceServiceLocationsTitle";
+        public const string HelpfulResourceServiceLocationsDescription = "HelpfulResourceServiceLocationsDescription";
+        public const string HelpfulResourceManageAccessKeysTitle = "HelpfulResourceManageAccessKeysTitle";
+        public const string HelpfulResourceManageAccessKeysDescription = "HelpfulResourceManageAccessKeysDescription";
+        public const string HelpfulResourceHostingSolutionsTitle = "HelpfulResourceHostingSolutionsTitle";
+        public const string HelpfulResourceHostingSolutionsDescription = "HelpfulResourceHostingSolutionsDescription";
+        public const string HelpfulResourceHostingFleetTitle = "HelpfulResourceHostingFleetTitle";
+        public const string HelpfulResourceHostingFleetDescription = "HelpfulResourceHostingFleetDescription";
+
         public const string ProfileSelectorDropdownLabel = "ProfileSelectorDropdownLabel";
         public const string ProfileSelectorBucketNameLabel = "ProfileSelectorBucketNameLabel";
         public const string ProfileSelectorRegionLabel = "ProfileSelectorRegionLabel";
@@ -302,5 +346,63 @@ namespace AmazonGameLift.Editor
         
         public const string ViewLogsStatusBoxUrlTextButton = "ViewLogsStatusBoxUrlTextButton";
         public const string ViewS3LogsStatusBoxUrlTextButton = "ViewS3LogsStatusBoxUrlTextButton";
+
+        public const string WhatIsContainerImage = "WhatIsContainerImage";
+        public const string DockerDocumentation = "DockerDocumentation";
+        public const string ContainerQuestionnaireDoesContainerImageExist = "ContainerQuestionnaireDoesContainerImageExist";
+        public const string ContainerQuestionnaireUseExistingRepo = "ContainerQuestionnaireUseExistingRepo";
+        public const string ContainerQuestionnaireWhereItLive = "ContainerQuestionnaireWhereItLive";
+        public const string ContainerQuestionnaireYes = "ContainerQuestionnaireYes";
+        public const string ContainerQuestionnaireNo = "ContainerQuestionnaireNo";
+
+        public const string ContainerGameServerBuildLabel = "ContainerGameServerBuildLabel";
+        public const string ContainerGameServerExecutableLabel = "ContainerGameServerExecutableLabel";
+        public const string SelectECRRepositoryLabel = "SelectECRRepositoryLabel";
+        public const string ContainerSelectImageLabel = "ContainerSelectImageLabel";
+        public const string DockerImageIDLabel = "DockerImageIDLabel";
+        public const string DefaultSettings = "DefaultSettings";
+        public const string DefaultSettingsDescription = "DefaultSettingsDescription";
+        public const string ContainerConnectionPortRangeLabel = "ContainerConnectionPortRangeLabel";
+        public const string ContainerTotalMemoryLabel = "ContainerTotalMemoryLabel";
+        public const string ContainerTotalVcpuLabel = "ContainerTotalVcpuLabel";
+        public const string ContainerImageTagLabel = "ContainerImageTagLabel";
+        public const string ContainerConnectionPortRangeInvalidMessage = "ContainerConnectionPortRangeInvalidMessage";
+        public const string ContainerTotalMemoryInvalidMessage = "ContainerTotalMemoryInvalidMessage";
+        public const string ContainerTotalVcpuInvalidMessage = "ContainerTotalVcpuInvalidMessage";
+
+        public const string ContainerLinksDockerDocumentationLabel = "ContainerLinksDockerDocumentationLabel";
+        public const string ContainerLinksDockerInstallLabel = "ContainerLinksDockerInstallLabel";
+        public const string ContainerLinksEcrUserGuideLabel = "ContainerLinksEcrUserGuideLabel";
+
+        public const string ContainerConfigureDciStepTitle = "ContainerConfigureDciStepTitle";
+        public const string ContainerConfigureDciStepDescription = "ContainerConfigureDciStepDescription";
+        public const string ContainerPushImageAutoStepTitle = "ContainerPushImageAutoStepTitle";
+        public const string ContainerPushImageAutoStepDescription = "ContainerPushImageAutoStepDescription";
+        public const string ContainerPushImageManualStepTitle = "ContainerPushImageManualStepTitle";
+        public const string ContainerPushImageManualStepDescription = "ContainerPushImageManualStepDescription";
+        public const string ContainerPushImageManualStepCallToActionLabel = "ContainerPushImageManualStepCallToActionLabel";
+        public const string ContainerPushImageManualLoginCommandLabel = "ContainerPushImageManualLoginCommandLabel";
+        public const string ContainerPushImageManualBuildCommandLabel = "ContainerPushImageManualBuildCommandLabel";
+        public const string ContainerPushImageManualTagCommandLabel = "ContainerPushImageManualTagCommandLabel";
+        public const string ContainerPushImageManualPushCommandLabel = "ContainerPushImageManualPushCommandLabel";
+        public const string ContainerConfigureCGDStepTitle = "ContainerConfigureCGDStepTitle";
+        public const string ContainerConfigureCGDStepDescription = "ContainerConfigureCGDStepDescription";
+        public const string ContainerCreateContainerFleetStepTitle = "ContainerCreateContainerFleetStepTitle";
+        public const string ContainerCreateContainerFleetDescription = "ContainerCreateContainerFleetDescription";
+        public const string ContainerFailStepViewInConsole = "ContainerFailStepViewInConsole";
+
+
+        public const string ContainersFleetUpdatePopupWindowTitle = "ContainersFleetUpdatePopupWindowTitle";
+        public const string ContainersFleetUpdatePopupDescription = "ContainersFleetUpdatePopupDescription";
+        public const string ContainersFleetUpdateDeploymentDetailsTitle = "ContainersFleetUpdateDeploymentDetailsTitle";
+        public const string ContainersFleetUpdateStatusBoxText = "ContainersFleetUpdateStatusBoxText";
+        public const string ContainersFleetUpdateStatusBoxButtonText = "ContainersFleetUpdateStatusBoxButtonText";
+        public const string ContainersFleetUpdatePopupVisitConsoleButtonLabel = "ContainersFleetUpdatePopupVisitConsoleButtonLabel";
+        public const string ContainersFleetUpdatePopupCancelButton = "ContainersFleetUpdatePopupCancelButton";
+        public const string ContainersFleetUpdatePopupUpdateButton = "ContainersFleetUpdatePopupUpdateButton";
+
+        public const string ContainersPageMissingWslDockerStatusBoxText = "ContainersPageMissingWslDockerStatusBoxText";
+        public const string ContainersPageDeploymentNoticeStatusBoxText = "ContainersPageDeploymentNoticeStatusBoxText";
+        public const string ContainersPageRegionUnsupportedStatusBoxTemplate = "ContainersPageRegionUnsupportedStatusBoxTemplate";
     }
 }

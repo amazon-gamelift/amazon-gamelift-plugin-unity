@@ -5,7 +5,7 @@
 ![GitHub downloads all releases](https://img.shields.io/github/downloads/aws/amazon-gamelift-plugin-unity/total)
 ![GitHub downloads latest release (by date)](https://img.shields.io/github/downloads/aws/amazon-gamelift-plugin-unity/latest/total)
 
-Compatible with Unity 2021.3 LTS and 2022.3 LTS.
+See Releases page for compatible Unity versions.
 
 # Overview
 
@@ -45,7 +45,7 @@ Complete the following steps to install and enable the plugin for your multiplay
     1. Under `Scoped Registries`, click on the `+` button and enter the values for the [UnityNuGet](https://github.com/xoofx/UnityNuGet) scoped registry:
         ```
         Name: Unity NuGet
-        Url: https://unitynuget-registry.azurewebsites.net
+        Url: https://unitynuget-registry.openupm.com
         Scope(s): org.nuget
         ```
     1. In your Unity project, open `Window > Package Manager`.
@@ -62,7 +62,9 @@ Complete the following steps to install and enable the plugin for your multiplay
 * Administrator rights on a Microsoft Windows OS
 * A supported Unity version
     * You also need to add the Unity editor folder (e.g. `C:\Program Files\Unity\Hub\Editor\<version>\Editor\ `) to the Windows PATH environment variable.
-* Visual Studio 2019 (can be installed with Unity)
+* AWS CLI 2.x
+    * Ensure the AWS CLI is in the Windows PATH environment. This should be handled by the installation wizard. A restart may be required after installation is complete.
+* Visual Studio 2019 (can be installed with Unity) or Jetbrains Rider 2024
 * .NET Core 6 to build the core plugin source.
 * NodeJS/npm: https://nodejs.org/en/download/ to package the plugin.
 
@@ -119,4 +121,3 @@ logs/amazon-gamelift-plugin-logs[YYYYMMDD].txt`. Note that the log file is creat
 * [AWS Support Center](https://console.aws.amazon.com/support/home)
 * [GitHub issues](https://github.com/aws/amazon-gamelift-plugin-unity/issues)
 * [Contributing guidelines](CONTRIBUTING.md)
-

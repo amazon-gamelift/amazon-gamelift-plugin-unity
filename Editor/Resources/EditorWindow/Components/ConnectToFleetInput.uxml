@@ -2,27 +2,26 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
-    <ui:Style src="../common.uss"/>
-    <ui:VisualElement class="separator separator--vertical separator--large">
-        <gl:StatusBox name="AnywherePageConnectFleetStatusBox"/>
+    <ui:Template src="../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
         <ui:VisualElement name="AnywherePageCreateFleet" class="separator separator--vertical">
             <ui:VisualElement name="AnywherePageCreateFleetName" class="form-row">
-                <ui:Label name="AnywherePageCreateFleetNameLabel" class="form-row__label" text="Fleet Name"/>
+                <ui:Label name="AnywherePageCreateFleetNameLabel" class="form-row__label" text="Fleet name"/>
                 <ui:VisualElement class="form-row__input">
                     <ui:TextField name="AnywherePageCreateFleetNameInput" class="text-input separator__single--tiny separator--vertical" value="GameName-AnywhereFleet"/>
-                    <ui:Label name="AnywherePageCreateFleetNameHint" class="input-hint" text="Fleet Name must have 1–1024 characters. Valid characters are A-Z, a-z, 0-9, _ and - (hyphen)"/>
+                    <ui:Label name="AnywherePageCreateFleetNameHint" class="input-hint" text="%%Fleet name must have $$ characters. Valid characters are...%%"/>
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement class="form-row">
                 <ui:VisualElement class="form-row__input form-row__input--no-label separator separator--horizontal">
-                    <ui:Button name="AnywherePageCreateFleetButton" class="button button--primary" text="Create Anywhere Fleet"/>
+                    <ui:Button name="AnywherePageCreateFleetButton" class="button button--primary" text="Create Anywhere fleet"/>
                     <ui:Button name="AnywherePageCreateFleetCancelButton" class="button" text="Cancel"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="AnywherePageConnectFleet" class="separator separator--vertical">
             <ui:VisualElement name="AnywherePageConnectFleetName" class="form-row">
-                <ui:Label name="AnywherePageConnectFleetNameLabel" class="form-row__label" text="Fleet Name"/>
+                <ui:Label name="AnywherePageConnectFleetNameLabel" class="form-row__label" text="Fleet name"/>
                 <ui:DropdownField name="AnywherePageConnectFleetNameDropdown" class="form-row__input dropdown"/>
             </ui:VisualElement>
             <ui:VisualElement name="AnywherePageConnectFleetID" class="form-row">
@@ -35,9 +34,11 @@
             </ui:VisualElement>
             <ui:VisualElement name="AnywherePageConnectFleetButtons" class="form-row">
                 <ui:VisualElement class="form-row__input form-row__input--no-label separator separator--horizontal">
-                    <ui:Button name="AnywherePageConnectFleetNewButton" class="button" text="Create New Anywhere Fleet"/>
+                    <ui:Button name="AnywherePageModifyFleetButton" class="button" text="Modify Anywhere fleet"/>
+                    <ui:Button name="AnywherePageCreateNewFleetButton" class="button button--primary" text="Create new Anywhere Fleet"/>
+                    <ui:Button name="AnywherePageConnectFleetViewOnConsoleButton" class="button button--default button--full-height" text="View on AWS Console"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-    </ui:VisualElement>
+    </ui:Instance>
 </ui:UXML>

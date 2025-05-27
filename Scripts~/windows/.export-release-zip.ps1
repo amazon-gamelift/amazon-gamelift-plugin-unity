@@ -14,7 +14,7 @@ $SERVER_SDK_PATH="$BUILD_DIR\$SERVER_SDK_FILENAME"
 
 Write-Host "Getting version number from 'package.json'"
 
-$PLUGIN_VERSION=Select-String -LiteralPath package.json -Pattern '"version": ".*",' | % { $_.Matches.Value } | % { $_.substring(12, $_.length-14) }
+$PLUGIN_VERSION=Select-String -LiteralPath "$ROOT_DIR\package.json" -Pattern '"version": ".*",' | % { $_.Matches.Value } | % { $_.substring(12, $_.length-14) }
 
 Write-Host "Identified package version as $PLUGIN_VERSION" -ForegroundColor DarkYellow
 

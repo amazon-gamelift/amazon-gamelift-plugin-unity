@@ -28,22 +28,57 @@
     background-color: var(--color-background-primary);
 }
 
-.tab__button {
+.tab__button__large {
     font-size: var(--font-size-large);
     -unity-text-align: middle-left;
+    -unity-font-style: bold;
     padding: 0 var(--spacing-small) 0 var(--spacing-medium);
     margin: 0 0 var(--spacing-small) 0;
+    padding-right: 50px;
     background-color: rgba(0,0,0,0);
     border-radius: 0;
     border-width: 0;
     height: 24px;
 }
 
-.tab__button:hover {
+.tab__button__large__bold {
+    font-size: var(--font-size-large);
+    -unity-text-align: middle-left;
+    -unity-font-style: bold;
+    padding: 0 var(--spacing-small) 0 var(--spacing-medium);
+    margin: 0 0 var(--spacing-small) 0;
+    padding-right: 50px;
+    background-color: rgba(0,0,0,0);
+    border-radius: 0;
+    border-width: 0;
+    height: 24px;
+}
+
+.tab__button__default {
+    font-size: var(--font-size-default);
+    -unity-text-align: middle-left;
+    padding: 0 var(--spacing-small) 0 var(--spacing-medium);
+    margin: 0 0 var(--spacing-small) 0;
+    padding-right: 50px;
+    background-color: rgba(0,0,0,0);
+    border-radius: 0;
+    border-width: 0;
+    height: 24px;
+}
+
+.tab__button__large__bold:hover {
     background-color: var(--color-button-default-hover);
 }
 
-.tab__button--selected {
+.tab__button__large__bold--selected {
+    background-color: var(--color-button-primary);
+}
+
+.tab__button__default:hover {
+    background-color: var(--color-button-default-hover);
+}
+
+.tab__button__default--selected {
     background-color: var(--color-button-primary);
 }
 

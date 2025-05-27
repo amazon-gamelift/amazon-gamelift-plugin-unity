@@ -24,6 +24,7 @@ namespace AmazonGameLift.Editor
             { CoreErrorCode.InvalidBucketPolicy, "There was a problem with the bucket policy."},
             { CoreErrorCode.InvalidCfnTemplate, "There was a problem with the template."},
             { CoreErrorCode.InvalidChangeSetStatus, "There was a problem with the changeset status."},
+            { CoreErrorCode.InvalidCredentialsFile, "There was a problem with the credentials file." },
             { CoreErrorCode.InvalidIdToken, "There was a problem with the ID token."},
             { CoreErrorCode.InvalidParameters, "There was a problem with the parameters."},
             { CoreErrorCode.InvalidParametersFile, "There was a problem with the parameters file."},
@@ -137,6 +138,7 @@ namespace AmazonGameLift.Editor
             { Strings.LifecycleNone, "No Lifecycle Policy"},
             { Strings.LifecycleSevenDays, "7 days"},
             { Strings.LifecycleThirtyDays, "30 days"},
+            { Strings.LoremIpsum, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." },
             { Strings.StatusDeploymentExePathInvalid, "There was a problem with deployment. The build exe is not in the build folder."},
             { Strings.StatusDeploymentFailure, "There was a problem with deployment. Error: {0}."},
             { Strings.StatusDeploymentStarting, "Preparing to deploy the scenario..."},
@@ -181,16 +183,17 @@ namespace AmazonGameLift.Editor
             { Strings.LabelOpenSdkApiDoc, "Open SDK API Reference"},
             
             { Strings.TabLanding, "Amazon GameLift" },
-            { Strings.TabCredentials, "AWS User Profiles" },
-            { Strings.TabAnywhere, "Host with Anywhere" },
-            { Strings.TabManagedEC2, "Host with Managed EC2" },
+            { Strings.TabContainers, "Managed Containers" },
+            { Strings.TabCredentials, "AWS Account Access" },
+            { Strings.TabAnywhere, "Anywhere" },
+            { Strings.TabManagedEC2, "Managed EC2" },
             { Strings.TabHelp, "Learning Resources" },
 
             { Strings.LandingPageHeader, "Amazon GameLift" },
             { Strings.LandingPageDescription, "Amazon GameLift provides solutions for hosting session-based multiplayer game servers in the cloud. This plugin contains libraries and native UI elements that make it easier to integrate Amazon GameLift into your game and to manage your hosting resources. Use the plugin to access the Amazon GameLift APIs and deploy AWS CloudFormation templates for common deployment scenarios. \nBuilt on AWS global computing infrastructure, Amazon GameLift helps you deliver high-performance, high-reliability, low-cost game servers that scale to meet player demand." },
-            { Strings.LandingPageNoAccountCardText, "I need a new AWS account for this project" },
+            { Strings.LandingPageNoAccountCardText, "I don't have an AWS account" },
             { Strings.LandingPageNoAccountCardButton, "Create an AWS Account" },
-            { Strings.LandingPageAccountCardText, "I have an AWS account for this project" },
+            { Strings.LandingPageAccountCardText, "I have an AWS account" },
             { Strings.LandingPageAccountCardButton, "Create a User Profile" },
             { Strings.LandingPageSampleHeader, "Try our Sample Game" },
             { Strings.LandingPageSampleDescription, "Explore Amazon GameLift with our sample multiplayer game. View integration code, set up hosting with Amazon GameLift Anywhere or Managed EC2 fleets, and experiment with hosting features. Import the sample game into your project, and look for it in the project Assets." },
@@ -198,76 +201,138 @@ namespace AmazonGameLift.Editor
             { Strings.LandingPageInfoStatusBoxText, "You will need to configure an AWS account profile to use Amazon GameLift." },
             { Strings.LandingPageWarningStatusBoxText, "Profile configuration is incomplete, navigate to AWS User Profiles for next steps." },
 
-            { Strings.UserProfilePageTitle, "Manage Your User Profiles"},
-            { Strings.UserProfilePageDescription, "Create a profile to link to an AWS account and store your security credentials. Your profile also specifies the AWS Region you want to work in.\nYou can have multiple profiles, but only one can be active at a time. Check your active profile selection on the main page of the Amazon GameLift window."},
-            { Strings.UserProfilePageAccountCardNoAccountTitle, "I need a new AWS account for this project"},
-            { Strings.UserProfilePageAccountCardNoAccountDescription, "You need an AWS account to work with AWS services. Create a new account, then set up an account user and get security credentials."},
-            { Strings.UserProfilePageAccountCardNoAccountLink, "Learn More"},
-            { Strings.UserProfilePageAccountCardNoAccountButtonLabel, "Create an AWS Account"},
-            { Strings.UserProfilePageAccountCardNewAccountTitle, "I have an AWS account for this project"},
-            { Strings.UserProfilePageAccountCardNewAccountDescription, "Create a user profile and link it to your AWS account. You need security credentials for an account user."},
-            { Strings.UserProfilePageAccountCardHasAccountButton, "Create a New Profile"},
-            { Strings.UserProfilePageAccountNewProfileTitle, "Create a New Profile"},
+            { Strings.LandingPageComputeHeader, "Choose a hosting option"},
+            { Strings.LandingPageComputeDescription,
+                "To get started, choose a hosting solution to work with. Each solution provides a step-by-step" +
+                " workflow to deploy your game server and run game sessions."},
+            { Strings.LandingPageAnywhereTitle, "Anywhere"},
+            { Strings.LandingPageAnywhereDescription,
+                "Create an Anywhere fleet with your local workstation. Prepare your game server for hosting with" +
+                " Amazon GameLift and run it locally. Use a locally running game client to start a new game session" +
+                " and join to play the game."},
+            { Strings.LandingPageAnywhereButton, "Test locally with Anywhere"},
+            { Strings.LandingPageManagedTitle, "Managed EC2"},
+            { Strings.LandingPageManagedDescription,
+                "Build a fleet of EC2 instances for cloud-based hosting managed by Amazon GameLift. Deploy your game" +
+                " server to the fleet, start a game session, and join from a game client on any supported device."},
+            { Strings.LandingPageManagedButton, "Host with Managed EC2"},
+            { Strings.LandingPageContainerTitle, "Managed containers"},
+            { Strings.LandingPageContainerDescription,
+                "Set up a container fleet with your game server for cloud-based hosting. Deploy your containerized" +
+                " game server to EC2 instances managed by Amazon GameLift. Start a game session and join from a" +
+                " game client on any supported device."},
+            { Strings.LandingPageContainerButton, "Host with Managed containers"},
+
+            { Strings.UserProfilePageTitle, "Set up your user profile"},
+            { Strings.UserProfilePageDescription, "An AWS profile identifies a particular user in an AWS account. It secures the user's access to Amazon GameLift resources and related AWS services. You can have multiple profiles for different AWS accounts and users. Profiles are stored on your local device."},
+            { Strings.UserProfilePageAccountCardNoAccountTitle, "I need a new AWS account and/or user"},
+            { Strings.UserProfilePageAccountCardNoAccountDescription, "Set up AWS account and user in the AWS Management Console. Then return here to complete your profile."},
+            { Strings.UserProfilePageAccountCardNoAccountButtonLabel, "Go to AWS Management Console"},
+            { Strings.UserProfilePageAccountCardHasAccountTitle, "I have an AWS account and user"},
+            { Strings.UserProfilePageAccountCardHasAccountDescription, "Create a profile with an AWS account and user."},
+            { Strings.UserProfilePageAccountCardHasAccountButton, "Add new profile"},
+            { Strings.UserProfilePageAccountNewProfileTitle, "Profile details"},
+            { Strings.UserProfilePageAccountNewProfileDescription, "Provide the requested information to create an AWS profile for use with Amazon GameLift."},
             { Strings.UserProfilePageAccountNewProfileName, "Profile name"},
-            { Strings.UserProfilePageAccountNewProfileAccessKeyInput, "AWS access key ID"},
-            { Strings.UserProfilePageAccountNewProfileSecretKeyLabel, "AWS secret key"},
-            { Strings.UserProfilePageAccountNewProfileRegionLabel, "AWS Region"},
-            { Strings.UserProfilePageAccountNewProfileCreateButton, "Create Profile"},
+            { Strings.UserProfilePageAccountNewProfileAccessKeyInput, "Access key ID"},
+            { Strings.UserProfilePageAccountNewProfileSecretKeyLabel, "Secret access key"},
+            { Strings.UserProfilePageAccountNewProfileRegionLabel, "Default AWS Region"},
+            { Strings.UserProfilePageAccountNewProfileCreateButton, "Create new profile"},
             { Strings.UserProfilePageAccountNewProfileCancelButton, "Cancel"},
-            { Strings.UserProfilePageAccountNewProfileHelpLink, "How do I get my AWS credentials?"},
-            { Strings.UserProfilePageBootstrapTitle, "Bootstrap your Profile"},
-            { Strings.UserProfilePageBootstrapDescription, "Bootstrap your profile to create an Amazon S3 bucket, which is used to store build artifacts and other material for deploying your game server for hosting. The S3 bucket is created in your profile's AWS Region. Each profile maintains its own S3 bucket."},
-            { Strings.UserProfilePageBootstrapStartButton, "Bootstrap Profile"},
-            { Strings.UserProfilePageBootstrapAnotherProfileButton, "Add Another Profile"},
-            { Strings.UserProfilePageBootstrapAnotherBucketButton, "Bootstrap to New S3 Bucket"},
-            { Strings.UserProfilePageBootstrapHelpLink, "What is bootstrapping?"},
+            { Strings.UserProfilePageAccountNewProfileHelpLink, "Go to IAM console"},
+            { Strings.UserProfilePageTableTitle, "User profiles"},
+            { Strings.UserProfilePageTableDescription, "These user profiles are configured for use with the plugin on this device. Select an existing profile to use during your current plugin session or create a new profile."},
+            { Strings.UserProfilePageSetProfileButton, "Select profile"},
+            { Strings.UserProfilePageBootstrapButton, "Bootstrap profile"},
+            { Strings.UserProfilePageAwsConfigurationFileLabel, "AWS credentials (local file)"},
+            { Strings.UserProfilePageAwsConfigurationFileTooltip, "Open file to view or update the selected profile's settings"},
             { Strings.UserProfilePageCompletedBootstrapHelpLink, "What is bootstrapping?"},
             { Strings.UserProfilePageBootstrapErrorText, "An error occurred when trying to bootstrap your S3 bucket."},
             
-            { Strings.UserProfilePageBootstrapPopupWindowTitle, "Allow potential charges for Amazon S3"},
-            { Strings.UserProfilePageBootstrapPopupTitle, "Depending on your AWS Free Tier status, you might incur storage costs for your S3 bucket."},
-            { Strings.UserProfilePageBootstrapPopupDescription, "Actual charges will depend on your usage. See Amazon S3 pricing."},
-            { Strings.UserProfilePageBootstrapPopupBucketText, "Bucket name"},
-            { Strings.UserProfilePageBootstrapPopupFreeTierLink, "What is AWS Free Tier?"},
+            { Strings.UserProfilePageBootstrapPopupWindowTitle, "Bootstrap {{PROFILE_NAME}}"},
+            { Strings.UserProfilePageBootstrapPopupNoticeStatusBox, "This action creates AWS resources for your account. You might incur charges for resources and " +
+                $"data storage unless your AWS account is eligible for <a href=\"{Urls.AwsFreeTier}\"><color=#D2D2D2><u>AWS Free Tier</u></color></a> benefits."},
+            { Strings.UserProfilePageBootstrapPopupDescription, "Bootstrap your profile to prepare AWS resources for use with Amazon GameLift." +
+                " This includes an Amazon S3 bucket to store project configurations, build artifacts, and other dependencies.\nProfiles do not share S3 buckets."},
+            { Strings.UserProfilePageBootstrapPopupBucketText, "S3 bucket name"},
             { Strings.UserProfilePageBootstrapPopupCancelButton, "Cancel"},
-            { Strings.UserProfilePageBootstrapPopupContinueButton, "Continue"},
+            { Strings.UserProfilePageBootstrapPopupContinueButton, "Bootstrap profile"},
             
             { Strings.UserProfilePageStatusBoxSuccessText, "Profile configuration and bootstrapping complete."},
             { Strings.UserProfilePageStatusBoxWarningText, "Profile configuration is incomplete, as bootstrapping is not completed."},
             { Strings.UserProfilePageStatusBoxErrorText, "An error occurred when trying to create your profile."},
             
-            { Strings.AnywherePageTitle, "Host with Amazon GameLift Anywhere"},
+            { Strings.HelpfulResourceSetupAccountTitle, "Set up an AWS account" },
+            { Strings.HelpfulResourceSetupAccountDescription, "Learn more about setting up an AWS account and user for use with Amazon GameLift." },
+            { Strings.HelpfulResourcePluginGuideTitle, "Plugin guide: Create a user profile" },
+            { Strings.HelpfulResourcePluginGuideDescription, "Get help with setting up a user profile for use with the Amazon GameLift plugin." },
+            { Strings.HelpfulResourceGettingStartedTitle, "Getting started with an AWS account" },
+            { Strings.HelpfulResourceOrganizingEnvTitle, "Organizing Your AWS Environment Using Multiple Accounts" },
+            { Strings.HelpfulResourceGetAccessKeysTitle, "Get your access keys" },
+            { Strings.HelpfulResourceGetAccessKeysDescription, "Learn how to generate a new set of security credentials for your AWS user." },
+            { Strings.HelpfulResourceServiceLocationsTitle, "Amazon GameLift service locations" },
+            { Strings.HelpfulResourceServiceLocationsDescription, "Choose an AWS Region for your GameLift fleet type" },
+            { Strings.HelpfulResourceManageAccessKeysTitle, "Manage access keys for IAM users" },
+            { Strings.HelpfulResourceManageAccessKeysDescription, "Learn how to manage and secure your access keys." },
+            { Strings.HelpfulResourceHostingSolutionsTitle, "Amazon GameLift hosting solutions" },
+            { Strings.HelpfulResourceHostingSolutionsDescription, "Learn more about the different ways you can host your game servers. You can use the plugin to create managed EC2 fleets, managed container fleets, and Anywhere fleets." },
+            { Strings.HelpfulResourceHostingFleetTitle, "Setting up a hosting fleet with Amazon GameLift" },
+            { Strings.HelpfulResourceHostingFleetDescription, "Learn about the role of a hosting fleet and how each fleet type is structured." },
+
+            { Strings.AnywherePageTitle, "Host with Anywhere"},
             { Strings.AnywherePageDescription, "Set up an Amazon GameLift Anywhere fleet to host game servers using your own hardware. With an Anywhere fleet, Amazon GameLift manages game sessions and placement (including matchmaking), while you control your own server hosting infrastructure under a single managed solution.\nCreate an Anywhere fleet for your on-premises or other compute resources. During game development, turn your local workstation into an Anywhere fleet to continuously deploy, test, and iterate your game builds."},
-            { Strings.AnywherePageIntegrateTitle, "Integrate Amazon GameLift With Your Game Project"},            
-            { Strings.AnywherePageIntegrateDescription, "Use the provided C# libraries to add Amazon GameLift functionality to your game to enable hosting. Working with the sample game? Integration is already done!"},
+            { Strings.AnywherePageIntegrateTitle, "Set up your game with Amazon GameLift"},
+            { Strings.AnywherePageIntegrateDescription,
+                "Identify the game server build that you want to deploy to an Anywhere fleet. Your client and server" +
+                " components must be integrated and packaged with the Amazon GameLift SDKs. For guidance on" +
+                " integration and packaging, see the Plugin Guide for Unreal Engine."},
             { Strings.AnywherePageIntegrateServerLink, "Integrate game server functionality with the Amazon GameLift server SDK"},
             { Strings.AnywherePageIntegrateClientLink, "Integrate game client functionality with the AWS SDK"},
-            { Strings.AnywherePageCreateFleetNameHint, "Fleet Name must have 1–1024 characters. Valid characters are A-Z, a-z, 0-9, _ and - (hyphen)"},
-            { Strings.AnywherePageCreateFleetButton, "Create New Anywhere Fleet"},
+            { Strings.AnywherePageCreateFleetNameHint, "The fleet name must have 1–1024 characters. Valid characters are A-Z, a-z, 0-9, _ and - (hyphen)"},
+            { Strings.AnywherePageCreateFleetButton, "Create new Anywhere fleet"},
             { Strings.AnywherePageCreateFleetCancelButton, "Cancel"},
-            { Strings.AnywherePageConnectFleetTitle, "Connect to an Anywhere Fleet"},
-            { Strings.AnywherePageCreateFleetNameLabel, "Fleet Name"},
-            { Strings.AnywherePageConnectFleetDefault, "Choose an Anywhere Fleet"},
-            { Strings.AnywherePageConnectFleetNameLabel, "Fleet Name"},
+            { Strings.AnywherePageConnectFleetTitle, "Connect to an Anywhere fleet"},
+            { Strings.AnywherePageConnectFleetDescription,
+                "Choose an existing Anywhere fleet or create a new fleet for your deployment. An Anywhere fleet is a" +
+                " collection of hosting resources that you managed (such as your local workstation). This action" +
+                " might create AWS resources and incur charges to your AWS account unless the account is eligible" +
+                $" for <a href=\"{Urls.AwsFreeTier}\"><color=#D2D2D2><u>AWS Free Tier</u></color></a> benefits."},
+            { Strings.AnywherePageCreateFleetNameLabel, "Fleet name"},
+            { Strings.AnywherePageConnectFleetDefault, "Choose an existing Anywhere fleet"},
+            { Strings.AnywherePageConnectFleetNameLabel, "Fleet name"},
             { Strings.AnywherePageConnectFleetIDLabel, "Fleet ID"},
             { Strings.AnywherePageConnectFleetStatusLabel, "Fleet status"},
             { Strings.AnywherePageConnectFleetStatusError, "Error"},
             { Strings.AnywherePageConnectFleetStatusActive, "Active"},
-            { Strings.AnywherePageConnectFleetNewButton, "Create New Anywhere Fleet"},
-            { Strings.AnywherePageComputeTitle, "Add Your Compute to the Fleet"},
+            { Strings.AnywherePageModifyFleetButton, "Change fleet selection"},
+            { Strings.AnywherePageConnectFleetViewOnConsoleButton, "View in AWS Management Console"},
+            { Strings.AnywherePageComputeTitle, "Register your workstation"},
+            { Strings.AnywherePageComputeDescription,
+                "Register your local workstation as a compute resource in the Anywhere fleet. Amazon GameLift" +
+                " establishes communication with game server processes that are running on the compute. It sends" +
+                " prompts to start game sessions and other actions.\nAfter you've registered your workstation," +
+                " you're ready to launch and play your multi-player game with Amazon GameLift! Start the server and" +
+                " then launch your project's game client to join a game session and start playing."},
             { Strings.AnywherePageComputeNameLabel, "Compute name"},
             { Strings.AnywherePageComputeIPLabel, "IP address"},
+            { Strings.AnywherePageComputeIPDescription,
+                "Defaults to the local IP address. You can use localhost (123.0.0.1) as the IP address. If your" +
+                " machine is accessible via a public IP address, change this value as appropriate."},
             { Strings.AnywherePageComputeStatusLabel, "Status"},
             { Strings.AnywherePageComputeStatusRegistered, "Registered"},
-            { Strings.AnywherePageComputeRegisterButton, "Register Compute"},
-            { Strings.AnywherePageComputeReplaceComputeButton, "Register new Compute"},
+            { Strings.AnywherePageComputeRegisterButton, "Register compute"},
+            { Strings.AnywherePageComputeReplaceComputeButton, "Register new compute"},
             { Strings.AnywherePageComputeCancelReplaceButton, "Cancel"},
-            { Strings.AnywherePageLaunchTitle, "Launch Game"},
-            { Strings.AnywherePageLaunchServerLabel, "Run Server"},
-            { Strings.AnywherePageLaunchServerButton, "Launch Server in Editor"},
-            { Strings.AnywherePageConfigureClientLabel, "Configure Client"},
-            { Strings.AnywherePageConfigureClientButton, "Apply Anywhere Settings"},
-            { Strings.AnywherePageLaunchClientLabel, "Run Client"},
+            { Strings.AnywherePageLaunchTitle, "Launch your game"},
+            { Strings.AnywherePageLaunchDescription,
+                "You're now ready to launch and play your multiplayer game using Amazon GameLift! Start the server" +
+                " to launch a new server process and connect it to the Amazon GameLift service. Then start your game" +
+                " client to request a new game session and join to play the game."},
+            { Strings.AnywherePageLaunchServerLabel, "Start game server"},
+            { Strings.AnywherePageLaunchServerButton, "Launch server in editor"},
+            { Strings.AnywherePageConfigureClientLabel, "Configure client"},
+            { Strings.AnywherePageConfigureClientButton, "Apply Anywhere settings"},
+            { Strings.AnywherePageLaunchClientLabel, "Start game client"},
             { Strings.AnywherePageLaunchClientDescription, "Build and launch your configured client."},
             { Strings.AnywherePageStatusBoxDefaultComputeErrorText, "An error occurred when trying to register a compute."},
             { Strings.AnywherePageStatusBoxDefaultFleetErrorText, "An error occurred when trying to create a fleet."},
@@ -275,29 +340,63 @@ namespace AmazonGameLift.Editor
             
             { Strings.ManagedEC2Title, "Host with Managed EC2"},
             { Strings.ManagedEC2Description, "Managed EC2 fleets use Amazon EC2 instances to host your game servers.\nAmazon GameLift manages the instances and removes the burden of hardware and software management from hosting your games."},
-            { Strings.ManagedEC2IntegrateTitle, "Integrate Amazon GameLift With Your Game Project"},
-            { Strings.ManagedEC2IntegrateDescription, "Use the provided C# libraries to add Amazon GameLift functionality to your game to enable hosting. Working with the sample game? Integration is already done!"},
+            { Strings.ManagedEC2IntegrateTitle, "Set up your game with Amazon GameLift"},
+            { Strings.ManagedEC2IntegrateDescription,
+                "Integrate and package your game components with the Amazon GameLift SDKs. For guidance, see the " +
+                $"<a href=\"{Urls.ManagedEC2IntegrateLink}\"><color=#D2D2D2><u>Plugin Guide for Unity Engine</u></color></a>."},
             { Strings.ManagedEC2IntegrateServerLink, "Integrate game server functionality with the Amazon GameLift server SDK"},
             { Strings.ManagedEC2IntegrateClientLink, "Integrate game client functionality with the AWS SDK"},
-            { Strings.ManagedEC2ScenarioTitle, "Select Deployment Scenario"},
-            { Strings.ManagedEC2ScenarioSingleFleetLabel, "Single-region Fleet"},
-            { Strings.ManagedEC2ScenarioSingleFleetRadio, "Creates a game backend service with a single Amazon GameLift fleet."},
-            { Strings.ManagedEC2ScenarioSingleFleetLink, "Learn more"},
-            { Strings.ManagedEC2ScenarioFlexMatchLabel, "Flex Match"},
-            { Strings.ManagedEC2ScenarioFlexMatchRadio, "Uses FlexMatch, a managed matchmaking service, to match game players together."},
-            { Strings.ManagedEC2ScenarioFlexMatchLink, "Learn more"},
-            { Strings.ManagedEC2ScenarioShowMoreButton, "Show more options"},
-            { Strings.ManagedEC2ParametersTitle, "[GameName] parameters"},
-            { Strings.ManagedEC2ParametersGameNameLabel, "Game Name"},
-            { Strings.ManagedEC2ParametersFleetNameLabel, "Fleet Name"},
-            { Strings.ManagedEC2ParametersBuildNameLabel, "Build Name"},
-            { Strings.ManagedEC2ParametersLaunchParametersLabel, "Launch Parameters"},
-            { Strings.ManagedEC2ParametersOperatingSystemLabel, "Build Operating System"},
-            { Strings.ManagedEC2ParametersGameServerFolderLabel, "Game Server Folder"},
-            { Strings.ManagedEC2ParametersGameServerFileLabel, "Game Server File"},
-            { Strings.ManagedEC2ParametersGameServerFilePath, "Game Server Build File Path"},
+            { Strings.DeploymentScenarioTitle, "Select deployment scenario"},
+            { Strings.DeploymentScenarioDescription,
+                "Choose the type of hosting solution you want to create. Each scenario generates a different" +
+                " collection of AWS resources. The charges to your AWS account, incurred when you deploy a fleet," +
+                " vary depending on the scenario you select, unless the account is eligible for" +
+                $" <a href=\"{Urls.AwsFreeTier}\"><color=#D2D2D2><u>AWS Free Tier</u></color></a> benefits."},
+            { Strings.DeploymentScenarioHelpLinkScenarios, "Learn about deployment scenarios"},
+            { Strings.DeploymentScenarioHelpLinkLocations, "Choose a location for your fleet"},
+            { Strings.DeploymentScenarioHelpLinkPricing, "Amazon GameLift pricing"},
+            { Strings.DeploymentScenarioSingleFleetLabelEc2,
+                "Use this scenario to deploy a minimal managed EC2 fleet for your game server. This scenario also" +
+                " sets up player authentication for your game and creates a backend service for game clients to start" +
+                " and join game sessions."},
+            { Strings.DeploymentScenarioSingleFleetLabelContainers,
+                "Deploy to one On-Demand fleet, with a game backend to put players into games."},
+            { Strings.DeploymentScenarioSingleFleetLink, "Learn more"},
+            { Strings.DeploymentScenarioFlexMatchLabelEc2,
+                "Use this scenario to deploy a fully configured set of managed EC2 fleets with matchmaking. This" +
+                " scenario also sets up a queue to manage game session placement across Spot and On-Demand fleets," +
+                " handles player authentication and creates a backend service for game clients to request matchmaking" +
+                " and join matches."},
+            { Strings.DeploymentScenarioFlexMatchLabelContainers,
+                "Deploy to one multi-location On-Demand fleet, with a game backend, matchmaking, and placement queue" +
+                " to put players into games."},
+            { Strings.DeploymentScenarioFlexMatchLink, "Learn more"},
+            { Strings.DeploymentScenarioShowMoreButton, "Show more options"},
+            { Strings.ManagedEC2ParametersTitle, "Set game parameters"},
+            { Strings.ManagedEC2ParametersDescription,
+                "Tell us about the game server build you want to deploy to this fleet. Use a server build that's" +
+                " been integrated and packaged with the Amazon GameLift SDKs. For guidance on integration and" +
+                $" packaging, see the <a href=\"{Urls.ManagedEC2IntegrateLink}\"><color=#D2D2D2><u>Plugin Guide for Unity Engine</u></color></a>."},
+            { Strings.ManagedEC2ParametersGameNameLabel, "Game name"},
+            { Strings.ManagedEC2ParametersFleetNameLabel, "Fleet name"},
+            { Strings.ManagedEC2ParametersBuildNameLabel, "Server build name"},
+            { Strings.ManagedEC2ParametersLaunchParametersLabel, "Launch parameters"},
+            { Strings.ManagedEC2ParametersOperatingSystemLabel, "Server build OS"},
+            { Strings.ManagedEC2ParametersGameServerFolderLabel, "Server build folder"},
+            { Strings.ManagedEC2ParametersGameServerFolderPath, "Server build folder path"},
+            { Strings.ManagedEC2ParametersGameServerFileLabel, "Server build executable"},
+            { Strings.ManagedEC2ParametersGameServerFilePath, "Server build executable path"},
             { Strings.ManagedEC2DeployTitle, "Deploy [ScenarioType]"},
-            { Strings.ManagedEC2DeployDescription, $"<b>Deploying GameLift can take up to 30-40 minutes</b>\nDeploying and running various AWS resources in the CloudFormation template will incur costs to your account. See <a href=\"{Urls.AboutGameLiftPricing}\"><color=#D2D2D2><u>AWS Pricing Plan</u></color></a> for details on the costs for each resource in the CloudFormation template."},
+            { Strings.ManagedEC2DeployDescription,
+                "When you've selected a deployment scenario and set your game parameters, you're ready to deploy your" +
+                " complete hosting solution with managed EC2 fleets. This action creates AWS resources and incurs" +
+                " charges to your AWS account unless the account is eligible for" +
+                $" <a href=\"{Urls.AwsFreeTier}\"><color=#D2D2D2><u>AWS Free Tier</u></color></a> benefits." +
+                "\n<b>Deployment can take 30 to 40 minutes</b>. When deployment is complete, game servers are running" +
+                " and waiting for players. You can launch game clients from any supported device and use it to join a" +
+                " game session and start playing. Use the Start client button to launch a game client from your local" +
+                " workstation. If you deployed the FlexMatch scenario, you need at least two game clients requesting" +
+                " a match to start a game session."},
             { Strings.ManagedEC2DeployStatusLabel, "Status"},
             { Strings.ManagedEC2DeployStatusNotDeployed, "Not Deployed"},
             { Strings.ManagedEC2DeployStatusDeploying, "Deploying"},
@@ -307,15 +406,15 @@ namespace AmazonGameLift.Editor
             { Strings.ManagedEC2DeployStatusRolledBack, "Rolled back"},
             { Strings.ManagedEC2DeployStatusRollingBack, "Rolling back"},
             { Strings.ManagedEC2DeployStatusLink, "View in CloudFormation Console"},
-            { Strings.ManagedEC2DeployActionsLabel, "AWS Resource Actions"},
+            { Strings.ManagedEC2DeployActionsLabel, "AWS resource actions"},
             { Strings.ManagedEC2CreateStackButton, "Create"},
             { Strings.ManagedEC2DeleteStackButton, "Delete"},
-            { Strings.ManagedEC2LaunchClientTitle, "Launch Game Client"},
-            { Strings.ManagedEC2LaunchClientLabel, "Run Client"},
-            { Strings.ManagedEC2LaunchClientButton, "Launch Client in Editor"},
+            { Strings.ManagedEC2LaunchClientTitle, "Launch your game client"},
+            { Strings.ManagedEC2LaunchClientLabel, "Start game client"},
+            { Strings.ManagedEC2LaunchClientButton, "Launch client in editor"},
             { Strings.ManagedEC2LaunchClientDescription, "Build client executable and launch 2 to 4 client instances to start a game session."},
-            { Strings.ManagedEC2ConfigureClientLabel, "Configure Client"},
-            { Strings.ManagedEC2ConfigureClientButton, "Apply Managed EC2 Settings"},
+            { Strings.ManagedEC2ConfigureClientLabel, "Configure client"},
+            { Strings.ManagedEC2ConfigureClientButton, "Apply Managed EC2 settings"},
             { Strings.ManagedEC2StatusBoxNotBootstrappedWarning, "Profile configuration is incomplete, as bootstrapping is not completed, navigate to AWS User Profiles for next steps."},
             
             { Strings.HelpPageTitle, "Learning Resources" },
@@ -347,6 +446,100 @@ namespace AmazonGameLift.Editor
             
             { Strings.ViewLogsStatusBoxUrlTextButton, "View Logs"},
             { Strings.ViewS3LogsStatusBoxUrlTextButton, "View S3 Console"},
+
+            { Strings.WhatIsContainerImage, "What is a container image?"},
+            { Strings.DockerDocumentation, "Docker Documentation"},
+            { Strings.ContainerQuestionnaireDoesContainerImageExist, "Do you have an existing Container image? If not, we'll create one for you."},
+            { Strings.ContainerQuestionnaireUseExistingRepo, "Do you want to store the new container image in an existing Amazon ECR repository? If not, we'll create a private repository for the image."},
+            { Strings.ContainerQuestionnaireWhereItLive, "Where does your container image live?"},
+            { Strings.ContainerQuestionnaireYes, "Yes"},
+            { Strings.ContainerQuestionnaireNo, "No"},
+
+            { Strings.ContainerGameServerBuildLabel, "Server build folder" },
+            { Strings.ContainerGameServerExecutableLabel, "Server executable"},
+            { Strings.SelectECRRepositoryLabel, "Select ECR repository"},
+            { Strings.ContainerSelectImageLabel, "Select ECR image"},
+            { Strings.DockerImageIDLabel, "Docker image ID"},
+            { Strings.DefaultSettings, "Container deployment settings - <i>optional</i>"},
+            { Strings.DefaultSettingsDescription,
+                "Keep or modify these core settings for your container deployment. You can create a fully customized" +
+                " container definition by using the" +
+                $" <a href=\"{Urls.AwsGameLiftDocs}\"><color=#D2D2D2><u>AWS Management Console</u></color></a>" +
+                $" or <a href=\"{Urls.AwsGameLiftDocs}\"><color=#D2D2D2><u>AWS CLI</u></color></a>."},
+            { Strings.ContainerConnectionPortRangeLabel, "Connection port range"},
+            { Strings.ContainerTotalMemoryLabel, "Game server memory limit"},
+            { Strings.ContainerTotalVcpuLabel, "Game server vCPU limit"},
+            { Strings.ContainerImageTagLabel, "Container image tag"},
+            { Strings.ContainerConnectionPortRangeInvalidMessage, "The port range is not valid" },
+            { Strings.ContainerTotalMemoryInvalidMessage, "The memory limit is not valid" },
+            { Strings.ContainerTotalVcpuInvalidMessage, "The total vCPU limit is not valid" },
+
+            { Strings.ContainerLinksDockerDocumentationLabel, "What is Docker?" },
+            { Strings.ContainerLinksDockerInstallLabel, "Docker Installation Guide" },
+            { Strings.ContainerLinksEcrUserGuideLabel, "Amazon ECR User Guide" },
+
+            { Strings.ContainerConfigureDciStepTitle, "Configuring container image" },
+            { Strings.ContainerConfigureDciStepDescription,
+                "We're creating a Dockerfile and building your Docker container image based on the information you" +
+                " provided. The Dockerfile is a blueprint for how to construct your container image. You can view the" +
+                " default Dockerfile template." },
+            { Strings.ContainerPushImageAutoStepTitle, "Pushing to Amazon ECR" },
+            { Strings.ContainerPushImageAutoStepDescription,
+                "We're pushing your Docker container image to your ECR repository. When you create a container fleet," +
+                " Amazon GameLift takes a snapshot of the stored image and deploys it across all instances in the" +
+                " fleet. You can view and update your ECR repositories in the AWS Console." },
+            { Strings.ContainerPushImageManualStepTitle, "Build image and push to Amazon ECR" },
+            { Strings.ContainerPushImageManualStepDescription,
+                "We couldn't find WSL or Docker on your system. Install these required tools to complete this step on" +
+                " a Windows device. Alternatively, you can manually run the CLI commands on a Linux Docker platform" +
+                " with your container image folder.\nTo manually push a build image to your ECR repository complete" +
+                " the following steps. For alternative registry authentication methods, including using Amazon ECR" +
+                $" credential helper, see <a href=\"{Urls.HowToAuthAPrivateEcrRepo}\"><color=#D2D2D2><u>Registry authentication</u></color></a>."},
+            { Strings.ContainerPushImageManualStepCallToActionLabel,
+                "When you've successfully pushed your container image to the ECR repo, continue. In the next step," +
+                " Amazon GameLift will try to detect the new image."},
+            { Strings.ContainerPushImageManualLoginCommandLabel,
+                "1. Retrieve an authentication token and authenticate your Docker client to your registry. Use the" +
+                " AWS CLI or CloudShell in the AWS Console:"},
+            { Strings.ContainerPushImageManualBuildCommandLabel,
+                "2. Build your Docker image using the following command. For information on building a Docker file" +
+                $" from scratch, see the instructions <a href=\"{Urls.HowToBuildADockerFile}\"><color=#D2D2D2><u>here</u></color></a>." +
+                " You can skip this step if your image has already been built:"},
+            { Strings.ContainerPushImageManualTagCommandLabel, "3. After the build is completed, tag your image so you can push the image to this repository:"},
+            { Strings.ContainerPushImageManualPushCommandLabel, "4. Run the following command to push this image to your newly created AWS repository:"},
+            { Strings.ContainerConfigureCGDStepTitle, "Creating container group definition" },
+            { Strings.ContainerConfigureCGDStepDescription, "We're creating a container group definition for you, based on the information you provided. A container group definition describes how to deploy your" +
+                " container on each compute instance in a container fleet. Amazon GameLift uses container groups to manage sets of containers and distribute computing" +
+                " resources among them." },
+            { Strings.ContainerCreateContainerFleetStepTitle, "Creating a container fleet" },
+            { Strings.ContainerCreateContainerFleetDescription, "We're deploying your container image to fleets of EC2 computing instances, based on the deployment information you provided. Initially, Amazon GameLift deploys one EC2 instance in each fleet, generating events " +
+                "and updating fleet status in real time.\nUse the Amazon GameLift console to monitor status and adjust the fleet's hosting capacity as needed." },
+            { Strings.ContainerFailStepViewInConsole, "View in AWS Management Console"},
+
+            { Strings.ContainersFleetUpdatePopupWindowTitle, "Update Fleet Deployment" },
+            { Strings.ContainersFleetUpdatePopupDescription,
+                "You can modify how your game server build is deployed to existing fleet instances. When you choose" +
+                " 'Update', Amazon GameLift begins redeploying all active fleet instances with your changes. This" +
+                " action might create AWS resources and incur charges to your AWS account unless the account is" +
+                $" eligible for <a href=\"{Urls.AwsFreeTier}\"><color=#D2D2D2><u>AWS Free Tier</u></color></a> benefits." },
+            { Strings.ContainersFleetUpdateDeploymentDetailsTitle, "Deployment Details" },
+            { Strings.ContainersFleetUpdateStatusBoxText, "During fleet update deployments, active game sessions are shut down." },
+            { Strings.ContainersFleetUpdateStatusBoxButtonText, "Learn more" },
+            { Strings.ContainersFleetUpdatePopupVisitConsoleButtonLabel, "Visit AWS Console"},
+            { Strings.ContainersFleetUpdatePopupCancelButton, "Cancel" },
+            { Strings.ContainersFleetUpdatePopupUpdateButton, "Update" },
+
+            { Strings.ContainersPageMissingWslDockerStatusBoxText,
+                "<b>Missing Docker</b>\nThis required tool is not detected on your system. To continue without" +
+                " Docker, you must manually build your image and push it to the repository." },
+            { Strings.ContainersPageDeploymentNoticeStatusBoxText,
+                "Note: Fleet deployment can take 10-20 minutes to complete. Fleet status must be \"Active\" before" +
+                " you can start hosting game sessions. This action creates AWS resources and incurs charges to your" +
+                " AWS account unless the account is eligible for" +
+                $" <a href=\"{Urls.AwsFreeTier}\"><color=#D2D2D2><u>AWS Free Tier</u></color></a> benefits." },
+            { Strings.ContainersPageRegionUnsupportedStatusBoxTemplate,
+                "Region {0} does not support container fleets. Select a different profile or create a new one with a" +
+                " region that supports container fleets." }
         };
 
         public string GetError(string errorCode = null)

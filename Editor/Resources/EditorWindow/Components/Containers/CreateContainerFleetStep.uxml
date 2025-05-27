@@ -1,0 +1,26 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Template src="../../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
+        <ui:VisualElement class="form-row">
+            <ui:Label name="CGDDeployStatusLabel" class="form-row__label--small" text="Fleet status"/>
+            <ui:VisualElement class="separator separator--horizontal separator--centered">
+                <gl:StatusIndicator/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="ContainerFleetIDLabel" class="form-row__label--small" text="Fleet ID"/>
+            <ui:Label name="ContainerFleetIDValue" class="form-row__text-display"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="ContainerFleetTypeLabel" class="form-row__label--small" text="Fleet type"/>
+            <ui:Label name="ContainerFleetTypeValue" class="form-row__text-display"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="ContainerFleetInstanceTypeLabel" class="form-row__label--small" text="Instance type"/>
+            <ui:Label name="ContainerFleetInstanceTypeValue" class="form-row__text-display"/>
+        </ui:VisualElement>
+    </ui:Instance>
+</ui:UXML>

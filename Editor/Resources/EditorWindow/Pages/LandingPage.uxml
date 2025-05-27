@@ -11,7 +11,7 @@
         </ui:VisualElement>
         <ui:VisualElement class="divider"/>
         <gl:StatusBox name="LandingPageStatusBox"/>
-        <ui:VisualElement class="separator separator--large separator--horizontal">
+        <ui:VisualElement name="LandingPageNoAccount" class="separator separator--large separator--horizontal">
             <ui:VisualElement class="card">
                 <ui:VisualElement class="card__container">
                     <ui:Image name="LandingPageNoAccountImage" class="card__icon icon--large"/>
@@ -30,15 +30,54 @@
                 <ui:Button name="LandingPageAccountCardButton" class="button button--primary button--large button--full-width" text="Add a new Profile"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement>
-            <ui:Label name="LandingPageSampleHeader" class="page__subtitle" text="Try our Sample Game"/>
-            <ui:VisualElement class="page__content separator separator--large separator--horizontal">
-                <ui:Image name="LandingPageSampleImage" class="sample__image"/>
-                <ui:VisualElement class="separator separator--vertical">
-                    <ui:Label name="LandingPageSampleDescription" text="Test out our sample multiplayer game with GameLift Anywhere."/>
-                    <ui:Button name="LandingPageSampleButton" class="button sample__button button--small" text="Import"/>
+        <ui:VisualElement name="LandingPageAccount" class="separator separator--vertical">
+            <ui:Label name="LandingPageComputeHeader" class="card__title" text="Choose a hosting option"/>
+            <ui:Label name="LandingPageComputeDescription" text="To get started, choose a hosting solution to work with. Each solution provides a step-by-step workflow to deploy your game server and run game sessions."/>
+            <ui:VisualElement class="separator separator--large separator--horizontal">
+                <ui:VisualElement class="card card--hosting separator separator--vertical">
+                    <ui:VisualElement class="card__container__vert">
+                        <ui:VisualElement class="separator separator--vertical separator--medium">
+                            <ui:Image name="AnywhereImage" class="card__icon"/>
+                            <ui:VisualElement>
+                                <ui:Label name="LandingPageAnywhereTitle" class="card__title bold" text="Anywhere"/>
+                                <ui:Label name="LandingPageAnywhereDescription" class="card__text__small" text="Create an Anywhere fleet with your local workstation. Install and run your game server and game client locally, start game sessions through GameLift, and join to play the game."/>
+                            </ui:VisualElement> 
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Button name="LandingPageAnywhereButton" class="button button--primary button--large button--full-width" text="Test locally with Anywhere"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="card card--hosting separator separator--vertical">
+                    <ui:VisualElement class="card__container__vert">
+                        <ui:VisualElement class="separator separator--vertical separator--medium">
+                            <ui:Image name="ManagedImage" class="card__icon"/>
+                            <ui:VisualElement>
+                                <ui:Label name="LandingPageManagedTitle" class="card__title bold" text="Managed EC2"/>
+                                <ui:Label name="LandingPageManagedDescription" class="card__text__small" text="Build a fleet of EC2 instances for cloud-based hosting managed by Amazon GameLift. Deploy your game server, start hosting game sessions, and join from game clients on any supported device."/>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                     <ui:Button name="LandingPageManagedButton" class="button button--default button--large button--full-width" text="Host with Managed EC2"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="LandingPageContainer" class="card card--hosting separator separator--vertical">
+                    <ui:VisualElement class="card__container__vert">
+                        <ui:VisualElement class="separator separator--vertical separator--medium">
+                            <ui:Image name="ContainerImage" class="card__icon"/>
+                            <ui:VisualElement>
+                                <ui:Label name="LandingPageContainerTitle" class="card__title bold" text="Managed containers"/>
+                                <ui:Label name="LandingPageContainerDescription" class="card__text__small" text="Configure a container fleet with your game server for cloud-based hosting. Deploy to Amazon GameLift-managed EC2 instances, start hosting game sessions, and join from game clients on any supported device."/>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Button name="LandingPageContainerButton" class="button button--default button--large button--full-width"/>
                 </ui:VisualElement>
             </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="ProfileTableDivider" class="divider"/>
+        <gl:ProfileTable name="ProfileTable"/>
+        <ui:Button name="ManageCredentialsButton" class="button button--default button--small button--part-width" text="Manage Credentials"/>
+        <ui:VisualElement class="divider"/>
+        <ui:VisualElement name="LandingPageAccount" class="separator separator--vertical">
+            <ui:Foldout name="HelpfulResourcesFoldout" class="foldout card__title" text="Helpful Resources"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

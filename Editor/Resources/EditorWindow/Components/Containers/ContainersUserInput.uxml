@@ -1,0 +1,126 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" class="separator separator--vertical">
+    <Style src="../../common.uss"/>
+
+    <!-- Server build location input -->
+    <ui:VisualElement name="ContainerServerBuildInputRow" class="form-row">
+        <ui:Label name="ContainerGameServerBuildLabel" class="form-row__label" text="Game Server Directory"/>
+        <ui:VisualElement class="form-row__input separator separator--vertical">
+            <ui:VisualElement class="separator separator--horizontal">
+                <ui:TextField name="ContainerGameServerBuildInput" class="form-row__input text-input" value="..."/>
+                <ui:Button name="ContainerGameServerBuildButton" class="button button--icon button--full-height">
+                    <ui:Image name="FolderIcon" class="icon--fill" />
+                </ui:Button>
+            </ui:VisualElement>
+            <ui:Label name="ContainerGameServerBuildInputInvalidMessage" class="error-message-text" text="The directory path is not valid"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- Server Executable input -->
+    <ui:VisualElement name="ContainerServerExecutableInputRow" class="form-row">
+        <ui:Label name="ContainerGameServerExecutableLabel" class="form-row__label" text="Game Server Executable"/>
+        <ui:VisualElement class="form-row__input separator separator--vertical">
+            <ui:VisualElement class="separator separator--horizontal">
+                <ui:TextField name="ContainerGameServerExecutableInput" class="form-row__input text-input" value="..."/>
+                <ui:Button name="ContainerGameServerExecutableButton" class="button button--icon button--full-height">
+                    <ui:Image name="FolderIcon" class="icon--fill" />
+                </ui:Button>
+            </ui:VisualElement>
+            <ui:Label name="ContainerGameServerExecutableInputInvalidMessage" class="error-message-text form-row__text-display" text="The executable path is not valid"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- Select ECR repository dropdown -->
+    <ui:VisualElement name="SelectECRRepositoryDropdownRow" class="form-row">
+        <ui:Label name="SelectECRRepositoryLabel" class="form-row__label" text="Select ECR Repository"/>
+        <ui:VisualElement class="form-row__input separator separator--vertical">
+            <ui:DropdownField name="SelectECRRepositoryDropdown" class="form-row__input dropdown"/>
+            <ui:Label name="SelectECRRepositoryDropdownInvalidMessage" class="error-message-text" text="Please select a repository"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- Select ECR image dropdown -->
+    <ui:VisualElement name="ContainerECRImageDropdownRow" class="form-row">
+        <ui:Label name="ContainerSelectImageLabel" class="form-row__label" text="Select Image"/>
+        <ui:VisualElement class="form-row__input separator separator--vertical">
+            <ui:DropdownField name="SelectECRImageDropdown" class="form-row__input dropdown"/>
+            <ui:Label name="SelectECRImageDropdownInvalidMessage" class="error-message-text" text="Please select an image"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- Docker image id input -->
+    <ui:VisualElement name="DockerImageIDInputRow" class="form-row">
+        <ui:Label name="DockerImageIDLabel" class="form-row__label" text="Image ID"/>
+        <ui:VisualElement class="form-row__input separator separator--vertical">
+            <ui:TextField name="DockerImageIDInput" class="form-row__input text-input"/>
+            <ui:Label name="DockerImageIDInvalidMessage" class="error-message-text" text="The docker image ID is not valid"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- Deployment senario selection -->
+    <ui:VisualElement name="ContainersDeploymentScenarioContainer" />
+
+    <!-- Default settings (optional fields) -->
+    <ui:Foldout name="DefaultSettingsFoldout" class="separator separator--vertical" text="Container deployment settings - optional">
+
+        <ui:Label name="DefaultSettingsDescription" text="%%Keep or modify these core settings for your container deployment...%%"/>
+        
+        <!-- Game name input -->
+        <ui:VisualElement class="form-row separator--vertical">
+            <ui:Label name="ContainerGameNameLabel" class="form-row__label--small" text="Game name"/>
+            <ui:VisualElement class="form-row__input separator separator--vertical">
+                <ui:TextField name="ContainerGameNameInput" class="form-row__input text-input"/>
+                <ui:Label name="ContainerGameNameInvalidMessage" class="error-message-text" text="The game name is not valid"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        
+        <!-- Connection port range input -->
+        <ui:VisualElement class="form-row separator--vertical">
+            <ui:Label name="ContainerConnectionPortRangeLabel" class="form-row__label--small" text="Connection port range"/>
+            <ui:VisualElement class="form-row__input separator separator--vertical">
+                <ui:TextField name="ContainerPortRangeInput" class="form-row__input text-input"/>
+                <ui:Label name="ContainerConnectionPortRangeInvalidMessage" class="error-message-text" text="The port range is not valid"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        
+
+        <!-- Memory limit input -->
+        <ui:VisualElement class="form-row">
+            <ui:Label name="ContainerTotalMemoryLabel" class="form-row__label--small" text="Game server memory limit"/>
+            <ui:VisualElement class="separator separator--vertical">
+                <ui:VisualElement class="separator separator--horizontal">
+                    <ui:TextField name="ContainerTotalMemoryInput" class="form-row-short__input text-input "/>
+                    <ui:Label name="ContainerTotalMemoryUnitMiBLabel" class="form-row__label--small" text=" MiB"/>
+                </ui:VisualElement>
+                <ui:Label name="ContainerTotalMemoryInvalidMessage" class="error-message-text" text="The memory limit is not valid"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+
+        <!-- vCPU limit input -->
+        <ui:VisualElement class="form-row">
+            <ui:Label name="ContainerTotalVcpuLabel" class="form-row__label--small" text="Game server vCPU limit"/>
+            <ui:VisualElement class="separator separator--vertical">
+                <ui:VisualElement class="separator separator--horizontal">
+                    <ui:TextField name="ContainerTotalVcpuInput" class="form-row-short__input text-input"/>
+                    <ui:Label name="ContainerTotalVcpuUnitLabel" class="form-row__label--small" text=" vCPUs"/>
+                </ui:VisualElement>
+                <ui:Label name="ContainerTotalVcpuInvalidMessage" class="error-message-text" text="The total vCPU limit is not valid"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+
+
+        <!-- Image tag input -->
+        <ui:VisualElement name="ImageTagInputInputRow" class="form-row">
+            <ui:Label name="ContainerImageTagLabel" class="form-row__label--small" text="Image tag"/>
+            <ui:VisualElement class="form-row__input separator separator--vertical">
+                <ui:TextField name="ContainerImageTagInput" class="form-row__input text-input"/>
+                <ui:Label name="ContainerImageTagInvalidMessage" class="error-message-text" text="The container image tag is not valid"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:Foldout>
+
+</ui:UXML>

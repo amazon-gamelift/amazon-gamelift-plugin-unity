@@ -4,16 +4,17 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="./GameLiftPlugin.uss"/>
     <ui:VisualElement name="Main" class="main">
-        <ui:VisualElement class="main__menu">
-            <ui:Button text="Amazon GameLift" name="Landing" class="tab__button"/>
-            <ui:VisualElement class="Divider"/>
-            <ui:Button text="AWS Account Credentials" name="Credentials" class="tab__button"/>
-            <ui:VisualElement class="Divider"/>
-            <ui:Button text="GameLift Anywhere" name="Anywhere" class="tab__button"/>
-            <ui:VisualElement class="Divider"/>
-            <ui:Button text="Managed EC2" name="ManagedEC2" class="tab__button"/>
-            <ui:VisualElement class="Divider"/>
-            <ui:Button text="Help &amp; Documentation" name="Help" class="tab__button"/>
+        <ui:VisualElement class="separator separator--menu">
+            <ui:Button text="Amazon GameLift" name="Landing" class="tab__button__large__bold"/>
+            <ui:VisualElement class="divider"/>
+            <ui:Button text="AWS Access Credentials" name="Credentials" class="tab__button__default"/>
+            <ui:VisualElement class="divider__padded"/>
+            <ui:Label class="tab__button__large" text="Hosting Solutions"/>
+            <ui:Button text="Anywhere" name="Anywhere" class="tab__button__default"/>
+            <ui:Button text="Managed EC2" name="ManagedEC2" class="tab__button__default"/>
+            <ui:Button text="Managed Containers" name="Containers" class="tab__button__default"/>
+            <ui:VisualElement class="divider__padded"/>
+            <ui:Button text="Help &amp; Documentation" name="Help" class="tab__button__default"/>
         </ui:VisualElement>
         <ui:ScrollView name="Content" class="main__content"/>
     </ui:VisualElement>

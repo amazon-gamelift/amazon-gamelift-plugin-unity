@@ -23,7 +23,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         public void CreateRequest_WhenSenarioFolderPathIsNull_ThrowsArgumentNullException()
         {
             var coreApiMock = new Mock<CoreApi>();
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             Assert.Throws<ArgumentNullException>(() => underTest.CreateRequest(null, TestGameName, true));
         }
@@ -34,7 +34,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             string testPath = Path.GetInvalidPathChars().First().ToString();
 
             var coreApiMock = new Mock<CoreApi>();
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             Assert.Throws<ArgumentException>(() => underTest.CreateRequest(testPath, TestGameName, true));
         }
@@ -43,7 +43,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         public void CreateRequest_WhenGameNameIsNull_ThrowsArgumentNullException()
         {
             var coreApiMock = new Mock<CoreApi>();
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             Assert.Throws<ArgumentNullException>(() => underTest.CreateRequest(TestScenarioPath, null, true));
         }
@@ -54,7 +54,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             var coreApiMock = new Mock<CoreApi>();
             coreApiMock.SetUpCoreApiWithProfile(success: false);
 
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             (DeploymentRequest _, bool success, Response failedResponse) = underTest
                 .CreateRequest(TestScenarioPath, TestGameName, true);
@@ -71,7 +71,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             coreApiMock.SetUpCoreApiWithProfile(success: true);
             coreApiMock.SetUpCoreApiWithRegion(success: false, valid: false);
 
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             (DeploymentRequest _, bool success, Response failedResponse) = underTest
                 .CreateRequest(TestScenarioPath, TestGameName, true);
@@ -89,7 +89,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             coreApiMock.SetUpCoreApiWithRegion(success: true, valid: true);
             coreApiMock.SetUpCoreApiWithBucket(success: false);
 
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             (DeploymentRequest _, bool success, Response failedResponse) = underTest
                 .CreateRequest(TestScenarioPath, TestGameName, true);
@@ -107,7 +107,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             coreApiMock.SetUpCoreApiWithRegion(success: true, valid: true);
             coreApiMock.SetUpCoreApiWithBucket(success: true);
 
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             (DeploymentRequest request, bool success, Response failedResponse) = underTest
                 .CreateRequest(TestScenarioPath, TestGameName, true);
@@ -127,7 +127,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             coreApiMock.SetUpCoreApiWithBucket(success: true);
             coreApiMock.SetUpGetStackNameAsGameName(TestGameName);
 
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             (DeploymentRequest request, bool _, Response _) = underTest
                 .CreateRequest(TestScenarioPath, TestGameName, true);
@@ -152,7 +152,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         public void WithServerBuild_WhenRequestIsNull_ThrowsArgumentNullException()
         {
             var coreApiMock = new Mock<CoreApi>();
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             Assert.Throws<ArgumentNullException>(() => underTest.WithServerBuild(null, TestBuildPath));
         }
@@ -161,7 +161,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         public void WithServerBuild_WhenBuildFolderPathIsNull_ThrowsArgumentNullException()
         {
             var coreApiMock = new Mock<CoreApi>();
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             Assert.Throws<ArgumentNullException>(() => underTest.WithServerBuild(new DeploymentRequest(), null));
         }
@@ -173,7 +173,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             var coreApiMock = new Mock<CoreApi>();
             coreApiMock.SetUpGetBuildS3Key(testKey);
 
-            var underTest = new DeploymentRequestFactory(coreApiMock.Object);
+            var underTest = new DeploymentRequestFactory(coreApiMock.Object, false);
 
             DeploymentRequest result = underTest.WithServerBuild(new DeploymentRequest(), TestBuildPath);
 

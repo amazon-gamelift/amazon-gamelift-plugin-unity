@@ -1,0 +1,15 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" class="card__container card__container__resource">
+    <ui:Style src="./HelpfulResourceCard.uss"/>
+    <ui:VisualElement class="card">
+        <ui:VisualElement class="resource">
+            <ui:Label name="HelpfulResourceTag">
+                <ui:Label name="HelpfulResourceTagText"/>
+            </ui:Label>
+        </ui:VisualElement>
+        <ui:Label name="HelpfulResourceTitle" class="card__title"/>
+        <ui:Label name="HelpfulResourceDescription"/>
+    </ui:VisualElement>
+</ui:UXML>

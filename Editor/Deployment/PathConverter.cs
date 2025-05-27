@@ -15,6 +15,22 @@ namespace AmazonGameLift.Editor
         public PathConverter(CoreApi coreApi) =>
             _coreApi = coreApi ?? throw new ArgumentNullException(nameof(coreApi));
 
+        /// <summary>Returns the absolute containers folder path, if the plugin is located under 'Assets' or 'Packages'.</summary>=
+        public virtual string GetContainersAbsolutePath()
+        {
+            string containersInternalPath = $"{Paths.PackageName}/{Paths.ContainersRootInPackage}/";
+            string containersAssetPath = $"Assets/{containersInternalPath}";
+            string containersPath = Path.GetFullPath(containersAssetPath);
+
+            if (!_coreApi.FileExists(containersPath))
+            {
+                string containersPackagePath = $"Packages/{containersInternalPath}";
+                containersPath = Path.GetFullPath(containersPackagePath);
+            }
+
+            return Path.GetDirectoryName(containersPath);
+        }
+
         /// <summary>Returns the absolute scenario folder path, if the plugin is located under 'Assets' or 'Packages'.</summary>
         /// <exception cref="ArgumentException">If <paramref name="scenarioFolderName"/> is null or empty.</exception>
         public virtual string GetScenarioAbsolutePath(string scenarioFolderName)

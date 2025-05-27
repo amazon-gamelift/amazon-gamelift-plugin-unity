@@ -1,0 +1,46 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!-- DeploymentStep Template. Recommened to use with DeploymentStepTemplate.Builder -->
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Style src="../ProgressBar.uss"/>
+    <ui:VisualElement class="separator separator--horizontal separator--small">
+        <!-- Progress bar -->
+        <gl:VerticalProgressBar/>
+        
+        <ui:VisualElement class="progress-step separator separator--vertical separator--small">
+            <ui:Label name="StepTitle" class="child__title" text="Template title"/>
+            <ui:Label name="StepDescription"  class="child__description" text="Template description."/>
+                
+            <ui:VisualElement class="separator separator--vertical separator--medium">
+                <ui:VisualElement name="LinkCollection" class="separator separator--horizontal separator--small">
+                    <!-- Example content: This is removed by DeploymentStepTemplate.Builder -->
+                    <ui:VisualElement name="LinkTemplate" class="external-link">
+                        <ui:Label name="LinkLabel" class="child__link" text="Template link label"/>
+                        <ui:Image name="ExternalLinkIcon" class="icon--tiny"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="divider--vertical"/>
+                </ui:VisualElement>
+
+                <gl:StatusBox name="StatusBox"/>
+                
+                <!-- Main content for the step -->
+                <ui:VisualElement name="StepContent" class="step-content" content-container="true"/>
+                
+                <!-- Log snippet -->
+                <ui:Label name="LogSnippet" class="hidden child__description" text="[TIMESTAMP] in progress message"/>
+
+                <ui:VisualElement name="ButtonCollection" class="form-row__input form-row__input--inline separator separator--horizontal">
+                    <ui:Button name="ProceedButton" class="button button--primary" text="Proceed anyway"/>
+                    <ui:Button name="ViewLogButton" class="button" text="View Log"/>
+                    <ui:Button name="TryAgainButton" class="button">
+                        <ui:Image name="Reset" class="icon--extrasmall separator__single--tiny separator--horizontal" />
+                        <ui:Label name="TryAgainLabel" text="Try again"/>
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="spacer"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

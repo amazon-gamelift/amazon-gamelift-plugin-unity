@@ -5,25 +5,13 @@
     <Style src="../common.uss"/>
     <ui:GroupBox class="form-row__group-box separator separator--vertical">
         <ui:VisualElement class="form-row">
-            <ui:Label name="ManagedEC2ScenarioSingleFleetLabel" class="form-row__label" text="Single-Region Fleet"/>
+            <ui:Label name="DeploymentScenarioLabel" class="form-row__label" text="Deployment scenario"/>
             <ui:VisualElement class="form-row__input">
-                <ui:RadioButton name="ManagedEC2ScenarioSingleFleetRadio" class="form-row__radio-button" text="Creates a game backend service with a single Amazon GameLift fleet."/>
-                <ui:VisualElement name="ManagedEC2ScenarioSingleFleetLinkParent" class="external-link form-row__radio-button-link">
-                    <ui:Label name="ManagedEC2ScenarioSingleFleetLink" class="form-row__text-display foldout__link" text="Learn More"/>
-                    <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
-                </ui:VisualElement>
+                <ui:RadioButton name="DeploymentScenarioSingleFleetRadio" class="form-row__radio-button" text="Single location"/>
+                <ui:Label name="DeploymentScenarioSingleFleetLabel" class="form-row__text-display foldout__link" text="%%Deploy to one On-Demand fleet, with a game backend to put players into games.%%"/>
+                <ui:RadioButton name="DeploymentScenarioFlexMatchRadio" class="form-row__radio-button" text="Multi-location with FlexMatch"/>
+                <ui:Label name="DeploymentScenarioFlexMatchLabel" class="form-row__text-display foldout__link" text="%%Deploy to Spot fleets, with a game backend, matchmaking, and placement queue to put players into games.%%"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="ManagedEC2ScenarioFlexMatch" class="form-row">
-            <ui:Label name="ManagedEC2ScenarioFlexMatchLabel" class="form-row__label" text="Flex Match"/>
-            <ui:VisualElement class="form-row__input">
-                <ui:RadioButton name="ManagedEC2ScenarioFlexMatchRadio" class="form-row__radio-button" text="Uses FlexMatch, a managed matchmaking service, to match game players together."/>
-                <ui:VisualElement name="ManagedEC2ScenarioFlexMatchLinkParent" class="external-link form-row__radio-button-link">
-                    <ui:Label name="ManagedEC2ScenarioFlexMatchLink" class="form-row__text-display foldout__link" text="Learn More"/>
-                    <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
-                </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:Button name="ManagedEC2ScenarioShowMoreButton" class="form-row__input form-row__input--no-label button" text="Show more Options"/>
     </ui:GroupBox>
 </ui:UXML>

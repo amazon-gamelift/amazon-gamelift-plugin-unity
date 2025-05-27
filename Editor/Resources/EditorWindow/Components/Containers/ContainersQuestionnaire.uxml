@@ -1,0 +1,33 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="../../common.uss"/>
+
+    <ui:VisualElement class="separator separator--vertical separator--large">
+        <ui:VisualElement name="DoesContainerImageExistRadioGroup" class="separator separator--vertical">
+            <ui:Label name="ContainerQuestionnaireDoesContainerImageExist" class="separator separator--vertical" text="Do you have an existing Container image?"/>
+            <ui:GroupBox  class="form-row__group-box separator separator--horizontal separator--large">
+                <ui:RadioButton name="ContainerImageExist" class="form-row__radio-button" text="Yes"/>
+                <ui:RadioButton name="ContainerImageNotExist" class="form-row__radio-button" text="No"/>
+            </ui:GroupBox>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="UseExistingEcrQuestionRadioGroup" class="separator separator--vertical">
+            <ui:Label name="ContainerQuestionnaireUseExistingRepo" class="separator separator--vertical" text="Would you like to use an existing Amazon ECR repository for the new image?"/>
+            <ui:GroupBox  class="form-row__group-box separator separator--horizontal separator--large">
+                <ui:RadioButton name="UseExistingEcrRepo" class="form-row__radio-button" text="Yes"/>
+                <ui:RadioButton name="NotUseExistingEcrRepo" class="form-row__radio-button separator" text="No"/>
+            </ui:GroupBox>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="DockerOrEcrQuestionRadioGroup" class="separator separator--vertical">
+            <ui:Label name="ContainerQuestionnaireWhereItLive" class="form-row__group-box separator separator--vertical" text="Where does your Container image live?"/>
+            <ui:GroupBox  class="form-row__group-box separator separator--horizontal separator--large">
+                <ui:RadioButton name="ImageInDocker" class="form-row__radio-button" text="Local docker image"/>
+                <ui:RadioButton name="ImageInEcr" class="form-row__radio-button" text="Amazon ECR private repo"/>
+            </ui:GroupBox>
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+</ui:UXML>

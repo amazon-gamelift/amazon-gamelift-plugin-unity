@@ -1,0 +1,22 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Template src="../../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
+    <ui:VisualElement class="separator separator--vertical">
+        <ui:VisualElement class="form-row">
+            <ui:Label name="BuildDirectoryLabel" class="form-row__label--small" text="Server build folder"/>
+            <ui:Label name="BuildDirectoryValue" class="form-row__text-display" text="C:\Users\...\Builds\LinuxServerBuild"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="BuildExecutableLabel" class="form-row__label--small" text="Server executable"/>
+            <ui:Label name="BuildExecutableValue" class="form-row__text-display" text=".\Server.x86_64"/>
+        </ui:VisualElement>
+        <ui:Button name="ViewDockerfileButton" class="form-row button button--default">
+            <ui:Label name="ViewDockerfileButtonLabel" text="View Dockerfile template"/>
+            <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
+         </ui:Button>
+    </ui:VisualElement>
+    </ui:Instance>
+</ui:UXML>

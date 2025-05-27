@@ -1,0 +1,43 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Template src="../../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
+        <ui:VisualElement name="ParametersContainerInProgress" class="separator separator--vertical">
+            <ui:VisualElement name="ManagedEC2ParametersInputContainer" />
+            <ui:Button name="SetParametersButton" class="button button--primary" text="Set parameters for deployment"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ParametersContainerComplete" class="separator separator--vertical">
+            <ui:VisualElement class="form-row">
+                <ui:Label name="GameNameLabel" class="form-row__label" text="Game name"/>
+                <ui:Label name="GameNameDisplay" class="form-row__text-display" text="Game Name"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="form-row">
+                <ui:Label name="FleetNameLabel" class="form-row__label" text="Fleet name"/>
+                <ui:Label name="FleetNameDisplay" class="form-row__text-display" text="Fleet Name"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="form-row">
+                <ui:Label name="BuildNameLabel" class="form-row__label" text="Server build name"/>
+                <ui:Label name="BuildNameDisplay" class="form-row__text-display" text="Build Name"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="form-row">
+                <ui:Label name="LaunchParametersLabel" class="form-row__label" text="Launch parameters"/>
+                <ui:Label name="LaunchParametersDisplay" class="form-row__text-display" text="Launch Parameters"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="form-row">
+                <ui:Label name="BuildOSLabel" class="form-row__label" text="Server build OS"/>
+                <ui:Label name="BuildOSDisplay" class="form-row__text-display" text="Build Operating System"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="form-row">
+                <ui:Label name="GameServerFolderLabel" class="form-row__label" text="Server build folder"/>
+                <ui:Label name="GameServerFolderDisplay" class="form-row__text-display" text="Game Server Folder"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="form-row">
+                <ui:Label name="GameServerFileLabel" class="form-row__label" text="Server build executable"/>
+                <ui:Label name="GameServerFileDisplay" class="form-row__text-display" text="Game Server File"/>
+            </ui:VisualElement>
+            <ui:Button name="ModifyParametersButton" class="button" text="Modify parameters"/>
+        </ui:VisualElement>
+    </ui:Instance>
+</ui:UXML>

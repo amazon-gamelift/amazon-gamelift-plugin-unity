@@ -1,0 +1,23 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <Style src="../common.uss"/>
+    <ui:VisualElement name="HelpfulResources" class="scroll-content separator separator--vertical">
+        <ui:VisualElement name="HelpfulResourcesRow" class="separator separator--horizontal">
+            <gl:HelpfulResourceCard name="SetupAWSCard"/>
+            <gl:HelpfulResourceCard name="PluginGuideCard"/>
+            <gl:HelpfulResourceCard name="GettingStartedCard"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="HelpfulResourcesRow" class="separator separator--horizontal">
+            <gl:HelpfulResourceCard name="OrganizingEnvCard"/>
+            <gl:HelpfulResourceCard name="GetAccessKeysCard"/>
+            <gl:HelpfulResourceCard name="ServiceLocationsCard"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="HelpfulResourcesRow" class="separator separator--horizontal">
+            <gl:HelpfulResourceCard name="ManageAccessKeysCard"/>
+            <gl:HelpfulResourceCard name="HostingSolutionsCard"/>
+            <gl:HelpfulResourceCard name="HostingFleetCard"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

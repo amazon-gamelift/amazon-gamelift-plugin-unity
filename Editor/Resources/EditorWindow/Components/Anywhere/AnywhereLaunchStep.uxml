@@ -1,0 +1,24 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Template src="../../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
+        <ui:VisualElement class="form-row">
+            <ui:Label name="AnywherePageConfigureClientLabel" class="form-row__label" text="Configure Client"/>
+            <ui:VisualElement class="form-row__input">
+                <ui:Button name="AnywherePageConfigureClientButton" class="button button--primary" text="Configure button"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="AnywherePageLaunchClientLabel" class="form-row__label" text="Launch Client"/>
+            <ui:Label name="AnywherePageLaunchClientDescription" class="form-row__text-display" text="Build and launch your game client."/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="AnywherePageLaunchServerLabel" class="form-row__label" text="Run Game"/>
+            <ui:VisualElement class="form-row__input">
+                <ui:Button name="AnywherePageLaunchServerButton" class="button button--primary" text="Launch button"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:Instance>
+</ui:UXML>

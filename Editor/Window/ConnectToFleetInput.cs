@@ -12,7 +12,7 @@ using UnityEngine.UIElements;
 
 namespace AmazonGameLift.Editor
 {
-    public class ConnectToFleetInput : StatefulInput
+    public class ConnectToFleetInput : ProgressBarStepComponent
     {
         private TextField _fleetNameInput;
         private DropdownField _fleetNameDropdownContainer;
@@ -23,48 +23,77 @@ namespace AmazonGameLift.Editor
         private VisualElement _fleetStatus;
         private StatusIndicator _statusIndicator;
         private GameLiftFleetManager _fleetManager => _stateManager.FleetManager;
-        private readonly StateManager _stateManager;
-        private readonly VisualElement _container;
         private Button _cancelButton;
+        private Button _viewFleetOnConsoleButton;
+        private Button _createNewFleetButton;
+        private Button _modifyFleetButton;
 
-        private FleetStatus _fleetState;
-        private List<FleetAttributes> _fleetAttributes = new List<FleetAttributes>();
-        private StatusBox _connectToAnywhereStatusBox;
+        private FleetStatus _fleetState = FleetStatus.NotCreated;
+        private List<FleetAttributes> _fleetAttributes = new();
+        private bool _isCompleted = false;
 
-        public ConnectToFleetInput(VisualElement container, StateManager stateManager)
+        public ConnectToFleetInput(VisualElement container, StateManager stateManager) : base (container, stateManager, "EditorWindow/Components/ConnectToFleetInput")
         {
-            var uxml = Resources.Load<VisualTreeAsset>("EditorWindow/Components/ConnectToFleetInput");
-            container.Add(uxml.Instantiate());
-            _container = container;
-
-            _stateManager = stateManager;
-            _fleetState = FleetStatus.NotCreated;
+            new DeploymentStepTemplate.Builder(Strings.AnywherePageConnectFleetTitle, Strings.AnywherePageConnectFleetDescription)
+                 .WithoutBaseButtons()
+                 .Build(container);
 
             AssignUiElements(container);
             RegisterCallBacks(container);
-            SetupPage();
-            SetupStatusBox();
             LocalizeText();
-            _stateManager.OnUserProfileUpdated += async () =>
-            {
-                await UpdateFleetMenu();
-                SetFleetState();
-                UpdateGUI();
-            };
-
-            UpdateGUI();
         }
 
-        private async Task OnAnywhereConnectClicked(string fleetName)
+        protected sealed override Task StartOrResumeStep()
         {
+            SetupPage();
+            return Task.CompletedTask;
+        }
+
+        protected sealed override void ResetStep() {
+            ResetState();
+            SetupPage();
+        }
+
+        private void ResetState()
+        {
+            _isCompleted = false;
+            _fleetState = FleetStatus.NotCreated;
+            _stateManager.AnywhereFleetName = null;
+            _stateManager.AnywhereFleetId = null;
+            _stateManager.AnywhereFleetLocation = null;
+            _stateManager.ComputeName = "";
+        }
+
+        private void FleetSelected()
+        {
+            SetFleetState();
+            if (!_isCompleted)
+            {
+
+                _isCompleted = true;
+                CompleteStep();
+            }
+        }
+
+        private async Task OnAnywhereCreateConfirmClicked(string fleetName)
+        {
+            if (_isCompleted)
+            {
+                var _fleetStateBeforeReset = _fleetState;
+                ResetState();
+                _fleetState = _fleetStateBeforeReset;
+                EditCompleted();
+            } else
+            {
+                TryStart();
+            }
+
             if (_fleetManager != null && _fleetState is FleetStatus.NotCreated or FleetStatus.Creating)
             {
-                _connectToAnywhereStatusBox.Close();
-
                 var customLocationResponse = await _fleetManager.CreateCustomLocationIfNotExists();
                 if (!customLocationResponse.Success)
                 {
-                    _connectToAnywhereStatusBox.Show(StatusBox.StatusBoxType.Error,
+                    EncounteredException(StatusBox.StatusBoxType.Error,
                         Strings.AnywherePageStatusBoxDefaultFleetErrorText, customLocationResponse.ErrorMessage);
                     return;
                 }
@@ -78,11 +107,14 @@ namespace AmazonGameLift.Editor
                     _stateManager.ComputeName = "";
 
                     await UpdateFleetMenu();
-                    _fleetState = FleetStatus.Selected;
+                    FleetSelected();
+
+                    // Reset and start next step because a new Compute will need to be created for the new fleet
+                    _nextStep?.ResetAndTryStart();
                 }
                 else
                 {
-                    _connectToAnywhereStatusBox.Show(StatusBox.StatusBoxType.Error,
+                    EncounteredException(StatusBox.StatusBoxType.Error,
                         Strings.AnywherePageStatusBoxDefaultFleetErrorText, createFleetResponse.ErrorMessage);
                 }
             }
@@ -90,8 +122,9 @@ namespace AmazonGameLift.Editor
             UpdateGUI();
         }
 
-        private async Task OnCreateNewFleetClicked()
+        private async Task OnModifyFleetClicked()
         {
+            Reset();
             if (_fleetState is FleetStatus.Selected or FleetStatus.Selecting)
             {
                 await UpdateFleetMenu();
@@ -101,44 +134,44 @@ namespace AmazonGameLift.Editor
             UpdateGUI();
         }
 
-        private void OnCancelButtonClicked()
-        {
-            if (_fleetState is FleetStatus.Creating)
-            {
-                _fleetState = FleetStatus.Selected;
-            }
-
-            UpdateGUI();
-        }
-
         private async void OnSelectFleetDropdown(string fleetSelection)
         {
+            // Need to reset any error state when selecting a new fleet
+            if (!_isCompleted)
+            {
+                TryStart();
+            }
+  
             var items = fleetSelection.Split(" (");
             var fleetName = items[0];
             var fleetId = items[1].Remove(items[1].Length - 1, 1);
-            var currentFleet =
+            var selectedFleet =
                 _fleetAttributes.FirstOrDefault(fleet => fleet.Name == fleetName && fleet.FleetId == fleetId);
-            if (currentFleet != null)
+            if (selectedFleet != null)
             {
-                var fleetLocationResponse = await _fleetManager.FindFirstFleetLocation(currentFleet.FleetId);
-                _fleetIdText.text = currentFleet.FleetId;
-                _stateManager.AnywhereFleetName = currentFleet.Name;
-                _stateManager.AnywhereFleetId = currentFleet.FleetId;
+                var fleetLocationResponse = await _fleetManager.FindFirstFleetLocation(selectedFleet.FleetId);
+                _fleetIdText.text = selectedFleet.FleetId;
+                _stateManager.AnywhereFleetName = selectedFleet.Name;
+                _stateManager.AnywhereFleetId = selectedFleet.FleetId;
                 _stateManager.AnywhereFleetLocation = fleetLocationResponse.Location;
-                _fleetState = FleetStatus.Selected;
+                FleetSelected();
             }
 
-            UpdateGUI();
+            SetupPage();
         }
 
         private void RegisterCallBacks(VisualElement container)
         {
             container.Q<Button>("AnywherePageCreateFleetButton").RegisterCallback<ClickEvent>(async _ =>
-                await OnAnywhereConnectClicked(_fleetNameInput.text));
-            container.Q<Button>("AnywherePageConnectFleetNewButton").RegisterCallback<ClickEvent>(async _ =>
-                await OnCreateNewFleetClicked());
+                await OnAnywhereCreateConfirmClicked(_fleetNameInput.text));
+            _modifyFleetButton.RegisterCallback<ClickEvent>(async _ =>
+                await OnModifyFleetClicked());
+            _createNewFleetButton.RegisterCallback<ClickEvent>(_ => CreateNewFleetClicked());
+            _viewFleetOnConsoleButton.RegisterCallback<ClickEvent>(_ =>
+                Application.OpenURL(string.Format(Urls.AwsGameLiftFleetViewTemplate, _stateManager.Region,
+                _stateManager.AnywhereFleetId)));
             _fleetNameDropdownContainer.RegisterValueChangedCallback(evt => OnSelectFleetDropdown(evt.newValue));
-            _cancelButton.RegisterCallback<ClickEvent>(_ => OnCancelButtonClicked());
+            _cancelButton.RegisterCallback<ClickEvent>(_ => SetupPage());
         }
 
         private void AssignUiElements(VisualElement container)
@@ -151,6 +184,9 @@ namespace AmazonGameLift.Editor
             _fleetCreateContainer = container.Q("AnywherePageCreateFleet");
             _fleetConnectContainer = container.Q("AnywherePageConnectFleet");
             _cancelButton = container.Q<Button>("AnywherePageCreateFleetCancelButton");
+            _viewFleetOnConsoleButton = container.Q<Button>("AnywherePageConnectFleetViewOnConsoleButton");
+            _createNewFleetButton = container.Q<Button>("AnywherePageCreateNewFleetButton");
+            _modifyFleetButton = container.Q<Button>("AnywherePageModifyFleetButton");
             _statusIndicator = container.Q<StatusIndicator>();
         }
 
@@ -193,6 +229,7 @@ namespace AmazonGameLift.Editor
                     {
                         _statusIndicator.Set(State.Success,
                             textProvider.Get(Strings.AnywherePageConnectFleetStatusActive));
+                        FleetSelected();
                     }
                 }
             }
@@ -228,6 +265,9 @@ namespace AmazonGameLift.Editor
             _fleetConnectContainer,
             _fleetId,
             _fleetStatus,
+            _viewFleetOnConsoleButton,
+            _modifyFleetButton,
+            _createNewFleetButton
         };
 
         private List<VisualElement> GetVisibleItemsByState()
@@ -241,29 +281,35 @@ namespace AmazonGameLift.Editor
                 },
                 FleetStatus.Selecting => new List<VisualElement>()
                 {
-                    _fleetNameDropdownContainer, _fleetConnectContainer
+                    _fleetNameDropdownContainer, _fleetConnectContainer, _createNewFleetButton
                 },
                 FleetStatus.Selected => new List<VisualElement>()
                 {
-                    _fleetNameDropdownContainer, _fleetId, _fleetStatus, _fleetConnectContainer
+                    _fleetNameDropdownContainer, _fleetId, _fleetStatus, _fleetConnectContainer, _viewFleetOnConsoleButton, _modifyFleetButton
                 },
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
 
-        private void SetupStatusBox()
-        {
-            _connectToAnywhereStatusBox = _container.Q<StatusBox>("AnywherePageConnectFleetStatusBox");
-        }
-
         protected sealed override void UpdateGUI()
         {
-            var elements = GetVisibleItemsByState();
+            var visibleElements = GetVisibleItemsByState();
             foreach (var element in GetFleetVisualElements())
             {
-                if (elements.Contains(element))
+                if (visibleElements.Contains(element))
                 {
                     Show(element);
+
+                    // Disable fleet dropdown if step is complete
+                    if (_fleetState == FleetStatus.Selected && element == _fleetNameDropdownContainer)
+                    {
+                        element.SetEnabled(false);
+                    }
+                    else
+                    {
+                        element.SetEnabled(true);
+                    }
+                    
                 }
                 else
                 {
@@ -271,7 +317,13 @@ namespace AmazonGameLift.Editor
                 }
             }
 
-            _container.SetEnabled(_stateManager.IsBootstrapped);
+            _container.SetEnabled(_stateManager.IsBootstrapped());
+        }
+
+        private void CreateNewFleetClicked()
+        {
+            _fleetState = FleetStatus.NotCreated;
+            UpdateGUI();
         }
 
         public enum FleetStatus
@@ -285,12 +337,21 @@ namespace AmazonGameLift.Editor
         private void LocalizeText()
         {
             var l = new ElementLocalizer(_container);
-            l.SetElementText("AnywherePageCreateFleetNameLabel", Strings.AnywherePageCreateFleetNameLabel);
-            l.SetElementText("AnywherePageConnectFleetName", Strings.AnywherePageConnectFleetName);
-            l.SetElementText("AnywherePageConnectFleetNameLabel", Strings.AnywherePageConnectFleetNameLabel);
-            l.SetElementText("AnywherePageConnectFleetIDLabel", Strings.AnywherePageConnectFleetIDLabel);
-            l.SetElementText("AnywherePageConnectFleetStatusLabel", Strings.AnywherePageConnectFleetStatusLabel);
-            l.SetElementText("AnywherePageConnectFleetNewButton", Strings.AnywherePageConnectFleetNewButton);
+            var strings = new[]
+            {
+                Strings.AnywherePageCreateFleetNameLabel,
+                Strings.AnywherePageCreateFleetNameHint,
+                Strings.AnywherePageConnectFleetName,
+                Strings.AnywherePageConnectFleetNameLabel,
+                Strings.AnywherePageConnectFleetIDLabel,
+                Strings.AnywherePageConnectFleetStatusLabel,
+                Strings.AnywherePageModifyFleetButton,
+                Strings.AnywherePageConnectFleetViewOnConsoleButton
+            };
+            foreach (var s in strings)
+            {
+                l.SetElementText(s, s);
+            }
         }
     }
 }

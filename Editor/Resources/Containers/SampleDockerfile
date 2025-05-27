@@ -1,0 +1,60 @@
+# Base image
+# ----------
+  # Add the base image that you want to use over here,
+  # Make sure to use an image with the same architecture as the
+  # Instance type you are planning to use on your fleets.
+FROM public.ecr.aws/amazonlinux/amazonlinux
+
+# Game build directory
+# --------------------
+  # Add your game build directory in the 'GAME_BUILD_DIRECTORY' env variable below.
+  #
+# Game executable
+# ---------------
+  # Add the relative path to your executable in the 'GAME_EXECUTABLE' env variable below.
+  # The game build provided over here needs to be integrated with gamelift server sdk.
+  # This template assumes that the executable path is relative to the game build directory.
+  #
+# Launch parameters
+# -----------------
+  # Add any launch parameters to pass into your executable in the 'LAUNCH_PARAMS' env variable below.
+  #
+# Default directory
+# -----------------
+  # The value provided in 'HOME_DIR' below will be where the game executable and logs exist.
+  #
+ARG GAME_BUILD_DIRECTORY
+ARG GAME_EXECUTABLE
+ARG LAUNCH_PARAMS
+
+ENV GAME_BUILD_DIRECTORY=$GAME_BUILD_DIRECTORY \
+    GAME_EXECUTABLE=$GAME_EXECUTABLE \
+    LAUNCH_PARAMS=$LAUNCH_PARAMS \
+    HOME_DIR="/local/game"
+
+# install dependencies as necessary
+RUN yum install -y shadow-utils
+
+RUN mkdir -p $HOME_DIR
+COPY .$GAME_BUILD_DIRECTORY/ $HOME_DIR
+    
+# Change directory to home
+WORKDIR $HOME_DIR
+    
+RUN useradd -m gamescale && \
+  echo "gamescale ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+  chown -R gamescale:gamescale $HOME_DIR
+
+# Add permissions to game build
+RUN chmod +x ./$GAME_EXECUTABLE
+    
+USER gamescale
+    
+# Check directory before starting the container
+RUN ls -lhrt .
+    
+# Check path before starting the container
+RUN echo $PATH
+    
+# Start the game build
+ENTRYPOINT ["/bin/sh", "-c", "./$GAME_EXECUTABLE", "$LAUNCH_PARAMS"]

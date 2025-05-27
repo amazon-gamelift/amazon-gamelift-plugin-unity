@@ -7,6 +7,7 @@ using System.IO;
 using AmazonGameLift.Runtime;
 using AmazonGameLiftPlugin.Core.AccountManagement;
 using AmazonGameLiftPlugin.Core.AccountManagement.Models;
+using AmazonGameLiftPlugin.Core.ContainerManagement;
 using AmazonGameLiftPlugin.Core.BucketManagement;
 using AmazonGameLiftPlugin.Core.BucketManagement.Models;
 using AmazonGameLiftPlugin.Core.CredentialManagement;
@@ -23,6 +24,9 @@ using AmazonGameLiftPlugin.Core.Shared.FileSystem;
 using AmazonGameLiftPlugin.Core.Shared.FileZip;
 using AmazonGameLiftPlugin.Core.Shared.ProcessManagement;
 using AmazonGameLiftPlugin.Core.Shared.S3Bucket;
+using System.Drawing;
+using Amazon.ECR.Model;
+using AmazonGameLiftPlugin.Core.ContainerManagement.Models;
 
 namespace AmazonGameLift.Editor
 {
@@ -151,6 +155,13 @@ namespace AmazonGameLift.Editor
             return _credentialsStore.UpdateAwsCredentials(request);
         }
 
+        public virtual GetCredentialsFileResponse GetCredentialsFile()
+        {
+            var request = new GetCredentialsFileRequest();
+            return _credentialsStore.GetCredentialsFile(request);
+        }
+
+
         #endregion
 
         #region Settings
@@ -278,7 +289,46 @@ namespace AmazonGameLift.Editor
         {
             return new AmazonS3Wrapper(string.Empty, string.Empty, string.Empty);
         }
-        
+        #endregion
+
+        #region ECR
+
+        public virtual ListECRImagesResponse ListECRImages(string profileName, string region, string repositoryName)
+        {
+            var ECRWrapper = CreateECRWrapper(profileName, region);
+            return ECRWrapper.ListECRImages(repositoryName);
+        }
+
+        public virtual DescribeECRRepositoriesResponse DescribeECRRepositories(string profileName, string region, List<string> RepositoryNames = null)
+        {
+            var ECRWrapper = CreateECRWrapper(profileName, region);
+            return ECRWrapper.DescribeECRRepositories(RepositoryNames);
+        }
+
+        public virtual CreateECRRepositoryResponse CreateRepository(string profileName, string region, string repositoryName)
+        {
+            var ECRWrapper = CreateECRWrapper(profileName, region);
+            return ECRWrapper.CreateRepository(repositoryName);
+        }
+
+        internal virtual IAmazonECRWrapper CreateECRWrapper(string profileName, string region)
+        {
+            RetriveAwsCredentialsResponse response = RetrieveAwsCredentials(profileName);
+
+            if (!response.Success)
+            {
+                return CreateDefaultECRWrapper();
+            }
+
+            string accessKey = response.AccessKey;
+            string secretKey = response.SecretKey;
+            return new AmazonECRWrapper(accessKey, secretKey, region);
+        }
+
+        private static IAmazonECRWrapper CreateDefaultECRWrapper()
+        {
+            return new AmazonECRWrapper(string.Empty, string.Empty, string.Empty);
+        }
         #endregion
 
         #region Deployment
@@ -295,9 +345,14 @@ namespace AmazonGameLift.Editor
             return s_deploymentFormatter.GetStackName(gameName);
         }
 
-        public virtual string GetServerGamePath(string gameFilePathInBuild)
+        public virtual string GetStackNameContainers(string gameName)
         {
-            return s_deploymentFormatter.GetServerGamePath(gameFilePathInBuild);
+            return s_deploymentFormatter.GetStackNameContainers(gameName);
+        }
+
+        public virtual string GetServerGamePath(string gameFilePathInBuild, string operatingSystem)
+        {
+            return s_deploymentFormatter.GetServerGamePath(gameFilePathInBuild, operatingSystem);
         }
 
         /// <summary>
@@ -407,6 +462,18 @@ namespace AmazonGameLift.Editor
                 }
             };
             return deploymentManager.DescribeStack(request);
+        }
+
+        public virtual DescribeStackResourceResponse DescribeStackResource(string profileName, string region, string stackName, string resourceIdentifier)
+        {
+            IDeploymentManager deploymentManager = CreateDeploymentManager(profileName, region);
+            var request = new DescribeStackResourceRequest
+            {
+                StackName = stackName,
+                LogicalResourceId = resourceIdentifier
+                
+            };
+            return deploymentManager.DescribeStackResource(request);
         }
 
         /// <summary>

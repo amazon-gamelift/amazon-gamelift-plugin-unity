@@ -14,31 +14,31 @@ namespace AmazonGameLift.Editor
         private VisualElement _root;
         private readonly TextProvider _textProvider = TextProviderFactory.Create();
         public Action<string> OnConfirm;
-        private const float PopupWidth = 600f;
-        private const float PopupHeight = 280f;
+        private const float PopupWidth = 850f;
+        private const float PopupHeight = 320f;
+        private StateManager _stateManager;
+
         
         public void OnEnable()
         {
             _root = rootVisualElement;
+            _stateManager = new StateManager(new CoreApi());
             m_VisualTreeAsset = UnityEngine.Resources.Load<VisualTreeAsset>("EditorWindow/Pages/GameLiftPluginBucketPopup");
             _root.Add(m_VisualTreeAsset.Instantiate());
-            titleContent = new GUIContent(_textProvider.Get(Strings.UserProfilePageBootstrapPopupWindowTitle));
+            titleContent = new GUIContent(_textProvider.Get(Strings.UserProfilePageBootstrapPopupWindowTitle).Replace("{{PROFILE_NAME}}", _stateManager.SelectedProfile.Name));
             maxSize = new Vector2(PopupWidth, PopupHeight);
             minSize = maxSize;
         }
         
         public void Init(string bucketName)
         {
-            _root.Q<Label>(Strings.UserProfilePageBootstrapPopupTitle).text = _textProvider.Get(Strings.UserProfilePageBootstrapPopupTitle);
             _root.Q<Label>(Strings.UserProfilePageBootstrapPopupDescription).text =
                 _textProvider.Get(Strings.UserProfilePageBootstrapPopupDescription);
             _root.Q<Label>("UserProfilePageBootstrapPopupBucketLabel").text =
                 _textProvider.Get(Strings.UserProfilePageBootstrapPopupBucketText);
 
-            var labelLink = _root.Q<Label>(Strings.UserProfilePageBootstrapPopupFreeTierLink);
-            labelLink.text = _textProvider.Get(Strings.UserProfilePageBootstrapPopupFreeTierLink);
-            _root.Q<VisualElement>("UserProfilePageBootstrapPopupFreeTierLinkParent")
-                .RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.AwsFreeTier));
+            var noticeStatusBox = _root.Q<StatusBox>(Strings.UserProfilePageBootstrapPopupNoticeStatusBox);
+            noticeStatusBox.Show(StatusBox.StatusBoxType.Warning, Strings.UserProfilePageBootstrapPopupNoticeStatusBox);
 
             var bucketNameTextField = _root.Q<TextField>(Strings.UserProfilePageBootstrapPopupBucketText);
             bucketNameTextField.value = bucketName;

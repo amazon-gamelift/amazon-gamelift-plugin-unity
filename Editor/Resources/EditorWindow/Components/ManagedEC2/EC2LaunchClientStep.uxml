@@ -1,0 +1,17 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Template src="../../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate">
+        <ui:VisualElement class="form-row">
+            <ui:Label name="ManagedEC2ConfigureClientLabel" class="form-row__label" text="Configure Client"/>
+            <ui:Button name="ManagedEC2ConfigureClientButton" class="button button--primary" text="Configure Client"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="form-row">
+            <ui:Label name="ManagedEC2LaunchClientLabel" class="form-row__label" text="Run Game"/>
+            <ui:Button name="ManagedEC2LaunchClientButton" class="button button--primary" text="Launch Client"/>
+            <ui:Label name="ManagedEC2LaunchClientDescription" class="form-row__text-display" text="Launch Client"/>
+        </ui:VisualElement>
+    </ui:Instance>
+</ui:UXML>

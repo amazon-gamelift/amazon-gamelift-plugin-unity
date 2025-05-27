@@ -70,5 +70,7 @@ namespace AmazonGameLiftPlugin.Core.Shared
         public static readonly string InvalidChangeSetStatus = "INVALIDCHANGESETSTATUS";
 
         public static readonly string TokenAlreadyExists = "TOKENALREADTEXISTS";
+
+        public static readonly string InvalidCredentialsFile = "INVALIDCREDENTIALSFILE";
     }
 }

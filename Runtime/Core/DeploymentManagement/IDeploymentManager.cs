@@ -9,6 +9,8 @@ namespace AmazonGameLiftPlugin.Core.DeploymentManagement
     {
         DescribeStackResponse DescribeStack(DescribeStackRequest request);
 
+        DescribeStackResourceResponse DescribeStackResource(DescribeStackResourceRequest request);
+
         ValidateCfnTemplateResponse ValidateCfnTemplate(ValidateCfnTemplateRequest request);
 
         CreateChangeSetResponse CreateChangeSet(CreateChangeSetRequest request);

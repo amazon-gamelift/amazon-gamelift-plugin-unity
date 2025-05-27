@@ -10,6 +10,8 @@
     --color-button-primary-hover: #336C9D;
     --color-button-default-hover: #666666;
     --color-button-border: #242424;
+    --color-button-green: #298100;
+    --color-button-red: #960000;
     --color-border-accent: #4c4c4c;
     --color-border-highlight: #9a9a9a;
     --color-font-default: #d2d2d2;
@@ -17,6 +19,8 @@
     --color-font-success: #58BC61;
     --color-font-error: #f30303;
     --color-font-link: #4C7EFF;
+    --color-font-link-light: #539FE5;
+    --color-font-link-light-hover: #A9CFF2;
     --color-font-dark: #090909;
     --color-foldout-title: #e4e4e4;
     --color-input-label: #c4c4c4;
@@ -40,11 +44,13 @@
     --border-size-thin: 1px;
     --border-size-medium: 2px;
 
+    --spacing-mini: 3px;
     --spacing-tiny: 6px;
     --spacing-smaller: 8px;
     --spacing-small: 12px;
     --spacing-medium: 18px;
     --spacing-large: 24px;
+    --spacing-extralarge: 32px;
 
     --spacing-tiny-negative: -6px;
     --spacing-small-negative: -12px;
@@ -101,6 +107,14 @@ Image#FolderIcon {
     --unity-image: resource("Images/Icons/Folder");
 }
 
+Image#Reset {
+    --unity-image: resource("Images/Icons/Reset");
+}
+
+Image#Start {
+    --unity-image: resource("Images/Icons/Start");
+}
+
 .button {
     padding: var(--spacing-tiny) var(--spacing-large);
     margin: 0;
@@ -123,8 +137,18 @@ Image#FolderIcon {
     background-color: var(--color-button-default-hover);
 }
 
-.button--primary {
+/*
+ * `button--primary` is used in multiple places where we rely on disabling the button to mark it visually as not primary.
+ * To ensure that the primary button visually stays primary when disabled, additionally use `button--maintain-color`.
+ */
+.button--primary,
+.button--primary.unity-disabled.button--maintain-color,
+.button--primary.unity-disabled.button--maintain-color:hover {
     background-color: var(--color-button-primary);
+}
+
+.button--red {
+    background-color: var(--color-button-red);
 }
 
 .button--primary:hover {
@@ -153,6 +177,10 @@ Image#FolderIcon {
     width: 100%;
 }
 
+.button--part-width {
+    width: 20%;
+}
+
 .button--full-height {
     height: 100%;
 }
@@ -160,6 +188,17 @@ Image#FolderIcon {
 .divider {
     height: 1px;
     background-color: rgba(255, 255, 255, 0.2);
+}
+
+.divider__padded {
+    height: 1px;
+    width: 220px;
+    align-self: center;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.separator.separator--top.separator--large {
+    margin-top: var(--spacing-large);
 }
 
 .separator.separator--vertical {
@@ -174,6 +213,19 @@ Image#FolderIcon {
 .separator.separator--horizontal {
     flex-direction: row;
     margin-right: var(--spacing-small-negative);
+}
+
+.separator.separator--menu {
+    margin-bottom: var(--spacing-small-negative);
+    flex-direction: column;
+    padding-top: var(--spacing-medium);
+    background-color: var(--color-background-accent);
+    border-right-color: var(--color-border-accent);
+    border-right-width: var(--border-size-medium);
+}
+
+.separator.separator--menu > * {
+    margin-bottom: var(--spacing-small);
 }
 
 .separator.separator--vertical > * {
@@ -197,6 +249,11 @@ Image#FolderIcon {
 .separator.separator--vertical.separator--large > * {
     margin-bottom: var(--spacing-large);
 }
+
+.separator.separator--vertical.separator--medium > * {
+    margin-bottom: var(--spacing-medium);
+}
+
 
 .separator.separator--vertical.separator--large > .separator.separator--vertical {
     /* large (parent) - small (child) */
@@ -240,6 +297,24 @@ Image#FolderIcon {
     margin-right: 0;
 }
 
+/*
+ * Common pattern: Need right-justified content on a separated list? Add this to the separator.
+ * Note: This can be re-used for bottom-justified content; however, this is a less common use-case.
+ */
+.separator--right {
+    justify-content: flex-end;
+}
+
+/*
+ * Common pattern: Need right AND left justified content on the same row?
+ *  1. Separator has this modifier.
+ *  2. Separator contains exactly two elements. The first will be left justified, and the second right justified.
+ *  3. If more elements needed on either side, replace right or left elements with separator containers of elements.
+ */
+.separator--split {
+    justify-content: space-between;
+}
+
 .separator__single--small.separator--horizontal {
     margin-right: var(--spacing-small);
 }
@@ -257,6 +332,10 @@ Image#FolderIcon {
     border-bottom-color: var(--color-font-accent);
     align-self: flex-start;
     flex-direction: row;
+}
+
+.external-link--small {
+    font-size: var(--font-size-small);
 }
 
 .external-link--centered {
@@ -312,6 +391,14 @@ Image#ExternalLinkIcon {
     margin-left: 0;
 }
 
+.foldout--indent .unity-foldout__content {
+    margin-left: var(--spacing-extralarge);
+}
+
+.foldout--indent .unity-foldout__toggle {
+    margin: 0 0 var(--spacing-medium) 0;
+}
+
 .foldout__description {
     color: var(--color-font-default);
 }
@@ -328,9 +415,20 @@ Image#ExternalLinkIcon {
     font-size: var(--font-size-large);
 }
 
+.form-row__label--small {
+    width: var(--form-row-label-width);
+    height: var(--form-row-height);
+    color: var(--color-input-label);
+    font-size: var(--font-size-default);
+}
+
 .form-row__input {
     flex: 1 1 auto;
-    font-size: var(--font-size-large);
+}
+
+.form-row-short__input {
+    min-width: 0%;
+    max-width: 100%;
 }
 
 .form-row__input--inline {
@@ -435,7 +533,7 @@ Image#ExternalLinkIcon {
 }
 
 .card {
-    padding: var(--spacing-small);
+    padding: var(--spacing-small) var(--spacing-tiny) ;
     border-width: var(--border-size-medium);
     border-color: var(--color-card-border);
     background-color: var(--color-card-background);
@@ -466,8 +564,22 @@ Image#ExternalLinkIcon {
     flex-direction: row;
 }
 
+.card__container__vert {
+    flex-direction: column;
+}
+
+.card__container__vert > * {
+    margin-bottom: var(--spacing-mini);
+}
+
 .card__text {
     font-size: var(--font-size-default);
+    -unity-text-align: middle-left;
+    flex: 1 1 auto;
+}
+
+.card__text__small {
+    font-size: var(--font-size-small);
     -unity-text-align: middle-left;
     flex: 1 1 auto;
 }
@@ -500,9 +612,108 @@ Image#ExternalLinkIcon {
 }
 
 .card__title {
-    font-size: var(--font-size-extralarge);
+    font-size: var(--font-size-large);
+    margin-bottom: var(--spacing-tiny);
 }
 
 .float-right {
     margin-left: auto;
+}
+
+.margin__tiny {
+    margin: var(--spacing-tiny);
+}
+
+.child__title {
+    font-size: var(--font-size-large);
+    -unity-font-style: bold;
+}
+
+.bold {
+     -unity-font-style: bold;
+}
+
+.child__description {
+    font-size: var(--font-size-small);
+}
+
+.child__link {
+    font-size: var(--font-size-hint);
+}
+
+.table__labels__header {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-color: var(--color-card-border);
+    height: 30px;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5px;
+}
+
+.table__labels__footer {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: var(--color-card-border);
+    height: 35px;
+    flex-direction: row;
+    align-items: center;
+    padding-left: var(--spacing-medium);
+}
+
+.table__labels__member {
+    background-color: var(--color-card-border);
+    border-left-width: 1px;
+    border-left-color: var(--color-card-border);
+    border-right-width: 1px;
+    border-right-color: var(--color-card-border);
+    border-top-width: 2px;
+    border-top-color: var(--color-button-default);
+    height: 30px;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5px;
+}
+
+.table__labels__text {
+    font-size: var(--font-size-small);
+    flex-grow: 1;
+}
+
+.table__labels__footer__text {
+    font-size: var(--font-size-medium);
+    -unity-font-style: bold;
+    flex-grow: 1;
+}
+
+.table__labels__container {
+    flex-grow: 1;
+    flex-basis: 0;
+    align-items: flex-start;
+    padding-top: 6px;
+}
+
+.table__labels__container__long {
+    flex-grow: 3;
+    flex-basis: 0;
+    align-items: flex-start;
+    padding-top: 6px;
+}
+
+.table__button__container {
+    flex-grow: 0.15;
+    flex-basis: 0;
+    align-items: flex-start;
+    padding-top: 6px;
+}
+
+.error-message-text {
+    color: var(--color-font-error);
+}
+
+.status-box--full-width {
+    width: 100%;
 }

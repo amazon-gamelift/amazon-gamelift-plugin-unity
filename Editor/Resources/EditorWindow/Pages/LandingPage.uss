@@ -11,6 +11,16 @@
     flex: 0 0 auto;
 }
 
+
+.card--hosting {
+    padding: var(--spacing-medium);
+    padding-bottom: var(--spacing-tiny);
+}
+
+.button--large {
+    font-size: var(--font-size-medium);
+}
+
 Image#LandingPageNoAccountImage {
     --unity-image: resource("Images/Icons/NoAccountIcon");
 }
@@ -21,4 +31,16 @@ Image#LandingPageAccountImage {
 
 Image#LandingPageSampleImage {
     --unity-image: resource("Images/LandingPage/SampleGame");
+}
+
+Image#AnywhereImage {
+    --unity-image: resource("Images/Icons/Anywhere");
+}
+
+Image#ManagedImage {
+    --unity-image: resource("Images/Icons/Managed");
+}
+
+Image#ContainerImage {
+    --unity-image: resource("Images/Icons/Containers");
 }

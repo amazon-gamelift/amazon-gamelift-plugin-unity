@@ -7,6 +7,10 @@
     align-items: center;
 }
 
+.status-indicator--small > .status-indicator__text {
+    font-size: var(--font-size-small);
+}
+
 .status-indicator__text {
     -unity-font-style: bold;
 }

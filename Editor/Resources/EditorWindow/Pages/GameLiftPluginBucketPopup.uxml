@@ -1,24 +1,23 @@
 <!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-<ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <Style src="./GameLiftPluginBucketPopup.uss"/>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <Style src="../Popup.uss"/>
     <ui:VisualElement class="separator separator--vertical separator--large">
         <ui:VisualElement class="separator separator--vertical">
-            <ui:Label name="UserProfilePageBootstrapPopupTitle" class="popup__heading" text="You might incur charges for creating an S3 Bucket..."/>
-            <ui:Label name="UserProfilePageBootstrapPopupDescription" text="Check and see if you have exceeded the AWS Free Tier usage &#10;limits or your period expired."/>
-            <ui:VisualElement name="UserProfilePageBootstrapPopupFreeTierLinkParent" class="external-link">
-                <ui:Label name="UserProfilePageBootstrapPopupFreeTierLink"/>
-                <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
-            </ui:VisualElement>
+            <gl:StatusBox class="status-box--full-width" name="UserProfilePageBootstrapPopupNoticeStatusBox"/>
+            <ui:Label name="UserProfilePageBootstrapPopupDescription" text=""/>
             <ui:VisualElement class="separator separator--large separator--horizontal separator--centered">
                 <ui:Label name="UserProfilePageBootstrapPopupBucketLabel"/>
                 <ui:TextField name="UserProfilePageBootstrapPopupBucketText" class="text-input" value="gamelift-bootstrap-012345678912-eu-west-1"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement class="separator separator--horizontal float-right">
-            <ui:Button name="UserProfilePageBootstrapPopupCancelButton" class="button" text="Cancel"/>
-            <ui:Button name="UserProfilePageBootstrapPopupContinueButton" class="button" text="Continue"/>
+        <ui:VisualElement class="separator separator--vertical">
+            <ui:VisualElement class="divider"/>
+            <ui:VisualElement class="separator separator--horizontal float-right">
+                <ui:Button name="UserProfilePageBootstrapPopupCancelButton" class="button" text="Cancel"/>
+                <ui:Button name="UserProfilePageBootstrapPopupContinueButton" class="button button--primary" text="Bootstrap profile"/>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -22,6 +22,11 @@ namespace AmazonGameLift.Editor
             return _textProvider.Get(textKey);
         }
 
+        public string GetError(string errorCode)
+        {
+            return _textProvider.GetError(errorCode);
+        }
+
         public void SetElementText(string elementName, string textKey)
         {
             var text = _textProvider.Get(textKey);
@@ -40,6 +45,16 @@ namespace AmazonGameLift.Editor
         {
             var text = wordReplacements.Aggregate(_textProvider.Get(textKey), (result, next) => result.Replace($"[{next.Key}]", next.Value));
             SetText(elementName, text);
+        }
+
+        public void SetElementTooltip(string elementName, string textKey)
+        {
+            var text = _textProvider.Get(textKey);
+            var element = _root.Q<TextElement>(elementName);
+            if (element != null)
+            {
+                element.tooltip = text;
+            }
         }
 
         private void SetText(string elementName, string text)

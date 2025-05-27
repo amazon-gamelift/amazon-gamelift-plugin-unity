@@ -31,7 +31,7 @@ namespace AmazonGameLift.Editor
             ShowWindow();
         }
 
-        [MenuItem("Amazon GameLift/Set AWS Account Profiles", priority = 100)]
+        [MenuItem("Amazon GameLift/Set up your user profile", priority = 100)]
         public static void OpenAccountProfilesTab()
         {
             GetPluginWindow().OpenTab(GameLiftPlugin.Pages.Credentials);
@@ -49,7 +49,13 @@ namespace AmazonGameLift.Editor
             GetPluginWindow().OpenTab(GameLiftPlugin.Pages.ManagedEC2);
         }
 
-        [MenuItem("Amazon GameLift/Sample Game/Import Sample Game", priority = 103)]
+        [MenuItem("Amazon GameLift/Host with Managed Containers", priority = 103)]
+        public static void OpenContainersTab()
+        {
+            GetPluginWindow().OpenTab(GameLiftPlugin.Pages.Containers);
+        }
+
+        [MenuItem("Amazon GameLift/Sample Game/Import Sample Game", priority = 104)]
         public static void ImportSampleGame()
         {
             AssetDatabase.ImportPackage(_filePackagePath, interactive: true);

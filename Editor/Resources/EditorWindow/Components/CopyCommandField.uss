@@ -1,0 +1,38 @@
+﻿/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+@import '../common.uss';
+
+.text-box {
+    border-radius: 4px;
+    border-width: var(--border-size-medium);
+    padding: 12px 16px 12px 16px;
+    align-items: center;
+    border-color: rgba(100, 100, 100, 1);
+    background-color: rgba(0, 0, 0, 1);
+    width: 100%;
+}
+
+.copy-command-field {
+    align-items: center;
+    margin-left: var(--spacing-medium);
+}
+
+Label.command-text__label {
+    color: var(--color-font-accent);
+    -unity-text-align: middle-left;
+    flex-shrink: 1;
+    margin-right: auto;
+    padding-right: var(--spacing-small)
+}
+
+Image.copy-icon {
+    --unity-image: resource("Images/Icons/CopyIcon")
+    width: 30px;
+    height: 30px;
+}
+
+Image.mouse-down {
+    background-color: rgba(30, 30, 30, 1);
+}
+

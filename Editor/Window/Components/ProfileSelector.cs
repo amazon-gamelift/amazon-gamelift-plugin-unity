@@ -10,7 +10,7 @@ namespace AmazonGameLift.Editor
 {
     public class ProfileSelector : VisualElement
     {
-        public new class UxmlFactory : UxmlFactory<ProfileSelector>
+        public new class UxmlFactory : UxmlFactory<ProfileSelector> 
         {
         }
 
@@ -42,7 +42,7 @@ namespace AmazonGameLift.Editor
             _dropdown.choices = _stateManager.AllProfiles.ToList();
             _dropdown.SetValueWithoutNotify(_stateManager.ProfileName);
             _region.text = _stateManager.Region;
-            if (_stateManager.IsBootstrapped)
+            if (_stateManager.IsBootstrapped())
             {
                 _bucketName.text = _stateManager.BucketName;
                 _statusIndicator.Set(State.Success, _textProvider.Get(Strings.BootstrapStatusActive));

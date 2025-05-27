@@ -43,6 +43,12 @@ namespace AmazonGameLiftPlugin.Core
         {
             return await _amazonGameLiftClient.DescribeGameSessionsAsync(request);
         }
+
+        public async Task<DescribeContainerGroupDefinitionResponse> DescribeContainerGroupDefinition(DescribeContainerGroupDefinitionRequest request)
+        {
+            return await _amazonGameLiftClient.DescribeContainerGroupDefinitionAsync(request);
+        }
+
         #endregion
         /// <summary>
         /// Server region is code dedicated to Amazon GameLift SDK and AWS SDK calls made by the game server. All of these calls will be done via UI Elements or on Startup. 
@@ -97,6 +103,7 @@ namespace AmazonGameLiftPlugin.Core
         {
             return _amazonGameLiftClient.DescribeFleetLocationAttributesAsync(request);
         }
+
         #endregion
     }
 }

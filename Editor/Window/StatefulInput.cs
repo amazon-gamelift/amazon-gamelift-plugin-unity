@@ -15,9 +15,21 @@ namespace AmazonGameLift.Editor
         private const string InactiveFoldoutElementName = "hidden";
 
         //Should be called with a visual element to hide this element on the screen
-        protected static void Hide(VisualElement element) => element.AddToClassList(InactiveFoldoutElementName);
+        public static void Hide(VisualElement element) => element?.AddToClassList(InactiveFoldoutElementName);
         //Should be called with a visual element to display this item on the screen
-        protected static void Show(VisualElement element) => element.RemoveFromClassList(InactiveFoldoutElementName);
+        public static void Show(VisualElement element) => element?.RemoveFromClassList(InactiveFoldoutElementName);
+        //Should be called with a visual element to display or hide the element on the screen
+        public static void ShowHide(VisualElement element, bool showElement)
+        {
+            if (showElement)
+            {
+                Show(element);
+            }
+            else
+            {
+                Hide(element);
+            }
+        }
 
         //Should be called after a change in the UI state to update the UI to reflect the change
         protected abstract void UpdateGUI();

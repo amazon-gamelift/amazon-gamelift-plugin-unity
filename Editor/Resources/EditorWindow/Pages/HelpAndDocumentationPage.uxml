@@ -26,5 +26,7 @@
                 <ui:Image name="ExternalLinkIcon" class="icon icon--extrasmall"/>
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement class="divider"/>
+        <ui:Foldout name="HelpfulResourcesFoldout" class="foldout separator separator--vertical" text="Helpful Resources"/>
     </ui:VisualElement>
 </ui:UXML>

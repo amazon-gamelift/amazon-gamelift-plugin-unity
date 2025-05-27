@@ -1,0 +1,20 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <Style src="../../Popup.uss"/>
+    <ui:VisualElement class="separator separator--vertical separator--large">
+        <ui:VisualElement class="separator separator--vertical">
+            <ui:Label text="You're about to reset your configuration for a managed container fleet. Before you proceed, we recommend that you clean up the resources from your last deployment, if any were created."/>
+            <gl:StatusBox class="status-box--full-width" name="ResetPopupStatusBox"/>
+            <ui:Label text="This action cannot be undone. You will lose all your progress, including any settings or configurations made so far."/>
+        </ui:VisualElement>
+        <ui:VisualElement class="separator separator--vertical">
+            <ui:VisualElement class="divider"/>
+            <ui:VisualElement class="separator separator--horizontal float-right">
+                <ui:Button name="ResetPopupCancelButton" class="button" text="Cancel"/>
+                <ui:Button name="ResetPopupResetButton" class="button button--red" text="Reset"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

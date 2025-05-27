@@ -4,13 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Amazon.GameLift.Model;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace AmazonGameLift.Editor
 {
-    public class RegisterComputeInput : StatefulInput
+    public class RegisterComputeInput : ProgressBarStepComponent
     {
         private ComputeStatus _computeState;
 
@@ -19,10 +20,7 @@ namespace AmazonGameLift.Editor
         private readonly Button _replaceComputeButton;
         private readonly Button _cancelReplaceButton;
         private readonly VisualElement _computeStatus;
-        private readonly VisualElement _container;
         private readonly StatusIndicator _statusIndicator;
-        private readonly StateManager _stateManager;
-        private StatusBox _registerComputeStatusBox;
 
         private const string _primaryButtonClassName = "button--primary";
         private const string _defaultComputeName = "ComputerName-ProfileName";
@@ -31,14 +29,14 @@ namespace AmazonGameLift.Editor
         private string _ipAddress;
 
         private Action _onComputeChanged;
+        private bool _isCompleted = false;
 
-        public RegisterComputeInput(VisualElement container, StateManager stateManager)
+        public RegisterComputeInput(VisualElement container, StateManager stateManager) : base(container, stateManager, "EditorWindow/Components/RegisterComputeInput")
         {
-            var uxml = Resources.Load<VisualTreeAsset>("EditorWindow/Components/RegisterComputeInput");
-            container.Add(uxml.Instantiate());
-            _container = container;
+            new DeploymentStepTemplate.Builder(Strings.AnywherePageComputeTitle, Strings.AnywherePageComputeDescription)
+                 .WithoutBaseButtons()
+                 .Build(container);
 
-            _stateManager = stateManager;
             _computeNameInput = container.Q<TextField>("AnywherePageComputeNameInput");
             _computeStatus = container.Q("AnywherePageComputeStatus");
             _registerButton = container.Q<Button>("AnywherePageComputeRegisterButton");
@@ -56,12 +54,37 @@ namespace AmazonGameLift.Editor
 
             SetupConfigSettings();
             RegisterCallbacks();
-            SetupStatusBox();
 
+            _stateManager.OnFleetChanged += ResetAndTryStart;
             _stateManager.OnFleetChanged += SetValidCompute;
-            _stateManager.OnFleetChanged += UpdateGUI; 
+            _stateManager.OnFleetChanged += UpdateGUI;
 
             UpdateGUI();
+        }
+
+        protected sealed override Task StartOrResumeStep()
+        {
+            UpdateGUI();
+            return Task.CompletedTask;
+        }
+
+        protected sealed override void ResetStep()
+        {
+            _isCompleted = false;
+            _stateManager.ComputeName = null;
+            _stateManager.IpAddress = null;
+            _stateManager.WebSocketUrl = null;
+            _computeState = ComputeStatus.NotRegistered;
+            UpdateGUI();
+        }
+
+        private void MarkComplete()
+        {
+            if (!_isCompleted)
+            {
+                _isCompleted = true;
+                CompleteStep();
+            }
         }
 
         private void RegisterCallbacks()
@@ -87,13 +110,14 @@ namespace AmazonGameLift.Editor
                     _stateManager.ComputeName = registerResponse.ComputeName;
                     _stateManager.IpAddress = registerResponse.IpAddress;
                     _stateManager.WebSocketUrl = registerResponse.WebSocketUrl;
+                    MarkComplete();
 
                     if (!string.IsNullOrWhiteSpace(previousComputeName) && previousComputeName != _computeName)
                     {
                         var deregisterResponse =
                             await _stateManager.ComputeManager.DeregisterCompute(previousComputeName,
                                 _stateManager.AnywhereFleetId);
-                                
+
                         if (!deregisterResponse)
                         {
                             Debug.LogError(new TextProvider().GetError(ErrorCode.DeregisterComputeFailed));
@@ -102,7 +126,7 @@ namespace AmazonGameLift.Editor
                 }
                 else
                 {
-                    _registerComputeStatusBox.Show(StatusBox.StatusBoxType.Error,
+                    EncounteredException(StatusBox.StatusBoxType.Error,
                         Strings.AnywherePageStatusBoxDefaultComputeErrorText,
                         registerResponse.ErrorMessage);
                 }
@@ -113,6 +137,11 @@ namespace AmazonGameLift.Editor
 
         private async void SetValidCompute()
         {
+            if (_stateManager.AnywhereFleetId == null)
+            {
+                return;
+            }
+
             var computes = await _stateManager.ComputeManager.ListCompute(_stateManager.AnywhereFleetId);
             if (computes.Success)
             {
@@ -150,10 +179,13 @@ namespace AmazonGameLift.Editor
             _stateManager.IpAddress = compute.IpAddress;
             _stateManager.WebSocketUrl = compute.GameLiftServiceSdkEndpoint;
             _computeNameInput.value = compute.ComputeName;
+            MarkComplete();
         }
 
         private void OnReplaceComputeButtonClicked()
         {
+            Reset();
+
             if (_computeState is ComputeStatus.Registered)
             {
                 _computeState = ComputeStatus.Registering;
@@ -170,7 +202,7 @@ namespace AmazonGameLift.Editor
             }
 
             _computeNameInput.value = _stateManager.ComputeName;
-            
+
             UpdateGUI();
         }
 
@@ -209,11 +241,6 @@ namespace AmazonGameLift.Editor
             };
         }
 
-        private void SetupStatusBox()
-        {
-            _registerComputeStatusBox = _container.Q<StatusBox>("AnywherePageComputeStatusBox");
-        }
-
         private void CheckReadOnly()
         {
             if (_computeState == ComputeStatus.Registered)
@@ -243,7 +270,7 @@ namespace AmazonGameLift.Editor
                 }
             }
 
-            _container.SetEnabled(_stateManager.IsBootstrapped &&
+            _container.SetEnabled(_stateManager.IsBootstrapped() &&
                                   !string.IsNullOrWhiteSpace(_stateManager.AnywhereFleetId));
 
             if (!string.IsNullOrWhiteSpace(_stateManager.ComputeName))
@@ -268,17 +295,23 @@ namespace AmazonGameLift.Editor
         private void LocalizeText()
         {
             var l = new ElementLocalizer(_container);
-            l.SetElementText("AnywherePageComputeNameLabel", Strings.AnywherePageComputeNameLabel);
-            l.SetElementText("AnywherePageComputeIPLabel", Strings.AnywherePageComputeIPLabel);
-            l.SetElementText("AnywherePageComputeIPDescription", _defaultIpAddress);
-            l.SetElementText("AnywherePageComputeStatusLabel", Strings.AnywherePageComputeStatusLabel);
-            l.SetElementText("AnywherePageComputeRegisterButton", Strings.AnywherePageComputeRegisterButton);
-            l.SetElementText("AnywherePageComputeReplaceComputeButton",
-                Strings.AnywherePageComputeReplaceComputeButton);
-            l.SetElementText("AnywherePageComputeCancelReplaceButton", Strings.AnywherePageComputeCancelReplaceButton);
+            var strings = new[]
+            {
+                Strings.AnywherePageComputeNameLabel,
+                Strings.AnywherePageComputeIPLabel,
+                Strings.AnywherePageComputeStatusLabel,
+                Strings.AnywherePageComputeRegisterButton,
+                Strings.AnywherePageComputeReplaceComputeButton,
+                Strings.AnywherePageComputeCancelReplaceButton
+            };
+            foreach (var s in strings)
+            {
+                l.SetElementText(s, s);
+            }
+            l.SetElementTooltip(Strings.AnywherePageComputeIPLabel, Strings.AnywherePageComputeIPDescription);
         }
 
-        public ComputeStatus getComputeStatus() 
+        public ComputeStatus getComputeStatus()
         {
             return _computeState;
         }

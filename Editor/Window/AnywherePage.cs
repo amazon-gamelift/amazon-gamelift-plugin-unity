@@ -1,27 +1,23 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-using UnityEditor;
-using UnityEditor.Build;
-using UnityEngine;
 using UnityEngine.UIElements;
-using AmazonGameLift.Runtime;
+using System.Collections.Generic;
+using System;
 
 namespace AmazonGameLift.Editor
 {
     public class AnywherePage
     {
-        private const string _primaryButtonClassName = "button--primary";
-        private const int RefreshUIMilliseconds = 2000;
         private readonly VisualElement _container;
         private readonly StateManager _stateManager;
+        private readonly AnywhereIntegrateStep _integrateInput;
+        private readonly ConnectToFleetInput _connectToFleetInput;
         private readonly RegisterComputeInput _registerComputeInput;
-        private GameLiftClientSettings _gameLiftClientSettings;
-        private GameLiftClientSettingsLoader _gameLiftClientSettingsLoader;
+        private readonly AnywhereLaunchStep _launchInput;
+        private readonly List<ProgressBarStepComponent> _progressBarSteps;
         private StatusBox _statusBox;
-        private StatusBox _launchStatusBox;
-        private Button _launchServerButton;
-        private Button _configureClientButton;
+        private Action _startAction;
 
         public AnywherePage(VisualElement container, StateManager stateManager)
         {
@@ -32,96 +28,57 @@ namespace AmazonGameLift.Editor
 
             container.Add(uxml);
             LocalizeText();
-
-            container.Q<VisualElement>("AnywherePageIntegrateServerLinkParent")
-                .RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.AnywherePageIntegrateServerLink));
-            container.Q<VisualElement>("AnywherePageIntegrateClientLinkParent")
-                .RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.AnywherePageIntegrateClientLink));
             SetupStatusBoxes();
+
+            container.Q<Button>("ManageCredentialsButton")
+                .RegisterCallback<ClickEvent>(_ => EditorMenu.OpenAccountProfilesTab());
 
             _stateManager.OnFleetChanged += UpdateGui;
             _stateManager.OnUserProfileUpdated += UpdateGui;
             _stateManager.OnComputeChanged += UpdateGui;
             _stateManager.OnClientSettingsChanged += UpdateGui;
+            _stateManager.OnUserProfileUpdated += () =>
+            {
+                var firstStep = _progressBarSteps[0];
+                firstStep.Reset();
+                firstStep.TryStart();
+            };
 
+            var integrateContainer = uxml.Q("AnywherePageIntegrateStepTitle");
+            _integrateInput = new AnywhereIntegrateStep(integrateContainer, stateManager);
             var fleetInputContainer = uxml.Q("AnywherePageConnectFleetTitle");
-            var fleetInput = new ConnectToFleetInput(fleetInputContainer, stateManager);
+            _connectToFleetInput = new ConnectToFleetInput(fleetInputContainer, stateManager);
             var computeInputContainer = uxml.Q("AnywherePageComputeTitle");
             _registerComputeInput = new RegisterComputeInput(computeInputContainer, stateManager);
-            
-            _launchServerButton = uxml.Q<Button>("AnywherePageLaunchServerButton");
-            _launchServerButton.RegisterCallback<ClickEvent>(_ =>
-            {
-                EditorUserBuildSettings.SwitchActiveBuildTarget(NamedBuildTarget.Server,
-                    EditorUserBuildSettings.selectedStandaloneTarget);
-                EditorApplication.EnterPlaymode();
-            });
+            var launchInputContainer = uxml.Q("AnywherePageLaunchTitle");
+            _launchInput = new AnywhereLaunchStep(launchInputContainer, stateManager);
 
-            LoadGameLiftClientSettings();
-            _configureClientButton = uxml.Q<Button>("AnywherePageConfigureClientButton");
-            _configureClientButton.RegisterCallback<ClickEvent>(_ =>
-            {
-                _gameLiftClientSettings.ConfigureAnywhereClientSettings();
-                _stateManager.OnClientSettingsChanged?.Invoke();
-            });
+            _progressBarSteps = new() { _integrateInput, _connectToFleetInput, _registerComputeInput, _launchInput };
+            _startAction = ProgressFlowContainer.SetupSteps(_progressBarSteps);
 
             UpdateGui();
+            _startAction();
         }
 
-        private void LoadGameLiftClientSettings()
-        {
-            _gameLiftClientSettings = _gameLiftClientSettingsLoader.LoadAsset();
-            _container.schedule.Execute(() => {
-                LoadGameLiftClientSettings();
-                UpdateGui();
-            }).StartingIn(RefreshUIMilliseconds);
-        }
 
         private void SetupStatusBoxes()
         {
             _statusBox = _container.Q<StatusBox>("AnywherePageStatusBox");
-            _launchStatusBox = _container.Q<StatusBox>("AnywherePageLaunchStatusBox");
-            _gameLiftClientSettingsLoader = new GameLiftClientSettingsLoader(_launchStatusBox);
-        }
+        } 
 
         private void UpdateGui()
         {
-            if (!_stateManager.IsBootstrapped)
+            if (!_stateManager.IsBootstrapped())
             {
                 _statusBox.Show(StatusBox.StatusBoxType.Warning, Strings.AnywherePageStatusBoxNotBootstrappedWarning);
             }
             else
             {
                 _statusBox.Close();
-            }
+            } 
 
-            ComputeStatus computeStatus = _registerComputeInput.getComputeStatus();
-            bool isComputeRegistered = computeStatus is ComputeStatus.Registered;
-            bool isClientConfigured = _gameLiftClientSettings && _gameLiftClientSettings.IsGameLiftAnywhere;
-            bool isConfigureClientEnabled = isComputeRegistered && !isClientConfigured && _gameLiftClientSettings;
-            
-            _configureClientButton.SetEnabled(isConfigureClientEnabled);
-            
-            if (isConfigureClientEnabled)
-            {
-                _configureClientButton.AddToClassList(_primaryButtonClassName);
-            }
-            else
-            {
-                _configureClientButton.RemoveFromClassList(_primaryButtonClassName);
-            }
-            
-            bool isLaunchServerEnabled = isComputeRegistered && isClientConfigured;
-            _launchServerButton.SetEnabled(isLaunchServerEnabled);
+            _startAction = ProgressFlowContainer.SetupSteps(_progressBarSteps);
 
-            if (isLaunchServerEnabled) 
-            {
-                _launchServerButton.AddToClassList(_primaryButtonClassName);
-            }
-            else 
-            {
-                _launchServerButton.RemoveFromClassList(_primaryButtonClassName);
-            }       
         }
 
         private void LocalizeText()
@@ -129,19 +86,6 @@ namespace AmazonGameLift.Editor
             var l = new ElementLocalizer(_container);
             l.SetElementText("AnywherePageTitle", Strings.AnywherePageTitle);
             l.SetElementText("AnywherePageDescription", Strings.AnywherePageDescription);
-            l.SetElementText("AnywherePageIntegrateTitle", Strings.AnywherePageIntegrateTitle);
-            l.SetElementText("AnywherePageIntegrateDescription", Strings.AnywherePageIntegrateDescription);
-            l.SetElementText("AnywherePageIntegrateServerLink", Strings.AnywherePageIntegrateServerLink);
-            l.SetElementText("AnywherePageIntegrateClientLink", Strings.AnywherePageIntegrateClientLink);
-            l.SetElementText("AnywherePageConnectFleetTitle", Strings.AnywherePageConnectFleetTitle);
-            l.SetElementText("AnywherePageComputeTitle", Strings.AnywherePageComputeTitle);
-            l.SetElementText("AnywherePageLaunchTitle", Strings.AnywherePageLaunchTitle);
-            l.SetElementText("AnywherePageConfigureClientLabel", Strings.AnywherePageConfigureClientLabel);
-            l.SetElementText("AnywherePageConfigureClientButton", Strings.AnywherePageConfigureClientButton);
-            l.SetElementText("AnywherePageLaunchServerLabel", Strings.AnywherePageLaunchServerLabel);
-            l.SetElementText("AnywherePageLaunchServerButton", Strings.AnywherePageLaunchServerButton);
-            l.SetElementText("AnywherePageLaunchClientLabel", Strings.AnywherePageLaunchClientLabel);
-            l.SetElementText("AnywherePageLaunchClientDescription", Strings.AnywherePageLaunchClientDescription);
         }
     }
 }

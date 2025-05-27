@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,6 +22,7 @@ namespace AmazonGameLift.Editor
         private const string ErrorBoxElementClass = "status-box--error";
 
         private StatusBoxType _currentType;
+        private StatusBoxExternalTargetType _externalTargetType = StatusBoxExternalTargetType.Link;
 
         private readonly IReadOnlyDictionary<StatusBoxType, string> _statusBoxClasses =
             new Dictionary<StatusBoxType, string>
@@ -31,9 +34,10 @@ namespace AmazonGameLift.Editor
             };
 
         private ElementLocalizer _elementLocalizer;
-        private string _linkURL;
+        private string _link; // either a URL or file path
         private readonly Button _externalButton;
         private readonly Label _externalButtonLabel;
+        private readonly Button _closeButton;
 
         public StatusBox()
         {
@@ -43,9 +47,19 @@ namespace AmazonGameLift.Editor
             _statusTextLabel = this.Q<Label>("StatusBoxLabel");
             _externalButton = this.Q<Button>("StatusBoxExternalButton");
             _externalButtonLabel = this.Q<Label>("StatusBoxExternalButtonLabel");
+            _closeButton = this.Q<Button>("StatusBoxCloseButton");
             _elementLocalizer = new ElementLocalizer(this);
             this.Q<Button>("StatusBoxCloseButton").RegisterCallback<ClickEvent>(_ => { Close(); });
-            _externalButton.RegisterCallback<ClickEvent>(_ => OpenURL());
+            _externalButton.RegisterCallback<ClickEvent>(_ =>
+            {
+                if (_externalTargetType == StatusBoxExternalTargetType.Link)
+                {
+                    OpenURL();
+                } else
+                {
+                    OpenFile();
+                }
+            });
 
             UpdateStatusBoxesState();
         }
@@ -55,25 +69,35 @@ namespace AmazonGameLift.Editor
             if (!string.IsNullOrWhiteSpace(externalButtonText))
             {
                 _externalButtonLabel.text = _elementLocalizer.GetText(externalButtonText);
-                _linkURL = externalButtonLink;
+                _link = externalButtonLink;
                 _externalButton.RemoveFromClassList(HiddenClassName);
+            }
+        }
+
+        private void OpenFile()
+        {
+            if (!string.IsNullOrWhiteSpace(_link))
+            {
+                Process.Start("\"" + _link + "\"");
             }
         }
 
         private void OpenURL()
         {
-            if (!string.IsNullOrWhiteSpace(_linkURL))
+            if (!string.IsNullOrWhiteSpace(_link))
             {
-                Application.OpenURL(_linkURL);
+                Application.OpenURL(_link);
             }
         }
 
         public void Show(StatusBoxType statusBoxType, string text, string additionalText = null,
-            string externalButtonLink = null, string externalButtonText = null)
+            string externalButtonLink = null, string externalButtonText = null,
+            StatusBoxExternalTargetType externalTargetType = StatusBoxExternalTargetType.Link)
         {
             RemoveFromClassList(_statusBoxClasses[_currentType]);
             AddToClassList(_statusBoxClasses[statusBoxType]);
             _currentType = statusBoxType;
+            _externalTargetType = externalTargetType;
 
             if (string.IsNullOrWhiteSpace(additionalText))
             {
@@ -83,7 +107,7 @@ namespace AmazonGameLift.Editor
             {
                 _elementLocalizer.SetElementText(_statusTextLabel.name, text, additionalText);
             }
-
+      
             if (string.IsNullOrWhiteSpace(externalButtonLink))
             {
                 _externalButton.AddToClassList(HiddenClassName);
@@ -121,6 +145,15 @@ namespace AmazonGameLift.Editor
             Info,
             Warning,
             Error
+        }
+        public enum StatusBoxExternalTargetType
+        {
+            Link,
+            File
+        }
+        public void HideCloseButton()
+        {
+            this.Remove(_closeButton);
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Style src="../common.uss"/>
+    <ui:VisualElement name="table__parent" class="separator separator--large">
+        <ui:VisualElement name="table__header" class="table__labels__header">
+            <ui:VisualElement class="table__button__container"/>
+            <ui:VisualElement class="table__labels__container">
+                <ui:Label class="table__labels__text" text="Profile name"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="table__labels__container">
+                <ui:Label class="table__labels__text" text="AWS Region"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="table__labels__container__long">
+                <ui:Label class="table__labels__text" text="S3 bucket name"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="table__labels__container">
+                <ui:Label class="table__labels__text" text="Bootstrap status"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

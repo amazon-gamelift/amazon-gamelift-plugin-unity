@@ -40,5 +40,13 @@ namespace AmazonGameLift.Runtime
             ApiGatewayUrl = apiGatewayUrl;
             UserPoolClientId = userPoolClientId;
         }
+
+        public void ConfigureContainersClientSettings(string awsRegion, string apiGatewayUrl, string userPoolClientId)
+        {
+            IsGameLiftAnywhere = false;
+            AwsRegion = awsRegion;
+            ApiGatewayUrl = apiGatewayUrl;
+            UserPoolClientId = userPoolClientId;
+        }
     }
 }

@@ -1,0 +1,10 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="../../ProgressBar.uss"/>
+    <ui:VisualElement name="LinkTemplate" class="external-link">
+        <ui:Label name="LinkLabel" class="child__link" text="Template link label"/>
+        <ui:Image name="ExternalLinkIcon" class="icon--tiny"/>
+    </ui:VisualElement>
+</ui:UXML>

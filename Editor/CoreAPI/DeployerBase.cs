@@ -36,14 +36,14 @@ namespace AmazonGameLift.Editor
         {
             _delay = delay ?? throw new ArgumentNullException(nameof(delay));
             GameLiftCoreApi = coreApi ?? throw new ArgumentNullException(nameof(coreApi));
-            RequestFactory = new DeploymentRequestFactory(coreApi);
+            RequestFactory = new DeploymentRequestFactory(coreApi, false);
         }
 
         protected DeployerBase()
         {
             _delay = new Delay();
             GameLiftCoreApi = CoreApi.SharedInstance;
-            RequestFactory = new DeploymentRequestFactory(GameLiftCoreApi);
+            RequestFactory = new DeploymentRequestFactory(GameLiftCoreApi, false);
         }
 
         /// <exception cref="ArgumentNullException">For all parameters.</exception>

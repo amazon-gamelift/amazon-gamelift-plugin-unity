@@ -13,7 +13,10 @@ namespace AmazonGameLift.Editor
     internal class UserProfileCreation
     {
         private readonly VisualElement _container;
+        private readonly VisualElement _credentialsInstructionBox;
+        private readonly Button _credentialsBoxCloseButton;
         private readonly Button _createProfileButton;
+        private readonly Button _cancelProfileCreateButton;
         private readonly DropdownField _regionDropDown;
         private readonly AwsCredentialsCreation _awsCredentialsCreateModel;
         private readonly List<TextField> _textFields;
@@ -39,7 +42,12 @@ namespace AmazonGameLift.Editor
             
             _createProfileButton = _container.Q<Button>("UserProfilePageAccountNewProfileCreateButton");
             _regionDropDown = _container.Q<DropdownField>("UserProfilePageAccountNewProfileRegionDropdown");
-            
+
+            _credentialsInstructionBox = _container.Q<VisualElement>("CredentialsBox");
+            _credentialsBoxCloseButton = _container.Q<Button>("CredentialsBoxCloseButton");
+
+            _cancelProfileCreateButton = container.Q<Button>("UserProfilePageAccountNewProfileCancelButton");
+
             SetupCallBacks();
             ValidateInputs();
             LocalizeText();
@@ -48,14 +56,22 @@ namespace AmazonGameLift.Editor
         private void LocalizeText()
         {
             var l = new ElementLocalizer(_container);
-            l.SetElementText("UserProfilePageAccountNewProfileTitle", Strings.UserProfilePageAccountNewProfileTitle);
-            l.SetElementText("UserProfilePageAccountNewProfileName", Strings.UserProfilePageAccountNewProfileName);
-            l.SetElementText("UserProfilePageAccountNewProfileAccessKeyInput", Strings.UserProfilePageAccountNewProfileAccessKeyInput);
-            l.SetElementText("UserProfilePageAccountNewProfileSecretKeyLabel", Strings.UserProfilePageAccountNewProfileSecretKeyLabel);
-            l.SetElementText("UserProfilePageAccountNewProfileRegionLabel", Strings.UserProfilePageAccountNewProfileRegionLabel);
-            l.SetElementText("UserProfilePageAccountNewProfileHelpLink", Strings.UserProfilePageAccountNewProfileHelpLink);
-            l.SetElementText("UserProfilePageAccountNewProfileCreateButton", Strings.UserProfilePageAccountNewProfileCreateButton);
-            l.SetElementText("UserProfilePageAccountNewProfileCancelButton", Strings.UserProfilePageAccountNewProfileCancelButton);
+            var strings = new[]
+            {
+                Strings.UserProfilePageAccountNewProfileTitle,
+                Strings.UserProfilePageAccountNewProfileDescription,
+                Strings.UserProfilePageAccountNewProfileName,
+                Strings.UserProfilePageAccountNewProfileAccessKeyInput,
+                Strings.UserProfilePageAccountNewProfileSecretKeyLabel,
+                Strings.UserProfilePageAccountNewProfileRegionLabel,
+                Strings.UserProfilePageAccountNewProfileHelpLink,
+                Strings.UserProfilePageAccountNewProfileCreateButton,
+                Strings.UserProfilePageAccountNewProfileCancelButton,
+            };
+            foreach (var s in strings)
+            {
+                l.SetElementText(s, s);
+            }
         }
 
         private void ToggleHiddenText(Button button, TextField hiddenField)
@@ -132,11 +148,22 @@ namespace AmazonGameLift.Editor
 
             _createProfileButton.RegisterCallback<ClickEvent>(_ =>
             {
+                _credentialsInstructionBox.RemoveFromClassList("hidden");
                 var result = CreateUserProfile();
                 if (result)
                 {
                     OnProfileCreated?.Invoke();
                 }
+            });
+
+            _credentialsBoxCloseButton.RegisterCallback<ClickEvent>(_ =>
+            {
+                _credentialsInstructionBox.AddToClassList("hidden");
+            });
+
+            _cancelProfileCreateButton.RegisterCallback<ClickEvent>(_ =>
+            {
+                _credentialsInstructionBox.RemoveFromClassList("hidden");
             });
         }
 

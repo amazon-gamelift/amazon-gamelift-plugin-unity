@@ -10,6 +10,7 @@ using AmazonGameLiftPlugin.Core.Shared.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using Amazon;
 
 namespace AmazonGameLiftPlugin.Core.CredentialManagement
@@ -128,6 +129,21 @@ namespace AmazonGameLiftPlugin.Core.CredentialManagement
             return Response.Ok(new GetProfilesResponse()
             {
                 Profiles = profiles
+            });
+        }
+
+        public GetCredentialsFileResponse GetCredentialsFile(GetCredentialsFileRequest request)
+        {
+            if (_sharedFile == null || string.IsNullOrEmpty(_sharedFile.FilePath) || !File.Exists(_sharedFile.FilePath))
+            {
+                return Response.Fail(new GetCredentialsFileResponse()
+                {
+                    ErrorCode = ErrorCode.InvalidCredentialsFile
+                });
+            }
+            return Response.Ok(new GetCredentialsFileResponse()
+            {
+                FilePath = _sharedFile.FilePath
             });
         }
 

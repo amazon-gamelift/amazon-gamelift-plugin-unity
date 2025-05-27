@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using AmazonGameLiftPlugin.Core.SettingsManagement.Models;
 using AmazonGameLiftPlugin.Core.Shared;
+using UnityEngine;
 
 namespace AmazonGameLift.Editor
 {
@@ -12,8 +13,13 @@ namespace AmazonGameLift.Editor
     {
         private CoreApi GameLiftCoreApi { get; }
 
-        internal DeploymentRequestFactory(CoreApi coreApi) =>
+        private bool IsContainersDeployment { get; }
+
+        internal DeploymentRequestFactory(CoreApi coreApi, bool isContainersDeployment)
+        {
             GameLiftCoreApi = coreApi ?? throw new ArgumentNullException(nameof(coreApi));
+            IsContainersDeployment = isContainersDeployment;
+        }
 
         /// <exception cref="ArgumentNullException">For all parameters.</exception>
         internal virtual (DeploymentRequest request, bool success, Response failedResponse) CreateRequest(
@@ -28,8 +34,8 @@ namespace AmazonGameLift.Editor
             {
                 throw new ArgumentNullException(nameof(gameName));
             }
-
-            string stackName = GameLiftCoreApi.GetStackName(gameName);
+ 
+            string stackName = IsContainersDeployment ? GameLiftCoreApi.GetStackNameContainers(gameName) : GameLiftCoreApi.GetStackName(gameName);
             string cfnTemplatePath = Path.Combine(scenarioFolderPath, Paths.CfnTemplateFileName);
             string parametersPath = Path.Combine(scenarioFolderPath, Paths.ParametersFileName);
             string lambdaFolderPath = Path.Combine(scenarioFolderPath, Paths.LambdaFolderPathInScenario);

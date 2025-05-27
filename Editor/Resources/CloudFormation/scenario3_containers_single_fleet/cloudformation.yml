@@ -1,0 +1,443 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  This CloudFormation template sets up a game backend service with a single Amazon GameLift fleet. After player
+  authenticates and start a game via POST /start_game, a lambda handler searches for an existing viable game session
+  with open player slot on the fleet, and if not found, creates a new game session. The game client is then expected
+  to poll POST /get_game_connection to receive a viable game session.
+
+Parameters:
+  ApiGatewayStageNameParameter:
+    Type: String
+    Default: v1
+    Description: Name of the Api Gateway stage
+  
+  ContainerGroupDefinitionNameParameter:
+    Type: String
+    Default: SampleCGDName
+    Description: Name of the Api Gateway stage
+
+  ContainerImageNameParameter:
+    Type: String
+    Default: SampleContainerImageName
+    Description: Name for the Container Image
+
+  ContainerImageUriParameter:
+    Type: String
+    Description: URI pointing to a Container Image in ECR
+
+  FleetDescriptionParameter:
+    Type: String
+    Default: Deployed by the Amazon GameLift Plug-in for Unity.
+    Description: Description of the fleet
+
+  FleetTcpFromPortParameter:
+    Type: Number
+    Default: 33430
+    Description: Starting port number for TCP ports to be opened
+
+  FleetTcpToPortParameter:
+    Type: Number
+    Default: 33440
+    Description: Ending port number for TCP ports to be opened
+
+  TotalMemoryLimitParameter:
+    Type: Number
+    Default: 4000
+    Description: The maximum amount of memory (in MiB) to allocate to the container group
+
+  TotalVcpuLimitParameter:
+    Type: Number
+    Default: 2
+    Description: The maximum amount of CPU units to allocate to the container group
+
+  GameNameParameter:
+    Type: String
+    Default: MyGame
+    Description: Game name to prepend before resource names
+    MaxLength: 12
+
+  LambdaZipS3BucketParameter:
+    Type: String
+    Description: S3 bucket that stores the lambda function zip
+
+  LambdaZipS3KeyParameter:
+    Type: String
+    Description: S3 key that stores the lambda function zip
+
+  MaxPlayersPerGameParameter:
+    Type: Number
+    Default: 10
+    Description: Maximum number of players per game session
+
+  MaxTransactionsPerFiveMinutesPerIpParameter:
+    Type: Number
+    Default: 100
+    MaxValue: 20000000
+    MinValue: 100
+
+  UnityEngineVersionParameter:
+    Type: String
+    Description: "Unity engine version being used by the plugin"
+
+Resources:
+  ApiGatewayCloudWatchRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+
+  Account:
+    Type: "AWS::ApiGateway::Account"
+    Properties:
+      CloudWatchRoleArn: !GetAtt ApiGatewayCloudWatchRole.Arn
+
+  GameRequestLambdaFunctionExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies:
+        - PolicyName: !Sub ${GameNameParameter}GameRequestLambdaFunctionGameLiftPolicies
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "gamelift:CreateGameSession"
+                  - "gamelift:CreatePlayerSession"
+                  - "gamelift:SearchGameSessions"
+                Resource: "*"
+
+  RestApi:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Name: !Sub ${GameNameParameter}RestApi
+
+  ResultsRequestLambdaFunctionExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies:
+        - PolicyName: !Sub ${GameNameParameter}ResultsRequestLambdaFunctionGameLiftPolicies
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "gamelift:CreateGameSession"
+                  - "gamelift:CreatePlayerSession"
+                  - "gamelift:SearchGameSessions"
+                Resource: "*"
+
+  UserPool:
+    Type: "AWS::Cognito::UserPool"
+    Properties:
+      AutoVerifiedAttributes:
+        - email
+      EmailConfiguration:
+        EmailSendingAccount: COGNITO_DEFAULT
+      EmailVerificationMessage: "Please verify your email to complete account registration for the GameLift Plugin Single-fleet deployment scenario. Confirmation Code {####}."
+      EmailVerificationSubject: GameLift Plugin - Deployment Scenario Account Verification
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+      UserPoolName: !Sub ${GameNameParameter}UserPool
+      UsernameAttributes:
+        - email
+
+  GameRequestApiResource:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: start_game
+      RestApiId: !Ref RestApi
+
+  ResultsRequestApiResource:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: get_game_connection
+      RestApiId: !Ref RestApi
+
+  UserPoolClient:
+    Type: "AWS::Cognito::UserPoolClient"
+    Properties:
+      AccessTokenValidity: 1
+      ClientName: !Sub ${GameNameParameter}UserPoolClient
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      GenerateSecret: false
+      IdTokenValidity: 1
+      PreventUserExistenceErrors: ENABLED
+      ReadAttributes:
+        - email
+        - preferred_username
+      RefreshTokenValidity: 30
+      SupportedIdentityProviders:
+        - COGNITO
+      UserPoolId: !Ref UserPool
+
+  WebACL:
+    Type: "AWS::WAFv2::WebACL"
+    DependsOn:
+      - ApiDeployment
+    Properties:
+      DefaultAction:
+        Allow:
+          {}
+      Description: !Sub "WebACL for game: ${GameNameParameter}"
+      Name: !Sub ${GameNameParameter}WebACL
+      Rules:
+        - Name: !Sub ${GameNameParameter}WebACLPerIpThrottleRule
+          Action:
+            Block:
+              {}
+          Priority: 0
+          Statement:
+            RateBasedStatement:
+              AggregateKeyType: IP
+              Limit: !Ref MaxTransactionsPerFiveMinutesPerIpParameter
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub ${GameNameParameter}WebACLPerIpThrottleRuleMetrics
+            SampledRequestsEnabled: true
+      Scope: REGIONAL
+      VisibilityConfig:
+        CloudWatchMetricsEnabled: true
+        MetricName: !Sub ${GameNameParameter}WebACLMetrics
+        SampledRequestsEnabled: true
+
+  ApiDeployment:
+    Type: "AWS::ApiGateway::Deployment"
+    DependsOn:
+      - GameRequestApiMethod
+      - ResultsRequestApiMethod
+    Properties:
+      RestApiId: !Ref RestApi
+      StageDescription:
+        DataTraceEnabled: true
+        LoggingLevel: INFO
+        MetricsEnabled: true
+      StageName: !Ref ApiGatewayStageNameParameter
+
+  Authorizer:
+    Type: "AWS::ApiGateway::Authorizer"
+    Properties:
+      IdentitySource: method.request.header.Auth
+      Name: CognitoAuthorizer
+      ProviderARNs:
+        - "Fn::GetAtt":
+            - UserPool
+            - Arn
+      RestApiId: !Ref RestApi
+      Type: COGNITO_USER_POOLS
+
+  GameRequestApiMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref Authorizer
+      HttpMethod: POST
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GameRequestLambdaFunction.Arn}/invocations"
+      OperationName: GameRequest
+      ResourceId: !Ref GameRequestApiResource
+      RestApiId: !Ref RestApi
+
+  ResultsRequestApiMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref Authorizer
+      HttpMethod: POST
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ResultsRequestLambdaFunction.Arn}/invocations"
+      OperationName: ResultsRequest
+      ResourceId: !Ref ResultsRequestApiResource
+      RestApiId: !Ref RestApi
+
+  WebACLAssociation:
+    Type: "AWS::WAFv2::WebACLAssociation"
+    DependsOn:
+      - ApiDeployment
+      - WebACL
+    Properties:
+      ResourceArn: !Sub
+        - "arn:aws:apigateway:${REGION}::/restapis/${REST_API_ID}/stages/${STAGE_NAME}"
+        - REGION: !Ref "AWS::Region"
+          REST_API_ID: !Ref RestApi
+          STAGE_NAME: !Ref ApiGatewayStageNameParameter
+      WebACLArn: !GetAtt WebACL.Arn
+
+  ContainerFleetRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - cloudformation.amazonaws.com
+                - gamelift.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/GameLiftContainerFleetPolicy"
+
+  ContainerGroupResource:
+    Type: "AWS::GameLift::ContainerGroupDefinition"
+    Properties:
+      GameServerContainerDefinition: 
+        ContainerName: !Ref ContainerImageNameParameter
+        ImageUri: !Ref ContainerImageUriParameter
+        ServerSdkVersion: "5.2.0"
+        PortConfiguration:
+          ContainerPortRanges:
+            - FromPort: !Ref FleetTcpFromPortParameter
+              Protocol: "TCP"
+              ToPort: !Ref FleetTcpToPortParameter                
+      Name: !Ref ContainerGroupDefinitionNameParameter
+      OperatingSystem: "AMAZON_LINUX_2023"
+      TotalVcpuLimit: !Ref TotalVcpuLimitParameter
+      TotalMemoryLimitMebibytes: !Ref TotalMemoryLimitParameter
+
+  ContainerFleetResource:
+    DependsOn:
+      - ContainerGroupResource
+    Type: "AWS::GameLift::ContainerFleet"
+    Properties:
+      GameServerContainerGroupDefinitionName: !Ref ContainerGroupDefinitionNameParameter
+      InstanceConnectionPortRange:
+        FromPort: !Ref FleetTcpFromPortParameter
+        ToPort: !Ref FleetTcpToPortParameter
+      Description: !Sub ${FleetDescriptionParameter} Using Unity Engine Version ${UnityEngineVersionParameter}
+      InstanceInboundPermissions:
+        - FromPort: !Ref FleetTcpFromPortParameter
+          IpRange: "0.0.0.0/0"
+          Protocol: TCP
+          ToPort: !Ref FleetTcpToPortParameter
+      InstanceType: c4.xlarge
+      BillingType: ON_DEMAND
+      FleetRoleArn: !GetAtt ContainerFleetRole.Arn
+      NewGameSessionProtectionPolicy: FullProtection
+      GameSessionCreationLimitPolicy:
+        NewGameSessionsPerCreator: 5
+        PolicyPeriodInMinutes: 2
+
+  AliasResource:
+    Type: "AWS::GameLift::Alias"
+    Properties:
+      Description: !Sub Alias to access ${GameNameParameter} fleet
+      Name: !Sub ${GameNameParameter}FleetAlias
+      RoutingStrategy:
+        Type: SIMPLE
+        FleetId: !Ref ContainerFleetResource
+
+  ResultsRequestLambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Code:
+        S3Bucket: !Ref LambdaZipS3BucketParameter
+        S3Key: !Ref LambdaZipS3KeyParameter
+      Description: Lambda function to handle game requests
+      Environment:
+        Variables:
+          FleetAlias: !Ref AliasResource
+      FunctionName: !Sub ${GameNameParameter}ResultsRequestLambda
+      Handler: results_request.handler
+      MemorySize: 128
+      Role: !GetAtt ResultsRequestLambdaFunctionExecutionRole.Arn
+      Runtime: python3.8
+
+  GameRequestLambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Code:
+        S3Bucket: !Ref LambdaZipS3BucketParameter
+        S3Key: !Ref LambdaZipS3KeyParameter
+      Description: Lambda function to handle game requests
+      Environment:
+        Variables:
+          FleetAlias: !Ref AliasResource
+          MaxPlayersPerGame: !Ref MaxPlayersPerGameParameter
+      FunctionName: !Sub ${GameNameParameter}GameRequestLambda
+      Handler: game_request.handler
+      MemorySize: 128
+      Role: !GetAtt GameRequestLambdaFunctionExecutionRole.Arn
+      Runtime: python3.8
+
+  ResultsRequestLambdaFunctionApiGatewayPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt ResultsRequestLambdaFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
+
+  GameRequestLambdaFunctionApiGatewayPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt GameRequestLambdaFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
+
+Outputs:
+  ApiGatewayEndpoint:
+    Description: Url of ApiGateway Endpoint
+    Value: !Sub "https://${RestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayStageNameParameter}/"
+
+  UserPoolClientId:
+    Description: Id of UserPoolClient
+    Value: !Ref UserPoolClient
+
+  IdentityRegion:
+    Description: Region name
+    Value: !Ref "AWS::Region"

@@ -21,7 +21,7 @@ Complete the following steps to install and enable the plugin for your multiplay
     1. Under `Scoped Registries`, click on the `+` button and enter the values for the [UnityNuGet](https://github.com/xoofx/UnityNuGet) scoped registry:
         ```
         Name: Unity NuGet
-        Url: https://unitynuget-registry.azurewebsites.net
+        Url: https://unitynuget-registry.openupm.com
         Scope(s): org.nuget
         ```
     1. In your Unity project, open `Window > Package Manager`.

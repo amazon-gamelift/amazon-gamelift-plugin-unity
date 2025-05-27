@@ -1,0 +1,22 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor">
+    <ui:Template src="../../Templates/DeploymentStep.uxml" name="DeploymentStepTemplate"/>
+    <ui:Instance template="DeploymentStepTemplate" >
+        <ui:VisualElement name="ScenariosContainerInProgress" class="separator separator--vertical">
+            <ui:RadioButton name="DeploymentScenarioSingleFleetRadio" class="form-row__radio-button" text="Single-region fleet"/>
+            <ui:Label name="DeploymentScenarioSingleFleetLabelEc2" class="form-row__text-display foldout__link" text="%%Creates a game backend service with a single Amazon GameLift fleet.%%"/>
+            <ui:RadioButton name="DeploymentScenarioFlexMatchRadio" class="form-row__radio-button" text="FlexMatch fleet"/>
+            <ui:Label name="DeploymentScenarioFlexMatchLabelEc2" class="form-row__text-display foldout__link" text="%%Uses FlexMatch, a managed matchmaking service, to match game players together.%%"/>
+            <ui:Button name="ConfigureParametersButton" class="button button--primary" text="Confirm deployment scenario"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ScenariosContainerComplete" class="separator separator--vertical">
+            <ui:VisualElement class="form-row">
+                <ui:Label name="EC2ScenarioLabel" class="form-row__label" text="Deployment scenario"/>
+                <ui:Label name="EC2ScenarioDisplay" class="form-row__text-display" text="Fleet type"/>
+            </ui:VisualElement>
+            <ui:Button name="ModifyScenarioButton" class="button" text="Change scenario"/>
+        </ui:VisualElement>
+    </ui:Instance>
+</ui:UXML>

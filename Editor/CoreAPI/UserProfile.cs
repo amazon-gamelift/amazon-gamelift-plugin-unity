@@ -2,6 +2,7 @@
 {
     public class UserProfile
     {
+        
         public string Region { get; set; }
 
         public string Name { get; set; }
@@ -21,6 +22,45 @@
         public string IpAddress { get; set; }
 
         public string WebSocketUrl { get; set; }
+
+        #endregion
+
+        #region Container Settings
+        public bool ContainerDeploymentInProgress { get; set; }
+
+        public bool ContainersDeploymentComplete { get; set; }
+
+        public ContainerScenarios ContainerQuestionnaireScenario { get; set; }
+
+        public DeploymentScenarios ContainerDeploymentScenario { get; set; }
+
+        public string ContainerGameServerBuildPath { get; set; }
+        public string ContainerGameServerExecutable { get; set; }
+        /**
+         * Image id that already existed in docker or was built by this plugin
+         */
+        public string ContainerDockerImageId { get; set; }
+        public string ContainerECRRepositoryName { get; set; }
+        public string ContainerECRRepositoryUri { get; set; }
+        public string ContainerECRImageUri { get; set; }
+        /**
+         * Image id that already existed in ECR or was pushed by this plugin
+         */
+        public string ContainerECRImageId { get; set; }
+        public string ContainerPortRange { get; set; }
+        public string ContainerTotalMemory { get; set; }
+        public string ContainerTotalVcpu { get; set; }
+        public string ContainerGameName { get; set; }
+        /**
+         * Image tag specified by customer for pushing to ECR
+         */
+        public string ContainerImageTag { get; set; }
+        public bool IsContainerImageBuilding { get; set; }
+        public bool IsContainerImageBuilt { get; set; }
+        public bool IsECRRepoCreated { get; set; }
+        public bool IsContainerPushedToECR { get; set; }
+        public bool IsCGDDeploying { get; set; }
+        public bool IsCGDDeployed { get; set; }
 
         #endregion
 

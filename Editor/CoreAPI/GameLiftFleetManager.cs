@@ -42,14 +42,14 @@ namespace AmazonGameLift.Editor
             {
                 return Response.Fail(new CreateFleetResponse { ErrorCode = ErrorCode.InvalidFleetName });
             }
-            
+
             try
             {
                 var createFleetRequest = new CreateFleetRequest
                 {
                     Name = fleetName,
                     ComputeType = ComputeType.ANYWHERE,
-                    Description = FleetDescription,
+                    Description = $"{FleetDescription} Using Unity Engine Version {UnityEngineVersionUtil.CurrentVersion}",
                     Locations = new List<LocationConfiguration>
                     {
                         new()

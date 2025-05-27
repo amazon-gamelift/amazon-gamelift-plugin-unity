@@ -34,7 +34,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             stateManagerMock.Object.DeploymentScenario =
                 coreSuccess ? storedScenario : DeploymentScenarios.SingleRegion;
 
-            DeploymentSettings underTest = GetUnitUnderTest(stateManager: stateManagerMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(stateManager: stateManagerMock);
 
             // Act
             underTest.Scenario = initialScenario;
@@ -57,7 +57,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             var stateManagerMock = new Mock<StateManager>();
             stateManagerMock.SetupProperty(state => state.DeploymentGameName, coreSuccess ? testGameName1 : null);
 
-            DeploymentSettings underTest = GetUnitUnderTest(stateManager: stateManagerMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(stateManager: stateManagerMock);
 
             // Act
             underTest.GameName = testGameName;
@@ -80,7 +80,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             stateManagerMock.SetupProperty(state => state.DeploymentBuildFolderPath,
                 coreSuccess ? testBuildFolderPath1 : null);
 
-            DeploymentSettings underTest = GetUnitUnderTest(stateManager: stateManagerMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(stateManager: stateManagerMock);
 
             // Act
             underTest.BuildFolderPath = testBuildFolderPath;
@@ -103,7 +103,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             stateManagerMock.SetupProperty(state => state.DeploymentBuildFilePath,
                 coreSuccess ? testBuildExePath1 : null);
 
-            DeploymentSettings underTest = GetUnitUnderTest(stateManager: stateManagerMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(stateManager: stateManagerMock);
 
             // Act
             underTest.BuildFolderPath = testBuildExePath;
@@ -120,7 +120,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [Test]
         public void IsBootstrapped_WhenNewInstance_IsFalse()
         {
-            DeploymentSettings underTest = GetUnitUnderTest();
+            EC2DeploymentSettings underTest = GetUnitUnderTest();
 
             Assert.IsFalse(underTest.IsBootstrapped);
         }
@@ -146,7 +146,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             coreApiMock.SetUpCoreApiWithBucket(success: bucketSet);
             coreApiMock.SetUpCoreApiWithRegion(success: regionSet, regionValid);
 
-            DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
             underTest.GameName = null;
             underTest.Refresh();
 
@@ -161,7 +161,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [Test]
         public void IsFormFilled_WhenNewInstance_IsFalse()
         {
-            DeploymentSettings underTest = GetUnitUnderTest();
+            EC2DeploymentSettings underTest = GetUnitUnderTest();
 
             Assert.IsFalse(underTest.IsFormFilled);
         }
@@ -169,18 +169,18 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [Test]
         public void IsFormFilled_WhenFieldsFilledAndNoServerBuild_IsTrue()
         {
-            DeploymentSettings underTest = TestWhenFieldsFilledAndNoServerBuild();
+            EC2DeploymentSettings underTest = TestWhenFieldsFilledAndNoServerBuild();
             Assert.IsTrue(underTest.IsFormFilled);
         }
 
         [Test]
         public void IsBuildPathFilled_WhenFieldsFilledAndNoServerBuild_IsTrue()
         {
-            DeploymentSettings underTest = TestWhenFieldsFilledAndNoServerBuild();
+            EC2DeploymentSettings underTest = TestWhenFieldsFilledAndNoServerBuild();
             Assert.IsTrue(underTest.IsBuildFolderPathFilled);
         }
 
-        private DeploymentSettings TestWhenFieldsFilledAndNoServerBuild()
+        private EC2DeploymentSettings TestWhenFieldsFilledAndNoServerBuild()
         {
             const string testGameName = "test";
             const string testScenarioName = "test scenario";
@@ -195,7 +195,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: false, coreApiMock);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
 
             // Act
             underTest.Refresh();
@@ -216,7 +216,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [TestCase(true, true, true)]
         public void IsFormFilled_WhenFieldsFilledAndServerBuildPathFilledParam_IsExpected(bool buildFolderExists, bool buildExeExists, bool expected)
         {
-            DeploymentSettings underTest = TestWhenFieldsFilledAndServerBuild(buildFolderExists, buildExeExists);
+            EC2DeploymentSettings underTest = TestWhenFieldsFilledAndServerBuild(buildFolderExists, buildExeExists);
             Assert.AreEqual(expected, underTest.IsFormFilled);
         }
 
@@ -227,7 +227,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [TestCase(true, true, true)]
         public void IsBuildFolderPathFilled_WhenFieldsFilledAndServerBuildPathFilledParam_IsExpected(bool buildFolderExists, bool buildExeExists, bool expected)
         {
-            DeploymentSettings underTest = TestWhenFieldsFilledAndServerBuild(buildFolderExists, buildExeExists);
+            EC2DeploymentSettings underTest = TestWhenFieldsFilledAndServerBuild(buildFolderExists, buildExeExists);
             Assert.AreEqual(expected, underTest.IsBuildFolderPathFilled);
         }
 
@@ -238,11 +238,11 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [TestCase(true, true, true)]
         public void IsBuildFilePathFilled_WhenFieldsFilledAndServerBuildPathFilledParam_IsExpected(bool buildFolderExists, bool buildExeExists, bool expected)
         {
-            DeploymentSettings underTest = TestWhenFieldsFilledAndServerBuild(buildFolderExists, buildExeExists);
+            EC2DeploymentSettings underTest = TestWhenFieldsFilledAndServerBuild(buildFolderExists, buildExeExists);
             Assert.AreEqual(expected, underTest.IsBuildFilePathFilled);
         }
 
-        private DeploymentSettings TestWhenFieldsFilledAndServerBuild(bool buildFolderExists, bool buildExeExists)
+        private EC2DeploymentSettings TestWhenFieldsFilledAndServerBuild(bool buildFolderExists, bool buildExeExists)
         {
             const string testGameName = "test";
             const string testScenarioName = "test scenario";
@@ -262,7 +262,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: true, coreApiMock);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
 
             // Act
             underTest.Refresh();
@@ -289,7 +289,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: false, coreApiMock);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
             // Act
             underTest.Refresh();
             underTest.Scenario = (DeploymentScenarios)(-1);
@@ -312,7 +312,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: false, coreApiMock);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
 
             // Act
             underTest.Refresh();
@@ -336,7 +336,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: false, coreApiMock);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
 
             // Act
             underTest.Refresh();
@@ -362,7 +362,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: false, coreApiMock);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
 
             // Act
             underTest.Refresh();
@@ -376,7 +376,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [Test]
         public void ScenarioPath_WhenNewInstance_IsNull()
         {
-            DeploymentSettings underTest = GetUnitUnderTest();
+            EC2DeploymentSettings underTest = GetUnitUnderTest();
 
             Assert.IsNull(underTest.ScenarioPath);
         }
@@ -400,7 +400,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: false, coreApiMock, scenarioFolder: testScenarioName);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock, pathConverter: pathConverterMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock, pathConverter: pathConverterMock);
 
             // Act
             underTest.Refresh();
@@ -425,7 +425,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: false, coreApiMock);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
 
             // Act
             underTest.Refresh();
@@ -449,7 +449,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             Mock<ScenarioLocator> scenarioLocatorMock = SetUpScenarioLocatorToReturnTestDeployer(
                 testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: false, coreApiMock);
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
 
             // Act
             underTest.Refresh();
@@ -469,7 +469,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             {
                 var scenarioLocatorMock = new Mock<ScenarioLocator>();
 
-                DeploymentSettings underTest = SetUpStartDeployment(
+                EC2DeploymentSettings underTest = SetUpStartDeployment(
                     deployerMock => SetUpDeployerStartDeployment(deployerMock, success: true),
                     waitSuccess: true, hasGameServer, scenarioLocatorMock: scenarioLocatorMock);
 
@@ -486,7 +486,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [Test]
         public void IsDeploymentRunning_WhenNewInstance_IsFalse()
         {
-            DeploymentSettings underTest = GetUnitUnderTest();
+            EC2DeploymentSettings underTest = GetUnitUnderTest();
 
             Assert.IsFalse(underTest.IsDeploymentRunning);
         }
@@ -498,7 +498,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
 
             async Task Run()
             {
-                DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
+                EC2DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
                     SetUpDeployerStartDeployment(deployerMock, success: true), waitSuccess: true, hasGameServer);
 
                 // Act
@@ -517,7 +517,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
 
             async Task Run()
             {
-                DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
+                EC2DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
                     SetUpDeployerStartDeployment(deployerMock, success: false), waitSuccess, hasGameServer);
 
                 // Act
@@ -546,7 +546,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
         [Test]
         public void CanCancel_WhenNewInstance_IsFalse()
         {
-            DeploymentSettings underTest = GetUnitUnderTest();
+            EC2DeploymentSettings underTest = GetUnitUnderTest();
 
             Assert.IsFalse(underTest.CanCancel);
         }
@@ -560,7 +560,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
 
             async Task Run()
             {
-                DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
+                EC2DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
                     SetUpDeployerStartDeployment(deployerMock, success: true), waitSuccess, hasGameServer);
 
                 // Act
@@ -579,7 +579,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
 
             async Task Run()
             {
-                DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
+                EC2DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
                     SetUpDeployerStartDeployment(deployerMock, success: false), waitSuccess, hasGameServer);
 
 
@@ -616,7 +616,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 var coreApiMock = new Mock<CoreApi>();
                 Mock<Delay> delayMock = SetUpDelayMock();
                 var deploymentWaiterMock = new Mock<DeploymentWaiter>(delayMock.Object, coreApiMock.Object);
-                (DeploymentSettings underTest, Mock<DeployerBase> deployerMock) = SetUpCancelDeploymentWhenCanCancelTrue(coreApiMock, deploymentWaiterMock);
+                (EC2DeploymentSettings underTest, Mock<DeployerBase> deployerMock) = SetUpCancelDeploymentWhenCanCancelTrue(coreApiMock, deploymentWaiterMock);
 
                 Task task = underTest.StartDeployment(ConfirmChangeSetTask);
                 Assert.IsTrue(underTest.IsDeploymentRunning);
@@ -645,7 +645,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 var coreApiMock = new Mock<CoreApi>();
                 Mock<Delay> delayMock = SetUpDelayMock();
                 var deploymentWaiterMock = new Mock<DeploymentWaiter>(delayMock.Object, coreApiMock.Object);
-                (DeploymentSettings underTest, Mock<DeployerBase> _) = SetUpCancelDeploymentWhenCanCancelTrue(coreApiMock, deploymentWaiterMock);
+                (EC2DeploymentSettings underTest, Mock<DeployerBase> _) = SetUpCancelDeploymentWhenCanCancelTrue(coreApiMock, deploymentWaiterMock);
 
                 var response = new DescribeStackResponse()
                 {
@@ -683,7 +683,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 var coreApiMock = new Mock<CoreApi>();
                 Mock<Delay> delayMock = SetUpDelayMock();
                 var deploymentWaiterMock = new Mock<DeploymentWaiter>(delayMock.Object, coreApiMock.Object);
-                (DeploymentSettings underTest, Mock<DeployerBase> _) = SetUpCancelDeploymentWhenCanCancelTrue(coreApiMock, deploymentWaiterMock);
+                (EC2DeploymentSettings underTest, Mock<DeployerBase> _) = SetUpCancelDeploymentWhenCanCancelTrue(coreApiMock, deploymentWaiterMock);
 
                 // It is called once in StartDeployment
                 coreApiMock.Verify(target => target.DescribeStack(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
@@ -700,7 +700,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             }
         }
 
-        private static (DeploymentSettings underTest, Mock<DeployerBase> deployerMock) SetUpCancelDeploymentWhenCanCancelTrue(
+        private static (EC2DeploymentSettings underTest, Mock<DeployerBase> deployerMock) SetUpCancelDeploymentWhenCanCancelTrue(
             Mock<CoreApi> coreApiMock, Mock<DeploymentWaiter> deploymentWaiterMock)
         {
             const string testGameName = "test";
@@ -745,7 +745,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 .Returns(Task.Delay(200).ContinueWith(_ => waitResponse))
                 .Verifiable();
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock, pathConverter: pathConverterMock, deploymentWaiter: deploymentWaiterMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock, pathConverter: pathConverterMock, deploymentWaiter: deploymentWaiterMock);
 
             underTest.Refresh();
             underTest.Scenario = DeploymentScenarios.SingleRegion;
@@ -771,7 +771,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             {
                 Mock<DeployerBase> deployerMock = null;
 
-                DeploymentSettings underTest = SetUpStartDeployment(mock =>
+                EC2DeploymentSettings underTest = SetUpStartDeployment(mock =>
                 {
                     SetUpDeployerStartDeployment(mock, success: true);
                     deployerMock = mock;
@@ -794,7 +794,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             {
                 Mock<DeployerBase> deployerMock = null;
 
-                DeploymentSettings underTest = SetUpStartDeployment(mock =>
+                EC2DeploymentSettings underTest = SetUpStartDeployment(mock =>
                 {
                     SetUpDeployerStartDeployment(mock, success: true);
                     deployerMock = mock;
@@ -840,7 +840,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                     testScenarioName, testScenarioDescription, testScenarioUrl, hasServer: true,
                     coreApiMock, deployerMock, scenarioLocatorMock);
 
-                DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock);
 
                 underTest.Refresh();
                 underTest.Scenario = DeploymentScenarios.SingleRegion;
@@ -865,7 +865,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             {
                 Mock<DeployerBase> deployerMock = null;
 
-                DeploymentSettings underTest = SetUpStartDeployment(mock =>
+                EC2DeploymentSettings underTest = SetUpStartDeployment(mock =>
                 {
                     SetUpDeployerStartDeployment(mock, success: true);
                     deployerMock = mock;
@@ -894,7 +894,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             {
                 Mock<DeployerBase> deployerMock = null;
 
-                DeploymentSettings underTest = SetUpStartDeployment(mock =>
+                EC2DeploymentSettings underTest = SetUpStartDeployment(mock =>
                 {
                     SetUpDeployerStartDeployment(mock, success: true);
                     deployerMock = mock;
@@ -935,10 +935,10 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             async Task Run()
             {
                 var coreApiMock = new Mock<CoreApi>();
-                var deploymentSettings = SetUpDeleteDeployment(coreApiMock);
-                deploymentSettings.Refresh();
+                var EC2DeploymentSettings = SetUpDeleteDeployment(coreApiMock);
+                EC2DeploymentSettings.Refresh();
 
-                await deploymentSettings.DeleteDeployment();
+                await EC2DeploymentSettings.DeleteDeployment();
 
                 coreApiMock.Verify();
             }
@@ -971,7 +971,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             coreApiMock.SetUpCoreApiWithDescribeStack(success: true, stackName: testGameName, result: testStatus,
                 outputs: testOutputs);
 
-            DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
 
             // Assert
             Assert.AreEqual(expectedStatusText, underTest.CurrentStackInfo.Status);
@@ -991,7 +991,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 var coreApiMock = new Mock<CoreApi>();
                 SetUpcoreApiforRefreshSuccess(coreApiMock, gameName: testGameName);
 
-                DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
 
                 underTest.Refresh();
                 underTest.Scenario = DeploymentScenarios.SingleRegion;
@@ -1022,7 +1022,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 var coreApiMock = new Mock<CoreApi>();
                 SetUpcoreApiforRefreshSuccess(coreApiMock, gameName: testGameName);
 
-                DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
 
                 underTest.Refresh();
                 underTest.Scenario = DeploymentScenarios.SingleRegion;
@@ -1069,7 +1069,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 coreApiMock.SetUpCoreApiWithDescribeStack(success: true, stackName: testGameName, result: testStatus,
                     outputs: testOutputs);
 
-                DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
 
                 underTest.Refresh();
                 underTest.Scenario = DeploymentScenarios.SingleRegion;
@@ -1096,7 +1096,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                     .Returns(false)
                     .Verifiable();
 
-                DeploymentSettings underTest = GetUnitUnderTest(deploymentIdContainer: deploymentIdContainer);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(deploymentIdContainer: deploymentIdContainer);
                 DeploymentStackInfo expectedInfo = underTest.CurrentStackInfo;
 
                 await underTest.WaitForCurrentDeployment();
@@ -1136,7 +1136,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 var deploymentIdContainer = new Mock<IDeploymentIdContainer>();
                 SetUpContainer(deploymentIdContainer, deploymentId);
 
-                DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock, deploymentWaiter: deploymentWaiter, deploymentIdContainer: deploymentIdContainer);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock, deploymentWaiter: deploymentWaiter, deploymentIdContainer: deploymentIdContainer);
 
                 DeploymentStackInfo unexpectedInfo = underTest.CurrentStackInfo;
 
@@ -1176,7 +1176,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 deploymentIdContainer.Setup(target => target.Clear())
                     .Verifiable();
 
-                DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock, deploymentWaiter: deploymentWaiter, deploymentIdContainer: deploymentIdContainer);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock, deploymentWaiter: deploymentWaiter, deploymentIdContainer: deploymentIdContainer);
 
                 DeploymentStackInfo expectedInfo = underTest.CurrentStackInfo;
 
@@ -1215,7 +1215,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 var deploymentIdContainer = new Mock<IDeploymentIdContainer>();
                 SetUpContainer(deploymentIdContainer, deploymentId);
 
-                DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock, deploymentWaiter: deploymentWaiter, deploymentIdContainer: deploymentIdContainer);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock, deploymentWaiter: deploymentWaiter, deploymentIdContainer: deploymentIdContainer);
 
                 try
                 {
@@ -1270,7 +1270,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 coreApiMock.SetUpCoreApiWithDescribeStack(success: true, stackName: testGameName, result: testStatus,
                     outputs: testOutputs);
 
-                DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
+                EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock);
 
                 underTest.Refresh();
                 underTest.Scenario = DeploymentScenarios.SingleRegion;
@@ -1294,10 +1294,10 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 .Verifiable();
         }
 
-        private static async Task TestWhenRefreshAndScenarioSelectedAndStartDeploymentException(string testError, bool hasGameServer, Action<DeploymentSettings> assert)
+        private static async Task TestWhenRefreshAndScenarioSelectedAndStartDeploymentException(string testError, bool hasGameServer, Action<EC2DeploymentSettings> assert)
         {
             var testException = new Exception(testError);
-            DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
+            EC2DeploymentSettings underTest = SetUpStartDeployment(deployerMock =>
             {
                 deployerMock.Setup(target => target.StartDeployment(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                     It.IsAny<bool>(), It.IsAny<ConfirmChangesDelegate>()))
@@ -1344,7 +1344,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             coreApiMock.SetUpCoreApiWithDescribeStack(success: true, profile, stackName: gameName, result: result);
         }
 
-        private static DeploymentSettings SetUpStartDeployment(Action<Mock<DeployerBase>> setUpDeployer,
+        private static EC2DeploymentSettings SetUpStartDeployment(Action<Mock<DeployerBase>> setUpDeployer,
             bool waitSuccess, bool hasGameServer, string buildFilePath = "test path/build.exe",
             Mock<ScenarioLocator> scenarioLocatorMock = null, Mock<CoreApi> coreApiMock = null,
             Mock<DeploymentWaiter> deploymentWaiter = null, Mock<IDeploymentIdContainer> deploymentIdContainer = null)
@@ -1390,7 +1390,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
                 .Returns(Task.FromResult(waitResponse))
                 .Verifiable();
 
-            DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock,
+            EC2DeploymentSettings underTest = GetUnitUnderTest(scenarioLocatorMock, coreApi: coreApiMock,
                 pathConverter: pathConverterMock, deploymentWaiter: deploymentWaiter, deploymentIdContainer: deploymentIdContainer);
 
             underTest.Refresh();
@@ -1406,7 +1406,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             return underTest;
         }
         
-        private static DeploymentSettings SetUpDeleteDeployment(Mock<CoreApi> coreApiMock = null)
+        private static EC2DeploymentSettings SetUpDeleteDeployment(Mock<CoreApi> coreApiMock = null)
         {
             const string testGameName = "test";
             const string testProfileName = "testProfile";
@@ -1430,7 +1430,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             stateManagerMock.SetupGet(l => l.ProfileName).Returns(testProfileName);
             stateManagerMock.SetupGet(l => l.Region).Returns(testRegion);
 
-            DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock, stateManager: stateManagerMock);
+            EC2DeploymentSettings underTest = GetUnitUnderTest(coreApi: coreApiMock, stateManager: stateManagerMock);
             
             return underTest;
         }
@@ -1477,7 +1477,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             return delayMock;
         }
 
-        private static DeploymentSettings GetUnitUnderTest(Mock<ScenarioLocator> scenarioLocator = null,
+        private static EC2DeploymentSettings GetUnitUnderTest(Mock<ScenarioLocator> scenarioLocator = null,
             Mock<PathConverter> pathConverter = null, Mock<CoreApi> coreApi = null,
             Mock<ScenarioParametersUpdater> parametersUpdater = null, Mock<DeploymentWaiter> deploymentWaiter = null,
             Mock<IDeploymentIdContainer> deploymentIdContainer = null, Mock<Delay> delay = null, Mock<StateManager> stateManager = null)
@@ -1491,7 +1491,7 @@ namespace AmazonGameLiftPlugin.Editor.UnitTests
             deploymentIdContainer = deploymentIdContainer ?? new Mock<IDeploymentIdContainer>();
             stateManager = stateManager ?? new Mock<StateManager>();
 
-            return new DeploymentSettings(scenarioLocator.Object, pathConverter.Object, coreApi.Object,
+            return new EC2DeploymentSettings(scenarioLocator.Object, pathConverter.Object, coreApi.Object,
                 parametersUpdater.Object, TextProviderFactory.Create(), deploymentWaiter.Object,
                 deploymentIdContainer.Object, delayMock.Object, new MockLogger(), stateManager.Object);
         }

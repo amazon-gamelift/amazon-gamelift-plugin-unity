@@ -139,6 +139,7 @@ namespace AmazonGameLiftPlugin.Core.DeploymentManagement
                 }
 
                 Stack stack = describeStacksResponse.Stacks[0];
+                
                 string gameName = stack.Parameters.Find(target => target.ParameterKey == s_gameNameParameter)?.ParameterValue;
 
                 var response = new DescribeStackResponse
@@ -169,6 +170,35 @@ namespace AmazonGameLiftPlugin.Core.DeploymentManagement
                     ErrorCode = ErrorCode.StackDoesNotExist,
                     ErrorMessage = ex.Message
                 });
+            }
+        }
+
+        public Models.DescribeStackResourceResponse DescribeStackResource(Models.DescribeStackResourceRequest request)
+        {
+            try
+            {
+                Amazon.CloudFormation.Model.DescribeStackResourceResponse describeStackResourceResponse = 
+                    _amazonCloudFormation.DescribeStackResource(new Amazon.CloudFormation.Model.DescribeStackResourceRequest()
+                {
+                    LogicalResourceId = request.LogicalResourceId,
+                    StackName = request.StackName
+                });
+
+                StackResourceDetail stackResourceDetail = describeStackResourceResponse.StackResourceDetail;
+
+                var response = new Models.DescribeStackResourceResponse
+                {
+                    StackId = stackResourceDetail.StackId,
+                    PhysicalResourceId = stackResourceDetail.PhysicalResourceId
+                };
+
+                return Response.Ok(response);
+            }
+            catch (AmazonCloudFormationException ex)
+            {
+                Logger.LogError(ex, ex.Message);
+
+                return null;
             }
         }
 

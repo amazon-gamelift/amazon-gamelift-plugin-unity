@@ -5,46 +5,22 @@
     <Style src="./AnywherePage.uss"/>
     <ui:VisualElement class="separator separator--vertical separator--large">
         <ui:VisualElement class="separator separator--vertical">
-            <ui:Label name="AnywherePageTitle" class="page__title" text="GameLift Anywhere"/>
-            <ui:Label name="AnywherePageDescription" text="Amazon GameLift Anywhere fleets use your existing infrastructure to host game servers while Amazon GameLift manages your matchmaking and queues.&#10;You can integrate Anywhere and Managed EC2 fleets in matchmaker and game session queues to manage matchmaking and game placement."/>
+            <ui:Label name="AnywherePageTitle" class="page__title" text="%%Amazon GameLift Anywhere%%"/>
+            <ui:Label name="AnywherePageDescription" text="%%Amazon GameLift Anywhere fleets use your existing...%%"/>
             <gl:InfoLinks/>
         </ui:VisualElement>
         <ui:VisualElement class="divider"/>
         <gl:StatusBox name="AnywherePageStatusBox"/>
-        <ui:Foldout name="AnywherePageUserProfileTitle" class="foldout separator separator--vertical" text="AWS User Profile">
-            <gl:ProfileSelector/>
-        </ui:Foldout>
-        <ui:Foldout name="AnywherePageIntegrateTitle" class="foldout separator separator--vertical" text="Integrate GameLift with your game client">
-            <ui:Label name="AnywherePageIntegrateDescription" class="page__content" text="Add the Amazon GameLift server SDK to your game server and add code to communicate with the GameLift hosting service. If you&apos;re working with the Amazon GameLift sample game, this integration is already done."/>
-            <ui:VisualElement name="AnywherePageIntegrateServerLinkParent" class="external-link">
-                <ui:Label name="AnywherePageIntegrateServerLink" text="Setup Amazon GameLift on a backend service"/>
-                <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="AnywherePageIntegrateClientLinkParent" class="external-link">
-                <ui:Label name="AnywherePageIntegrateClientLink" text="Setup Amazon GameLift client"/>
-                <ui:Image name="ExternalLinkIcon" class="icon--extrasmall"/>
-            </ui:VisualElement>
-        </ui:Foldout>
-        <ui:Foldout name="AnywherePageConnectFleetTitle" class="foldout" text="Connect to Anywhere Fleet"/>
-        <ui:Foldout name="AnywherePageComputeTitle" class="foldout" text="Register Compute"/>
-        <ui:Foldout name="AnywherePageLaunchTitle" class="foldout separator separator--vertical" text="Launch foldout">
-            <gl:StatusBox name="AnywherePageLaunchStatusBox"/>
-            <ui:VisualElement class="form-row">
-                <ui:Label name="AnywherePageConfigureClientLabel" class="form-row__label" text="Configure Client"/>
-                <ui:VisualElement class="form-row__input">
-                    <ui:Button name="AnywherePageConfigureClientButton" class="button button--primary" text="Configure button"/>
-                </ui:VisualElement>
-            </ui:VisualElement>
-            <ui:VisualElement class="form-row">
-                <ui:Label name="AnywherePageLaunchClientLabel" class="form-row__label" text="Launch Client"/>
-                <ui:Label name="AnywherePageLaunchClientDescription" class="form-row__text-display" text="Build and launch your game client."/>
-            </ui:VisualElement>
-            <ui:VisualElement class="form-row">
-                <ui:Label name="AnywherePageLaunchServerLabel" class="form-row__label" text="Run Game"/>
-                <ui:VisualElement class="form-row__input">
-                    <ui:Button name="AnywherePageLaunchServerButton" class="button button--primary" text="Launch button"/>
-                </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:Foldout>
+        <ui:VisualElement class="separator separator--vertical">
+            <ui:Label class="child__title" text="AWS Credential Profile"/>
+            <gl:ProfileTable name="ProfileTable"/>
+            <ui:Label text="This credential profile will be used to create your fleet, change your active profile in AWS Access Credentials."/>
+            <ui:Button name="ManageCredentialsButton" class="button button--default button--small button--part-width" text="Manage Credentials"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="divider"/>
     </ui:VisualElement>
+    <ui:VisualElement name="AnywherePageIntegrateStepTitle"/>
+    <ui:VisualElement name="AnywherePageConnectFleetTitle"/>
+    <ui:VisualElement name="AnywherePageComputeTitle"/>
+    <ui:VisualElement name="AnywherePageLaunchTitle"/>
 </ui:UXML>

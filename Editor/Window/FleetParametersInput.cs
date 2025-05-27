@@ -63,7 +63,8 @@ namespace AmazonGameLift.Editor
             _serverFolderButton = container.Q<Button>("ManagedEC2ParametersGameServerFolderButton");
             _serverFolderButton.RegisterCallback<ClickEvent>(_ =>
             {
-                var value = EditorUtility.OpenFolderPanel("Game Server Build Folder Path", Application.dataPath,
+                var popupTitle = new TextProvider().Get(Strings.ManagedEC2ParametersGameServerFolderPath);
+                var value = EditorUtility.OpenFolderPanel(popupTitle, Application.dataPath,
                     _parameters.GameServerFolder);
                 _parameters.GameServerFolder = value;
                 _serverFolderInput.value = value;

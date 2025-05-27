@@ -13,5 +13,9 @@ namespace AmazonGameLift.Editor
         public const string CfnTemplateFileName = "cloudformation.yml";
         public const string ParametersFileName = "parameters.json";
         public const string ServerSdkDllInPackage = "Runtime/Plugins/GameLiftServerSDKNet45.dll";
+        public const string ContainersRootInPackage = "Editor/Resources/Containers";
+        public const string ContainersOutputFolderName = "Output~";
+        public const string ContainerDockerfileFileName = "SampleDockerfile";
+        public const string ContainerPushImageScriptFileName = "PushExistingImageToECRScriptTemplate.ps1";
     }
 }

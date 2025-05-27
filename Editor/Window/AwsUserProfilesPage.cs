@@ -1,10 +1,14 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UIElements;
+using AmazonGameLiftPlugin.Core.CredentialManagement.Models;
 using BucketErrorCode = AmazonGameLiftPlugin.Core.Shared.ErrorCode;
 
 namespace AmazonGameLift.Editor
@@ -15,6 +19,7 @@ namespace AmazonGameLift.Editor
 
         private readonly AwsCredentialsUpdate _awsCredentialsUpdateModel;
         private readonly BootstrapSettings _bootstrapSettings;
+        private readonly ElementLocalizer _elementLocalizer;
 
         private VisualElement _currentElement;
 
@@ -22,11 +27,15 @@ namespace AmazonGameLift.Editor
         private readonly StateManager _stateManager;
         private readonly VisualElement _container;
         private readonly UserProfileCreation _userProfileCreation;
+        private readonly HelpfulResources _helpfulResources;
         private readonly List<VisualElement> _allMenus;
         private readonly VisualElement _noAccountMenu;
         private readonly VisualElement _createMenu;
-        private readonly VisualElement _bootstrapMenu;
-        private readonly VisualElement _completedMenu;
+        private readonly VisualElement _profilesTableMenu;
+        private readonly Button _bootstrapButton;
+        private readonly Button _selectProfileButton;
+        private readonly Button _openCredentialsFileButton;
+        private TextField _configFilePathInput;
         private StatusBox _statusBox;
 
         public AwsUserProfilesPage(VisualElement container, StateManager stateManager)
@@ -39,19 +48,18 @@ namespace AmazonGameLift.Editor
             var uxml = mVisualTreeAsset.Instantiate();
 
             _container.Add(uxml);
+            _elementLocalizer = new ElementLocalizer(_container);
             SetupStatusBoxes();
             LocalizeText();
 
             _noAccountMenu = _container.Q<VisualElement>("UserProfilePageNoAccountMenu");
             _createMenu = _container.Q<VisualElement>("UserProfilePageCreateMenu");
-            _bootstrapMenu = _container.Q<VisualElement>("UserProfilePageBootstrapMenu");
-            _completedMenu = _container.Q<VisualElement>("UserProfilePageCompletedMenu");
+            _profilesTableMenu = _container.Q<VisualElement>("UserProfilesTableMenu");
             _allMenus = new List<VisualElement>()
             {
                 _noAccountMenu,
                 _createMenu,
-                _bootstrapMenu,
-                _completedMenu,
+                _profilesTableMenu,
             };
             AccountDetailTextFields = _createMenu.Query<TextField>().ToList();
 
@@ -66,26 +74,46 @@ namespace AmazonGameLift.Editor
             _userProfileCreation = new UserProfileCreation(createProfileContainer, _stateManager);
             _userProfileCreation.OnProfileCreated += () =>
             {
-                ShowProfileMenu(_bootstrapMenu);
+                ShowProfileMenu(_profilesTableMenu);
             };
             _bootstrapSettings = BootstrapSettingsFactory.Create(_stateManager);
+
+            var helpfulResourcesContainer = _container.Q<Foldout>("HelpfulResourcesFoldout");
+            _helpfulResources = new HelpfulResources(helpfulResourcesContainer);
+            helpfulResourcesContainer.value = false;
 
             RefreshProfiles();
 
             container.Q<DropdownField>("UserProfilePageAccountNewProfileRegionDropdown").choices =
                 _stateManager.CoreApi.ListAvailableRegions().ToList();
 
+            _configFilePathInput = _container.Q<TextField>("UserProfilePageAwsConfigurationFileInput");
+            _configFilePathInput.SetEnabled(false);
+
+            _selectProfileButton = _container.Q<Button>(Strings.UserProfilePageSetProfileButton);
+
+            _bootstrapButton = _container.Q<Button>(Strings.UserProfilePageBootstrapButton);
+
+            _openCredentialsFileButton = _container.Q<Button>("UserProfilePageAwsConfigurationFileButton");
+
             UpdateGui();
 
             _stateManager.OnUserProfileUpdated += UpdateGui;
 
+            _stateManager.OnUserProfileUpdated += EnableDisableButtons;
+
+            _stateManager.OnAddAnotherProfile += () => ShowProfileMenu(_createMenu);
+
+            _stateManager.OnProfileRadioButtonChanged += EnableDisableButtons;
+
             ChooseProfileMenu();
             SetupButtonCallbacks();
+            EnableDisableButtons();
         }
 
         private void UpdateGui()
         {
-            if (!_stateManager.IsBootstrapped)
+            if (!_stateManager.IsBootstrapped())
             {
                 _statusBox.Show(StatusBox.StatusBoxType.Warning, Strings.UserProfilePageStatusBoxWarningText);
             }
@@ -93,48 +121,56 @@ namespace AmazonGameLift.Editor
             {
                 _statusBox.Close();
             }
+
+            GetCredentialsFileResponse response = _stateManager.CoreApi.GetCredentialsFile();
+            if (!response.Success)
+            {
+                UnityEngine.Debug.LogError(_elementLocalizer.GetError(response.ErrorCode));
+                _openCredentialsFileButton.SetEnabled(false);
+                return;
+            }
+            _configFilePathInput.value = response.FilePath;
+            _openCredentialsFileButton.SetEnabled(true);
         }
 
         private void LocalizeText()
         {
-            var l = new ElementLocalizer(_container);
-            l.SetElementText("UserProfilePageTitle", Strings.UserProfilePageTitle);
-            l.SetElementText("UserProfilePageDescription", Strings.UserProfilePageDescription);
-            l.SetElementText("UserProfilePageAccountCardNoAccountTitle", Strings.UserProfilePageAccountCardNoAccountTitle);
-            l.SetElementText("UserProfilePageAccountCardNoAccountDescription", Strings.UserProfilePageAccountCardNoAccountDescription);
-            l.SetElementText("UserProfilePageAccountCardNewAccountTitle", Strings.UserProfilePageAccountCardNewAccountTitle);
-            l.SetElementText("UserProfilePageAccountCardNewAccountDescription", Strings.UserProfilePageAccountCardNewAccountDescription);
-            l.SetElementText("UserProfilePageAccountCardNoAccountLink", Strings.UserProfilePageAccountCardNoAccountLink);
-            l.SetElementText("UserProfilePageAccountCardNoAccountButtonLabel", Strings.UserProfilePageAccountCardNoAccountButtonLabel);
-            l.SetElementText("UserProfilePageAccountCardHasAccountButton", Strings.UserProfilePageAccountCardHasAccountButton);
-            l.SetElementText("UserProfilePageBootstrapTitle", Strings.UserProfilePageBootstrapTitle);
-            l.SetElementText("UserProfilePageBootstrapDescription", Strings.UserProfilePageBootstrapDescription);
-            l.SetElementText("LabelBootstrapRegion", Strings.LabelBootstrapRegion);
-            l.SetElementText("UserProfilePageBootstrapHelpLink", Strings.UserProfilePageBootstrapHelpLink);
-            l.SetElementText("UserProfilePageBootstrapStartButton", Strings.UserProfilePageBootstrapStartButton);
-            l.SetElementText("UserProfilePageBootstrapAnotherProfileButton", Strings.UserProfilePageBootstrapAnotherProfileButton);
-            l.SetElementText("UserProfilePageBootstrapAnotherBucketButton", Strings.UserProfilePageBootstrapAnotherBucketButton);
-            l.SetElementText("UserProfilePageAccountAddNewProfileButton", Strings.UserProfilePageBootstrapAnotherProfileButton);
-            l.SetElementText("UserProfilePageCompletedBootstrapHelpLink", Strings.UserProfilePageCompletedBootstrapHelpLink);
+            var strings = new[]
+            {
+                Strings.UserProfilePageTitle,
+                Strings.UserProfilePageDescription,
+
+                Strings.UserProfilePageAccountCardNoAccountTitle,
+                Strings.UserProfilePageAccountCardNoAccountDescription,
+                Strings.UserProfilePageAccountCardNoAccountButtonLabel,
+
+                Strings.UserProfilePageAccountCardHasAccountTitle,
+                Strings.UserProfilePageAccountCardHasAccountDescription,
+                Strings.UserProfilePageAccountCardHasAccountButton,
+
+                Strings.UserProfilePageTableTitle,
+                Strings.UserProfilePageTableDescription,
+                Strings.UserProfilePageAwsConfigurationFileLabel,
+                Strings.UserProfilePageBootstrapButton,
+                Strings.UserProfilePageCompletedBootstrapHelpLink,
+                Strings.UserProfilePageSetProfileButton
+            };
+            foreach (var s in strings)
+            {
+                _elementLocalizer.SetElementText(s, s);
+            }
+            _elementLocalizer.SetElementTooltip(Strings.UserProfilePageAwsConfigurationFileLabel,
+                Strings.UserProfilePageAwsConfigurationFileTooltip);
         }
 
         private void SetupButtonCallbacks()
         {
             _container.Q<Button>("UserProfilePageAccountCardNoAccountButton")
                 .RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.CreateAwsAccountLearnMore));
-            _container.Q<VisualElement>("UserProfilePageBootstrapHelpLinkParent")
-                .RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.S3BootstrapHelp));
-            _container.Q<VisualElement>("UserProfilePageCompletedBootstrapHelpLinkParent")
-                .RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.S3BootstrapHelp));
             _container.Q<VisualElement>("UserProfilePageAccountNewProfileHelpLinkParent")
                 .RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.AwsIamDocumentation));
 
             _container.Q<Button>("UserProfilePageAccountCardHasAccountButton").RegisterCallback<ClickEvent>(_ =>
-            {
-                var targetWizard = _container.Q<VisualElement>("UserProfilePageCreateMenu");
-                ShowProfileMenu(targetWizard);
-            });
-            _container.Q<Button>("UserProfilePageBootstrapAnotherProfileButton").RegisterCallback<ClickEvent>(_ =>
             {
                 var targetWizard = _container.Q<VisualElement>("UserProfilePageCreateMenu");
                 ShowProfileMenu(targetWizard);
@@ -144,21 +180,31 @@ namespace AmazonGameLift.Editor
                 _userProfileCreation.Reset();
                 ChooseProfileMenu();
             });
-            _container.Q<Button>("UserProfilePageBootstrapStartButton").RegisterCallback<ClickEvent>(_ =>
+
+            _selectProfileButton.RegisterCallback<ClickEvent>(_ =>
+            {
+                _stateManager.SetProfile(_stateManager.SelectedRadioButton);
+            });
+
+            _bootstrapButton.RegisterCallback<ClickEvent>(_ =>
             {
                 _bootstrapSettings.RefreshBucketName();
                 OpenS3Popup(_bootstrapSettings.BucketName);
             });
-            _container.Q<Button>("UserProfilePageBootstrapAnotherBucketButton").RegisterCallback<ClickEvent>(_ =>
+            _container.Q<VisualElement>("WhatIsBootstrappingLink").RegisterCallback<ClickEvent>(_ => Application.OpenURL(Urls.S3BootstrapHelp));
+
+            _openCredentialsFileButton.RegisterCallback<ClickEvent>(_ =>
             {
-                _bootstrapSettings.RefreshBucketName();
-                OpenS3Popup(_bootstrapSettings.BucketName);
+                Process.Start($"\"{_configFilePathInput.value}\"");
             });
-            _container.Q<Button>("UserProfilePageAccountAddNewProfileButton").RegisterCallback<ClickEvent>(_ =>
-            {
-                var targetWizard = _container.Q<VisualElement>("UserProfilePageCreateMenu");
-                ShowProfileMenu(targetWizard);
-            });
+        }
+
+        private void EnableDisableButtons()
+        {
+            var selectedProfile = _stateManager.SelectedProfile;
+            var selectedButton = _stateManager.SelectedRadioButton;
+            _bootstrapButton.SetEnabled(selectedProfile != null && selectedProfile.Name == selectedButton && !_stateManager.IsBootstrapped(selectedProfile));
+            _selectProfileButton.SetEnabled(selectedProfile != null && selectedButton != null && selectedProfile.Name != selectedButton);
         }
 
         private void ChooseProfileMenu()
@@ -171,13 +217,9 @@ namespace AmazonGameLift.Editor
             {
                 ShowProfileMenu(_createMenu);
             }
-            else if (_stateManager.IsBootstrapped)
-            {
-                ShowProfileMenu(_completedMenu);
-            }
             else
             {
-                ShowProfileMenu(_bootstrapMenu);
+                ShowProfileMenu(_profilesTableMenu);
             }
         }
 

@@ -1,0 +1,17 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+@import './common.uss';
+
+:root {
+    padding: var(--spacing-large);
+    border-width: var(--border-size-medium);
+    border-color: var(--color-border-highlight);
+    height: 100%;
+}
+
+.popup__heading {
+    font-size: var(--font-size-extralarge);
+    color: var(--color-input-label);
+    -unity-font-style: bold;
+}
