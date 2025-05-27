@@ -11,5 +11,4 @@ else
 }
 
 Write-Host "Downloads clean up completed!" -ForegroundColor Yellow
-
 exit 0

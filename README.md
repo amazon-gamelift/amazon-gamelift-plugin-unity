@@ -121,4 +121,3 @@ logs/amazon-gamelift-plugin-logs[YYYYMMDD].txt`. Note that the log file is creat
 * [AWS Support Center](https://console.aws.amazon.com/support/home)
 * [GitHub issues](https://github.com/aws/amazon-gamelift-plugin-unity/issues)
 * [Contributing guidelines](CONTRIBUTING.md)
-
