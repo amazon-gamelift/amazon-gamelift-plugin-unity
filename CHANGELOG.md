@@ -1,5 +1,11 @@
 CHANGELOG
 
+# 3.1.0 (05/29/2025)
+- Adds or improves client-side validation in all server SDK actions.
+- Adds more specific and improved error responses to API errors.
+- Adds idempotency token support to allow InitSDK() retries to succeed.
+- Includes autoBackfillMode in the data passed in the OnUpdateGameSession() callback.
+
 # 3.0.1 (03/13/2025)
 This version supports the LTS versions of Unity 6.0, 2021.3, and 2022.3.
 - Update the installation instructions to use the new registry URL for Unity NuGet in Package Manager
