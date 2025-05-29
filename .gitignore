@@ -6,6 +6,9 @@
 *.iml.meta
 build.meta
 /build/
+**/Output~/
+/Out/
+/Temp/
 
 # Infra
 *.js
@@ -19,3 +22,11 @@ cdk.out
 
 # Vscode 
 .vscode
+
+# CSharp Server SDK files
+# Keep txt.metas and cs.metas, because Unity won't generate these.
+# The release packaging process adds the CSharp Server SDK files to the package without opening Unity, so .metas must exist.
+# Unity treats tarbell packages as immutable, so it won't generate metas even after the package is installed.
+/GameLiftServerSDK/release-notes/*.txt
+/GameLiftServerSDK/Runtime/Core/Server/**/*.cs
+/GameLiftServerSDK/Runtime/Core/Common/**/*.cs

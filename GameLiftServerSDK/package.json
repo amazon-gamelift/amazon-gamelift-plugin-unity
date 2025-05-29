@@ -1,0 +1,31 @@
+{
+    "name": "com.amazonaws.gameliftserver.sdk",
+    "displayName": "Amazon GameLift Server SDK",
+    "author": "Amazon.com, Inc.",
+    "version": "5.3.0",
+    "unity": "2020.3",
+    "description": "The Amazon GameLift Server SDK Plugin for Unity contains source code to integrate Unity based game servers with the Amazon GameLift service.",
+    "documentationUrl": "https://aws.amazon.com/documentation/gamelift",
+    "changelogUrl": "",
+    "licensesUrl": "",
+    "keywords": [
+        "AWS",
+        "GameLift",
+        "Multiplayer",
+        "SDK"
+    ],
+    "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "org.nuget.log4net": "2.0.15",
+        "org.nuget.polly": "7.2.3",
+        "org.nuget.websocketsharp.core": "1.0.0",
+        "org.nuget.system.configuration.configurationmanager": "7.0.0"
+    },
+    "samples": [
+        {
+            "displayName": "Log4Net Config",
+            "description": "Configure custom logging that writes to terminal and file with log4net.",
+            "path": "Samples~/Log4NetConfig~"
+        }
+    ]
+}
