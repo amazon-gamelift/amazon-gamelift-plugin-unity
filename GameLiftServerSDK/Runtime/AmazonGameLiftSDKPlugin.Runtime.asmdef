@@ -1,0 +1,24 @@
+{
+    "name": "AmazonGameLiftSDKPlugin.Runtime",
+    "rootNamespace": "",
+    "references": [],
+    "includePlatforms": [
+        "Editor",
+        "LinuxStandalone64",
+        "macOSStandalone",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "websocket-sharp-core.dll",
+        "Newtonsoft.Json.dll",
+        "log4net.dll",
+        "Polly.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
