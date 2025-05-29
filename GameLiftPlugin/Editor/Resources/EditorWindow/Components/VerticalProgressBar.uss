@@ -1,18 +1,30 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: Apache-2.0 */
 
+<<<<<<< HEAD:GameLiftPlugin/Editor/Resources/EditorWindow/Components/VerticalProgressBar.uss
 @import '../common.uss';
+=======
+@import '../../common.uss';
+>>>>>>> main:Editor/Resources/EditorWindow/Components/VerticalProgressBar.uss
 
 .vertical-progress-bar {
     flex-direction: column;
     align-items: center;
+<<<<<<< HEAD:GameLiftPlugin/Editor/Resources/EditorWindow/Components/VerticalProgressBar.uss
     top: 20px;
+=======
+    top: 20;
+>>>>>>> main:Editor/Resources/EditorWindow/Components/VerticalProgressBar.uss
     bottom: 0;
 }
 
 .progress-bar {
     position: absolute;
+<<<<<<< HEAD:GameLiftPlugin/Editor/Resources/EditorWindow/Components/VerticalProgressBar.uss
     top: 23px;
+=======
+    top: 23;
+>>>>>>> main:Editor/Resources/EditorWindow/Components/VerticalProgressBar.uss
     bottom: 0;
     width: 3px;
 }
