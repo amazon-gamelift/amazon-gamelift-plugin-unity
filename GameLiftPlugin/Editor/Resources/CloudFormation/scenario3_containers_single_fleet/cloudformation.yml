@@ -337,11 +337,7 @@ Resources:
       GameServerContainerDefinition: 
         ContainerName: !Ref ContainerImageNameParameter
         ImageUri: !Ref ContainerImageUriParameter
-<<<<<<< HEAD:GameLiftPlugin/Editor/Resources/CloudFormation/scenario3_containers_single_fleet/cloudformation.yml
         ServerSdkVersion: "5.3.0"
-=======
-        ServerSdkVersion: "5.2.0"
->>>>>>> main:Editor/Resources/CloudFormation/scenario3_containers_single_fleet/cloudformation.yml
         PortConfiguration:
           ContainerPortRanges:
             - FromPort: !Ref FleetTcpFromPortParameter

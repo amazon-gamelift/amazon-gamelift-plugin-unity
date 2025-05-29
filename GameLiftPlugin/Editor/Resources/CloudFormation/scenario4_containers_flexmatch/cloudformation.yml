@@ -540,11 +540,7 @@ Resources:
       GameServerContainerDefinition: 
         ContainerName: !Ref ContainerImageNameParameter
         ImageUri: !Ref ContainerImageUriParameter
-<<<<<<< HEAD:GameLiftPlugin/Editor/Resources/CloudFormation/scenario4_containers_flexmatch/cloudformation.yml
         ServerSdkVersion: "5.3.0"
-=======
-        ServerSdkVersion: "5.2.0"
->>>>>>> main:Editor/Resources/CloudFormation/scenario4_containers_flexmatch/cloudformation.yml
         PortConfiguration:
           ContainerPortRanges:
             - FromPort: !Ref FleetTcpFromPortParameter

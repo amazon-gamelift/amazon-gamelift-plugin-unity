@@ -4,11 +4,7 @@
 @import './common.uss';
 
 .progress-step {
-<<<<<<< HEAD:GameLiftPlugin/Editor/Resources/EditorWindow/ProgressBar.uss
     top: 20px;
-=======
-    top: 20;
->>>>>>> main:Editor/Resources/EditorWindow/ProgressBar.uss
 }
 
 .spacer {

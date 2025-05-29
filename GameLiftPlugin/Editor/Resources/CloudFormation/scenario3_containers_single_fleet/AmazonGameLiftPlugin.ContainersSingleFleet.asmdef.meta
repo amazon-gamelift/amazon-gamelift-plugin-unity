@@ -1,15 +1,7 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:GameLiftPlugin/Editor/Resources/CloudFormation/scenario3_containers_single_fleet/AmazonGameLiftPlugin.ContainersSingleFleet.asmdef.meta
 guid: 08c2e5be5eec9544ca0f53a5d4926af9
-=======
-<<<<<<<< HEAD:GameLiftServerSDK/Runtime/AmazonGameLiftSDKPlugin.Runtime.asmdef.meta
-guid: 40c1c597f690db94ea5246459d4ebbe0
-========
-guid: 08c2e5be5eec9544ca0f53a5d4926af9
->>>>>>>> main:GameLiftPlugin/Editor/Resources/CloudFormation/scenario3_containers_single_fleet/AmazonGameLiftPlugin.ContainersSingleFleet.asmdef.meta
->>>>>>> main:Editor/Resources/CloudFormation/scenario3_containers_single_fleet/AmazonGameLiftPlugin.ContainersSingleFleet.asmdef.meta
 AssemblyDefinitionImporter:
   externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  userData:
+  assetBundleName:
+  assetBundleVariant:
