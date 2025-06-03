@@ -20,10 +20,10 @@ See Releases page for compatible Unity versions.
 This repository contains the C# server SDK plugin for integration with a Unity game project. It includes two variants of the plugin:
 
 - `Amazon GameLift Servers SDK for Unity` includes the C# server SDK only. Use this plugin to add the server SDK to your game projects
-  and customize your integration. For more details, see the README file in the `GameLiftServerSDK` folder of this repository.
+  and customize your integration. For more details, [see the README file](./GameLiftServerSDK) in the `GameLiftServerSDK` folder of this repository.
 - `Amazon GameLift Servers Plugin for Unity` includes the server SDK and additional UI components for the Unity Editor. The UI components
   give you guided workflows so you can deploy your game for hosting with Amazon GameLift Servers directly from the Unity editor.
-  For more details, see the README file in the `GameLiftPlugin` folder of this repository.
+  For more details, [see the README file](./GameLiftPlugin) in the `GameLiftPlugin` folder of this repository.
 
 Download the plugin variant that best fits your project requirements from the Releases page of this repository.
 
