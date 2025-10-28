@@ -13,6 +13,7 @@ using AmazonGameLiftPlugin.Core.UserIdentityManagement.Models;
 #endif
 using UnityEngine;
 using UnityEngine.Events;
+using Aws.GameLift.Unity.Metrics;
 
 #if UNITY_EDITOR
 using AmazonGameLift.Editor;
@@ -29,8 +30,12 @@ public class GameLift : MonoBehaviour
     [SerializeField]
     private GameLiftClientSettings _gameLiftSettings;
 
+    [SerializeField]
+    private GameLiftMetricsProcessor _metricsProcessor;
+
     private readonly Logger _logger = Logger.SharedInstance;
 #if UNITY_SERVER
+
     private GameLiftServer _server;
 #else
     private GameLiftClient _client;
@@ -38,7 +43,7 @@ public class GameLift : MonoBehaviour
 
     public int ServerPort { get; private set; }
 
-    public bool IsConnected { get; set;}
+    public bool IsConnected { get; set; }
 
     private bool MyRemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
     {
@@ -74,12 +79,14 @@ public class GameLift : MonoBehaviour
         // Allow Unity to validate HTTPS SSL certificates; http://stackoverflow.com/questions/4926676
         ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
         ConnectionChangedEvent.AddListener(value => IsConnected = value);
+
 #if UNITY_SERVER
         _logger.Write(":) I AM SERVER");
-        _server = new GameLiftServer(this, _logger);
+        _server = new GameLiftServer(this, _logger, _metricsProcessor);
 #else
         _logger.Write(":) I AM CLIENT");
         var config = _gameLiftSettings.GetConfiguration();
+
         if (config.IsGameLiftAnywhere)
         {
 #if UNITY_EDITOR
@@ -129,12 +136,14 @@ public class GameLift : MonoBehaviour
 
     public bool AcceptPlayerSession(string playerSessionId)
     {
-        return _server.AcceptPlayerSession(playerSessionId);
+        bool result = _server.AcceptPlayerSession(playerSessionId);
+        return result;
     }
 
     public bool RemovePlayerSession(string playerSessionId)
     {
-        return _server.RemovePlayerSession(playerSessionId);
+        bool result = _server.RemovePlayerSession(playerSessionId);
+        return result;
     }
 
 #else

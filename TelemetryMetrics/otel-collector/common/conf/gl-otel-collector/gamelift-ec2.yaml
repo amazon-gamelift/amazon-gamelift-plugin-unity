@@ -1,0 +1,84 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# EC2 fleet specific configuration for GameLift OpenTelemetry Collector
+# This file should be loaded alongside gamelift-base.yaml using:
+# --config gamelift-base.yaml --config gamelift-ec2.yaml
+
+receivers:
+  hostmetrics:
+    collection_interval: 30s
+    scrapers:
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      disk:
+      load:
+      filesystem:
+        metrics:
+          system.filesystem.utilization:
+            enabled: true
+        exclude_mount_points:
+          mount_points: ["/boot/efi"]
+          match_type: strict
+      memory:
+        metrics:
+          system.memory.utilization:
+            enabled: true
+      network:
+      paging:
+      process:
+        mute_process_all_errors: true
+        metrics:
+          process.cpu.time:
+            enabled: true
+          process.disk.io:
+            enabled: false
+          process.memory.usage:
+            enabled: true
+          process.memory.virtual:
+            enabled: true
+
+processors:
+  resourcedetection/ec2:
+    detectors: ["ec2"]
+    ec2:
+      # See https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/resourcedetectionprocessor/internal/aws/ec2/documentation.md
+      resource_attributes:
+        cloud.account.id:
+          enabled: false
+        cloud.availability_zone:
+          enabled: false
+        cloud.platform:
+          enabled: false
+        cloud.provider:
+          enabled: false
+        cloud.region:
+          enabled: true
+        host.id:
+          enabled: true
+        host.image.id:
+          enabled: false
+        host.name:
+          enabled: false
+        host.type:
+          enabled: true
+
+service:
+  pipelines:
+    metrics:
+      receivers:
+        - statsd
+        - hostmetrics
+        - crashreporter
+      processors:
+        - resourcedetection/ec2
+        - deltatocumulative
+        - filter/processowner
+        - attributes/deploymenttype
+        - attributes/fleetid
+      exporters:
+        - prometheusremotewrite
+        # Enable the below section to send metrics to AWS CloudWatch.
+        # - awsemf

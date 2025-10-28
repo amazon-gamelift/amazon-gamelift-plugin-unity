@@ -1,0 +1,1089 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.1"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "description": "",
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 22,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "**Fleet ID:** <a href=\"/d/container_overview/container-fleet-overview?var-fleet_id=${fleet_id}&from=${__from}&to=${__to}\" target=\"_blank\">${fleet_id}</a><br>\n**Task ID:** ${task_id}<br>\n**Container:** ${container_name}<br>\n\nRelated dashboards: <a href=\"/d/container_overview/container-overview?var-fleet_id=${fleet_id}&from=${__from}&to=${__to}\" target=\"_blank\">Container fleet overview</a>\n\nMonitor container-level performance metrics for potential issues:\n\n- **Current averages** shows real-time resource utilization. When performance degrades, check CPU usage, memory consumption, and I/O patterns for bottlenecks.\n\n- **Resource Usage** tracks detailed CPU, memory utilization over time. High utilization patterns indicate resource constraints or inefficient code.\n\n- **Network** reflects container connectivity performance. For latency or connectivity issues, check network I/O rates, packet rates, and error rates.\n\n- **Storage** indicates container storage performance. Slow response times suggest examining storage I/O patterns and rates.\n\nClick the information icon (ⓘ) next to each graph for detailed analysis and troubleshooting steps.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.4.1",
+      "title": "Dashboard overview",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 15,
+      "panels": [],
+      "title": "Current averages",
+      "type": "row"
+    },
+    {
+      "description": "Current CPU utilization of the selected container.\n\n**What to look for:**\n- Values consistently above 70% indicate high CPU usage\n- Values above 85% suggest CPU bottlenecks\n- Sudden spikes may indicate inefficient code or resource contention\n\n**Troubleshooting:**\n- Check CPU usage patterns in the Resource Usage section\n- Review game server CPU-intensive operations\n- Consider container resource limits and requests\n- Monitor for CPU throttling",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 10
+      },
+      "id": 1,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "100 * (rate(container_cpu_usage_total_Nanoseconds{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval]) / rate(container_cpu_usage_system_Nanoseconds{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval]))",
+          "legendFormat": "{{container_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "gauge"
+    },
+    {
+      "description": "Current memory utilization of the selected container.\n\n**What to look for:**\n- Values consistently above 70% indicate high memory usage\n- Values above 85% suggest memory pressure\n- Sudden increases may indicate memory leaks\n\n**Troubleshooting:**\n- Check memory usage patterns in the Resource Usage section\n- Review game server memory allocation patterns\n- Monitor for memory leaks in game sessions\n- Consider container memory limits",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 10
+      },
+      "id": 2,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_memory_utilized_Megabytes{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"} / container_memory_reserved_Megabytes{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "legendFormat": "{{container_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Memory Usage",
+      "type": "gauge"
+    },
+    {
+      "description": "Current network receive rate for the selected containers.\n\n**What to look for:**\n- High sustained receive rates may indicate heavy network traffic\n- Sudden drops could suggest connectivity issues\n\n**Troubleshooting:**\n- Check network error rates for packet loss\n- Review game server network usage patterns\n- Monitor for network bottlenecks",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 16,
+        "y": 10
+      },
+      "id": 3,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_network_rate_rx_Bytes_per_Second{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "legendFormat": "{{container_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Network In",
+      "type": "gauge"
+    },
+    {
+      "description": "Current network transmit rate for the selected containers.\n\n**What to look for:**\n- High sustained transmit rates may indicate heavy network traffic\n- Sudden drops could suggest connectivity issues\n\n**Troubleshooting:**\n- Check network error rates for packet loss\n- Review game server network usage patterns\n- Monitor for network bottlenecks",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 20,
+        "y": 10
+      },
+      "id": 17,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_network_rate_tx_Bytes_per_Second{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "legendFormat": "{{container_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Network Out",
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 16,
+      "panels": [],
+      "title": "Resource Usage",
+      "type": "row"
+    },
+    {
+      "description": "CPU usage breakdown showing total, kernel mode, user mode, and system time.\n\n**What to look for:**\n- High kernel mode usage may indicate I/O bottlenecks\n- High user mode usage indicates application processing\n- System time spikes may indicate resource contention\n\n**Troubleshooting:**\n- Identify CPU usage patterns by mode\n- High kernel time suggests I/O or system call overhead\n- High user time indicates application CPU load",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "unit": "ns"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_cpu_usage_total_Nanoseconds{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "A",
+          "legendFormat": "Total - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_cpu_usage_kernelmode_Nanoseconds{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "B",
+          "legendFormat": "Kernel Mode - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_cpu_usage_usermode_Nanoseconds{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "C",
+          "legendFormat": "User Mode - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_cpu_usage_system_Nanoseconds{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "D",
+          "legendFormat": "System - {{container_name}}"
+        }
+      ],
+      "title": "CPU Usage Details",
+      "type": "timeseries"
+    },
+    {
+      "description": "Memory usage breakdown showing current, max, and limit values.\n\n**What to look for:**\n- Current memory usage vs limits\n- Maximum memory usage spikes\n- Memory usage patterns\n\n**Troubleshooting:**\n- Monitor usage approaching limits\n- Identify peak memory usage scenarios\n- Check for memory allocation efficiency",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_memory_usage_Bytes{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "refId": "A",
+          "legendFormat": "Current Usage - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_memory_usage_max_Bytes{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "refId": "B",
+          "legendFormat": "Max Usage - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_memory_usage_limit_Bytes{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "refId": "C",
+          "legendFormat": "Limit - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_memory_reserved_Bytes{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "refId": "D",
+          "legendFormat": "Reserved - {{container_name}}"
+        }
+      ],
+      "title": "Memory Usage Details",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "id": 17,
+      "panels": [],
+      "title": "Network",
+      "type": "row"
+    },
+    {
+      "description": "Network I/O rates showing bytes per second for receive and transmit.\n\n**What to look for:**\n- Network traffic patterns correlating with game activity\n- Sustained high network usage\n- Asymmetric traffic patterns\n\n**Troubleshooting:**\n- Compare with network error rates\n- Check for network bottlenecks\n- Monitor for unusual traffic spikes",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "unit": "binBps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Transmit"
+            },
+            "properties": [
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_network_rate_rx_Bytes_per_Second{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "refId": "A",
+          "legendFormat": "Receive - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "container_network_rate_tx_Bytes_per_Second{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}",
+          "refId": "B",
+          "legendFormat": "Transmit - {{container_name}}"
+        }
+      ],
+      "title": "Network I/O (Bytes)",
+      "type": "timeseries"
+    },
+    {
+      "description": "Network packet rates showing packets per second for receive and transmit.\n\n**What to look for:**\n- Packet rate patterns vs byte rates\n- High packet rates with low byte rates (small packets)\n- Packet rate spikes during game events\n\n**Troubleshooting:**\n- Compare packet rates with byte rates\n- Look for small packet issues (high packet count, low bytes)\n- Monitor for network optimization opportunities",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "unit": "pps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Transmit Packets"
+            },
+            "properties": [
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 36
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_network_io_usage_rx_packets_Count{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "A",
+          "legendFormat": "Receive Packets - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_network_io_usage_tx_packets_Count{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "B",
+          "legendFormat": "Transmit Packets - {{container_name}}"
+        }
+      ],
+      "title": "Network I/O (Packets)",
+      "type": "timeseries"
+    },
+    {
+      "description": "Network error and drop rates showing problematic network events.\n\n**What to look for:**\n- Non-zero error rates indicating network issues\n- Packet drops suggesting network congestion\n- Patterns correlating with performance problems\n\n**Troubleshooting:**\n- Investigate network connectivity issues\n- Check for network congestion or limits\n- Review container network configuration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "unit": "pps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 44
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_network_io_usage_rx_errors_Count{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "A",
+          "legendFormat": "RX Errors - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_network_io_usage_tx_errors_Count{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "B",
+          "legendFormat": "TX Errors - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_network_io_usage_rx_dropped_Count{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "C",
+          "legendFormat": "RX Dropped - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_network_io_usage_tx_dropped_Count{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "D",
+          "legendFormat": "TX Dropped - {{container_name}}"
+        }
+      ],
+      "title": "Network Errors and Drops",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 52
+      },
+      "id": 18,
+      "panels": [],
+      "title": "Storage",
+      "type": "row"
+    },
+    {
+      "description": "Storage I/O rates showing read and write bytes per second.\n\n**What to look for:**\n- Storage I/O patterns correlating with game activity\n- High read rates during game loading\n- High write rates during game saves or logging\n\n**Troubleshooting:**\n- Check for storage bottlenecks\n- Monitor storage usage patterns\n- Look for excessive I/O operations",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "unit": "binBps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Write"
+            },
+            "properties": [
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 53
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_storage_read_bytes_Bytes{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "A",
+          "legendFormat": "Read - {{container_name}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(container_storage_write_bytes_Bytes{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\", container_name=~\"$container_name\"}[$__rate_interval])",
+          "refId": "B",
+          "legendFormat": "Write - {{container_name}}"
+        }
+      ],
+      "title": "Storage I/O",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [
+    "gamelift",
+    "container",
+    "performance"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Fleet ID",
+        "multi": false,
+        "name": "fleet_id",
+        "options": [],
+        "query": "label_values(container_cpu_utilized_None, fleet_id)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        }
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Task ID",
+        "multi": false,
+        "name": "task_id",
+        "options": [],
+        "query": "label_values(container_cpu_utilized_None{fleet_id=\"$fleet_id\"}, aws_ecs_task_id)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        }
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "Container",
+        "multi": true,
+        "name": "container_name",
+        "options": [],
+        "query": "label_values(container_cpu_utilized_None{fleet_id=\"$fleet_id\", aws_ecs_task_id=\"$task_id\"}, container_name)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        }
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Container Performance",
+  "uid": "container_performance",
+  "version": 2,
+  "weekStart": ""
+}

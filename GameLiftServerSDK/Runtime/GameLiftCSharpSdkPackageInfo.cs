@@ -42,7 +42,7 @@ namespace AmazonGameLift.Runtime
             }
         }
         
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
             [InitializeOnLoadMethod]
             private static void Init()
             {
@@ -82,7 +82,7 @@ namespace AmazonGameLift.Runtime
                     AssetDatabase.SaveAssets();
                 }
             }
-        #endif // UNITY_EDITOR
+#endif // UNITY_EDITOR
     }
 } 
 #endif // UNITY_SERVER

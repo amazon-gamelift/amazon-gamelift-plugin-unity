@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GameLiftCSharpSdkPackageInfo
   m_EditorClassIdentifier: AmazonGameLiftSDKPlugin.Runtime:AmazonGameLift.Runtime:GameLiftCSharpSdkPackageInfo
   pluginName: Unity3D_com.amazonaws.gameliftserver.sdk
-  version: 5.3.0
+  version: 5.4.0

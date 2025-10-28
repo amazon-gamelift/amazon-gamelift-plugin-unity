@@ -1,0 +1,64 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Container fleet specific configuration for GameLift OpenTelemetry Collector
+# This file should be loaded alongside gamelift-base.yaml using:
+# --config gamelift-base.yaml --config gamelift-container.yaml
+
+receivers:
+  awsecscontainermetrics:
+    collection_interval: 30s
+
+processors:
+  resourcedetection/ecs:
+    detectors: ["ecs"]
+    ecs:
+      # See https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/resourcedetectionprocessor/internal/aws/ecs/documentation.md
+      resource_attributes:
+        cloud.account.id:
+          enabled: false
+        cloud.availability_zone:
+          enabled: false
+        cloud.platform:
+          enabled: false
+        cloud.provider:
+          enabled: false
+        cloud.region:
+          enabled: true
+        aws.ecs.cluster.arn:
+          enabled: false
+        aws.ecs.launchtype:
+          enabled: false
+        aws.ecs.task.arn:
+          enabled: false
+        aws.ecs.task.family:
+          enabled: false
+        aws.ecs.task.id:
+          enabled: true
+        aws.ecs.task.revision:
+          enabled: false
+        aws.log.group.arns:
+          enabled: false
+        aws.log.group.names:
+          enabled: false
+        aws.log.stream.arns:
+          enabled: false
+        aws.log.stream.names:
+          enabled: false
+
+service:
+  pipelines:
+    metrics:
+      receivers:
+        - statsd
+        - awsecscontainermetrics
+        - crashreporter
+      processors:
+        - resourcedetection/ecs
+        - deltatocumulative
+        - attributes/deploymenttype
+        - attributes/fleetid
+      exporters:
+        - prometheusremotewrite
+        # Enable the below section to send metrics to AWS CloudWatch.
+        # - awsemf

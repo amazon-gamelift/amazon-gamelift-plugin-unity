@@ -13,6 +13,7 @@ using AmazonGameLiftPlugin.Core.CredentialManagement.Models;
 using AmazonGameLiftPlugin.Core.Shared.FileSystem;
 using Aws.GameLift;
 using Aws.GameLift.Server;
+using Aws.GameLift.Unity.Metrics;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -26,6 +27,7 @@ public class GameLiftServer
     private readonly GameLift _gl;
     private readonly Logger _logger;
     private readonly Settings<ServerSettingsKeys> _settings;
+    private readonly GameLiftMetricsProcessor _metricsProcessor;
 #if UNITY_EDITOR
     private readonly ICredentialsStore _credentialsStore;
 #endif
@@ -34,10 +36,11 @@ public class GameLiftServer
     private bool _isConnected;
     private string _logFilePath;
 
-    public GameLiftServer(GameLift gl, Logger logger)
+    public GameLiftServer(GameLift gl, Logger logger, GameLiftMetricsProcessor metricsProcessor = null)
     {
         _gl = gl ?? throw new ArgumentNullException(nameof(gl));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _metricsProcessor = metricsProcessor;
         _settings = new Settings<ServerSettingsKeys>(ServerConfigFilePath);
 #if UNITY_EDITOR
         _credentialsStore = new CredentialsStore(new FileWrapper());
@@ -112,6 +115,8 @@ public class GameLiftServer
             if (outcome.Success)
             {
                 _logger.Write(":) Accepted Player Session: " + playerSessionId);
+                // Record player session accepted metric
+                _metricsProcessor?.OnPlayerSessionAccepted();
                 return true;
             }
             else
@@ -138,6 +143,8 @@ public class GameLiftServer
             if (outcome.Success)
             {
                 _logger.Write(":) Removed Player Session: " + playerSessionId);
+                // Record player session removed metric
+                _metricsProcessor?.OnPlayerSessionRemoved();
                 return true;
             }
             else
@@ -192,6 +199,10 @@ public class GameLiftServer
             onStartGameSession: gameSession =>
             {
                 _logger.Write(":) GAMELIFT SESSION REQUESTED"); //And then do stuff with it maybe.
+                
+                // Record game session started metric
+                _metricsProcessor?.OnGameSessionStarted(gameSession);
+                
                 try
                 {
                     GenericOutcome outcome = GameLiftServerAPI.ActivateGameSession();
@@ -221,6 +232,10 @@ public class GameLiftServer
             onProcessTerminate: () =>
             {
                 _logger.Write(":| GAMELIFT PROCESS TERMINATION REQUESTED (OK BYE)");
+                
+                // Record game session ended metric
+                _metricsProcessor?.OnGameSessionEnded();
+                
                 _gl.TerminateServer();
             },
             onHealthCheck: () =>

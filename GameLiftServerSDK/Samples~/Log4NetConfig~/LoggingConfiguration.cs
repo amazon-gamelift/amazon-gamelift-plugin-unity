@@ -1,4 +1,4 @@
-﻿#if (UNITY_EDITOR || UNITY_SERVER)
+﻿#if UNITY_EDITOR || UNITY_SERVER
 using log4net.Config;
 using UnityEngine;
 using System.IO;

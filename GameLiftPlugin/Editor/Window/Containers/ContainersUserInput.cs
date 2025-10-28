@@ -30,6 +30,8 @@ namespace AmazonGameLift.Editor
         private TextField _containerTotalVcpuInput;
         private TextField _containerImageTagInput;
         private TextField _containerGameNameInput;
+        private Toggle _containerEnableMetricsToggle;
+        private StatusBox _metricsInfoStatusBox;
         private Label _invalidPortRangeLabel;
         private Label _invalidMemoryLimitLabel;
         private Label _invalidVcpuLimitLabel;
@@ -108,6 +110,8 @@ namespace AmazonGameLift.Editor
             _containerTotalVcpuInput = _container.Q<TextField>("ContainerTotalVcpuInput");
             _containerImageTagInput = _container.Q<TextField>("ContainerImageTagInput");
             _containerGameNameInput = _container.Q<TextField>("ContainerGameNameInput");
+            _containerEnableMetricsToggle = _container.Q<Toggle>("ContainerEnableMetricsToggle");
+            _metricsInfoStatusBox = _container.Q<StatusBox>("MetricsInfoBox");
 
             _invalidPortRangeLabel = _container.Q<Label>("ContainerConnectionPortRangeInvalidMessage");
             _invalidMemoryLimitLabel = _container.Q<Label>("ContainerTotalMemoryInvalidMessage");
@@ -223,6 +227,7 @@ namespace AmazonGameLift.Editor
             _containerTotalMemoryInput.SetEnabled(value);
             _containerPortRangeInput.SetEnabled(value);
             _imageTagInputRow.SetEnabled(value);
+            _containerEnableMetricsToggle.SetEnabled(value);
 
         }
 
@@ -359,6 +364,10 @@ namespace AmazonGameLift.Editor
             _containerTotalVcpuInput.value = string.IsNullOrEmpty(_stateManager.ContainerTotalVcpu) ? ContainersUserInputValidation.DEFAULT_VCPU_LIMIT : _stateManager.ContainerTotalVcpu;
             _containerImageTagInput.value = string.IsNullOrEmpty(_stateManager.ContainerImageTag) ? ContainersUserInputValidation.DEFAULT_IMAGE_TAG : _stateManager.ContainerImageTag;
             _containerGameNameInput.value = string.IsNullOrEmpty(_stateManager.ContainerGameName) ? ContainersUserInputValidation.DEFAULT_GAME_NAME : _stateManager.ContainerGameName;
+            _containerEnableMetricsToggle.value = _stateManager.ContainerEnableMetrics;
+            
+            var textProvider = new TextProvider();
+            _metricsInfoStatusBox.Show(StatusBox.StatusBoxType.Info, textProvider.Get(Strings.MetricsInfoStatusBoxText));
         }
 
         public void PopulateContent()
@@ -374,6 +383,7 @@ namespace AmazonGameLift.Editor
             _stateManager.ContainerTotalMemory = _containerTotalMemoryInput.value;
             _stateManager.ContainerTotalVcpu = _containerTotalVcpuInput.value;
             _stateManager.ContainerGameName = _containerGameNameInput.value;
+            _stateManager.ContainerEnableMetrics = _containerEnableMetricsToggle.value;
 
             switch (_stateManager.ContainerQuestionnaireScenario)
             {

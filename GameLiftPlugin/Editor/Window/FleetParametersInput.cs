@@ -28,6 +28,8 @@ namespace AmazonGameLift.Editor
         private readonly DropdownField _osDropdown;
         private readonly Button _serverFolderButton;
         private readonly Button _serverFileButton;
+        private readonly Toggle _enableMetricsToggle;
+        private readonly StatusBox _metricsInfoStatusBox;
 
         public Action<ManagedEC2FleetParameters> OnValueChanged;
 
@@ -50,6 +52,18 @@ namespace AmazonGameLift.Editor
                 value => parameters.GameServerFolder = value);
             _serverFileInput = SetupInput("ManagedEC2ParametersGameServerFileInput", parameters.GameServerFile,
                 value => parameters.GameServerFile = value);
+
+            _enableMetricsToggle = container.Q<Toggle>("EnableMetricsToggle");
+            _enableMetricsToggle.value = parameters.EnableMetrics;
+            _enableMetricsToggle.RegisterValueChangedCallback(e =>
+            {
+                _parameters.EnableMetrics = e.newValue;
+                OnValueChanged(_parameters);
+            });
+
+            _metricsInfoStatusBox = container.Q<StatusBox>("MetricsInfoBox");
+            var textProvider = new TextProvider();
+            _metricsInfoStatusBox.Show(StatusBox.StatusBoxType.Info, textProvider.Get(Strings.MetricsInfoStatusBoxText));
 
             _osDropdown = container.Q<DropdownField>("ManagedEC2ParametersOperatingSystemInput");
             _osDropdown.choices = OSMappings.Keys.ToList();

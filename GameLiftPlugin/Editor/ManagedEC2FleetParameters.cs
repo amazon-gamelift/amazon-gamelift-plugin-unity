@@ -11,5 +11,6 @@ namespace AmazonGameLift.Editor
         public OperatingSystem OperatingSystem;
         public string GameServerFolder;
         public string GameServerFile;
+        public bool EnableMetrics;
     }
 }

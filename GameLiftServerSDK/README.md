@@ -189,6 +189,17 @@ public class ServerSDKManualTest : MonoBehaviour
     }
 }
 ```
+
+## Metrics
+
+This telemetry metrics solution enables the feature to collect and ship telemetry metrics from your game servers hosted on Amazon GameLift Servers to AWS services for monitoring and observability. For detailed setup and usage instructions, see [METRICS.md](../TelemetryMetrics/METRICS.md).
+
+You can enable server metrics (performance, players/sessions, memory, and network) by adding `GameLiftMetricsProcessor` to a scene and creating a `GameLiftMetricsSettings` asset. For setup and full details, see:
+
+- Metrics overview and configuration: [CUSTOM_METRICS.md](../TelemetryMetrics/CUSTOM_METRICS.md)
+- Default tags and out‑of‑the‑box metrics: [default_tags_and_metrics.md](../TelemetryMetrics/default_tags_and_metrics.md)
+- Network instrumentation (bytes/packets/connection counts): [network_stats.md](../TelemetryMetrics/network_stats.md)
+
 ## Troubleshooting
 
 ### Seeing 100% CPU utilization on a server written using Unity.
@@ -199,6 +210,3 @@ This can cause slow application performance, longer load times, and unexpected c
 It also has the potential to impact other server processes running on the same machine, causing unexpected terminations and other issues. 
 
 To avoid this, you can [set the `Application.targetFrameRate` configuration in your server build script](https://docs.unity3d.com/ScriptReference/Application-targetFrameRate.html). This sets a bounded maximum FPS that will override the default maximum.
-
- 
-

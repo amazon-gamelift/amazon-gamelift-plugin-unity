@@ -326,6 +326,16 @@ namespace AmazonGameLift.Editor
             }
         }
 
+        public bool ContainerEnableMetrics
+        {
+            get => _selectedProfile.ContainerEnableMetrics;
+            set
+            {
+                _selectedProfile.ContainerEnableMetrics = value;
+                SaveProfiles();
+            }
+        }
+
         public bool IsContainerImageBuilding
         {
             get => _selectedProfile.IsContainerImageBuilding;
@@ -426,6 +436,16 @@ namespace AmazonGameLift.Editor
             set
             {
                 _selectedProfile.BuildOperatingSystem = value;
+                SaveProfiles();
+            }
+        }
+
+        public bool EnableMetrics
+        {
+            get => _selectedProfile.EnableMetrics;
+            set
+            {
+                _selectedProfile.EnableMetrics = value;
                 SaveProfiles();
             }
         }
