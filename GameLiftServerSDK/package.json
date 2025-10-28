@@ -2,7 +2,7 @@
     "name": "com.amazonaws.gameliftserver.sdk",
     "displayName": "Amazon GameLift Server SDK",
     "author": "Amazon.com, Inc.",
-    "version": "5.3.0",
+    "version": "5.4.0",
     "unity": "2020.3",
     "description": "The Amazon GameLift Server SDK Plugin for Unity contains source code to integrate Unity based game servers with the Amazon GameLift service.",
     "documentationUrl": "https://aws.amazon.com/documentation/gamelift",

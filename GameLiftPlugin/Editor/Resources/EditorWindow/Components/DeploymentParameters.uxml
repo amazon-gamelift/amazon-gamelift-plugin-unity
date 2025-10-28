@@ -1,8 +1,13 @@
 ﻿<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-<ui:UXML xmlns:ui="UnityEngine.UIElements" class="separator separator--vertical">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor" class="separator separator--vertical">
     <Style src="../common.uss"/>
+    <gl:StatusBox class="status-box--info" name="MetricsInfoBox"/>
+    <ui:VisualElement class="form-row">
+        <ui:Label name="EnableMetricsLabel" class="form-row__label" text="Enable telemetry metrics"/>
+        <ui:Toggle name="EnableMetricsToggle" class="form-row__input" value="false"/>
+    </ui:VisualElement>
     <ui:VisualElement class="form-row">
         <ui:Label name="ManagedEC2ParametersGameNameLabel" class="form-row__label" text="Game name"/>
         <ui:TextField name="ManagedEC2ParametersGameNameInput" class="form-row__input text-input" value="GameName"/>

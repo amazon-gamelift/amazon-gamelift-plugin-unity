@@ -13,5 +13,6 @@ namespace AmazonGameLift.Editor
         public const string ContainerGroupDefinitionFromPort = "FleetTcpFromPortParameter";
         public const string ContainerGroupDefinitionToPort = "FleetTcpToPortParameter";
         public const string UnityEngineVersion = "UnityEngineVersionParameter";
+        public const string EnableMetrics = "EnableMetricsParameter";
     }
 }

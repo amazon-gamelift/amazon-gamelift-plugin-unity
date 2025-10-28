@@ -25,6 +25,7 @@ namespace AmazonGameLift.Editor
             _deploymentSettings.BuildFolderPath = parameters.GameServerFolder;
             _deploymentSettings.BuildFilePath = parameters.GameServerFile;
             _deploymentSettings.BuildOperatingSystem = parameters.OperatingSystem;
+            _deploymentSettings.EnableMetrics = parameters.EnableMetrics;
         }
         
         public void StartDeployment()

@@ -103,6 +103,15 @@ Parameters:
     Type: String
     Description: "Unity engine version being used by the plugin"
 
+  EnableMetricsParameter:
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+    Description: "Enable telemetry metrics collection using OTEL collector"
+
+Conditions:
+  ShouldCreateMetricsResources: !Equals [!Ref EnableMetricsParameter, "true"]
+
 Resources:
   ApiGatewayCloudWatchRole:
     Type: "AWS::IAM::Role"
@@ -180,6 +189,37 @@ Resources:
                   - "gamelift:SearchGameSessions"
                 Resource: "*"
 
+  MetricsInstanceRole:
+    Type: "AWS::IAM::Role"
+    Condition: ShouldCreateMetricsResources
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: gamelift.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AMPRemoteWriteAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - aps:RemoteWrite
+                Resource: !Sub 'arn:aws:aps:*:${AWS::AccountId}:workspace/*'
+        - PolicyName: OTelCollectorEMFExporter
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:PutLogEvents
+                  - logs:CreateLogStream
+                  - logs:CreateLogGroup
+                  - logs:PutRetentionPolicy
+                Resource: !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:*:log-stream:*'
   UserPool:
     Type: "AWS::Cognito::UserPool"
     Properties:
@@ -369,7 +409,7 @@ Resources:
         Key: !Ref BuildS3KeyParameter
         RoleArn: !GetAtt BuildAccessRole.Arn
       Version: !Ref BuildVersionParameter
-      ServerSdkVersion: 5.3.0
+      ServerSdkVersion: 5.4.0
 
   FleetResource:
     Type: "AWS::GameLift::Fleet"
@@ -377,7 +417,9 @@ Resources:
       BuildId: !Ref ServerBuild
       CertificateConfiguration:
         CertificateType: GENERATED
-      Description: !Sub ${FleetDescriptionParameter} Using Unity Engine Version ${UnityEngineVersionParameter}
+      Description: !Sub 
+        - "${FleetDescriptionParameter} Using Unity Engine Version ${UnityEngineVersionParameter}${MetricsText}"
+        - MetricsText: !If [ShouldCreateMetricsResources, " with telemetry metrics enabled", ""]
       DesiredEC2Instances: 1
       EC2InboundPermissions:
         - FromPort: !Ref FleetTcpFromPortParameter
@@ -390,6 +432,8 @@ Resources:
           ToPort: !Ref FleetUdpToPortParameter
       EC2InstanceType: c5.large
       FleetType: ON_DEMAND
+      InstanceRoleARN: !If [ShouldCreateMetricsResources, !GetAtt MetricsInstanceRole.Arn, !Ref "AWS::NoValue"]
+      InstanceRoleCredentialsProvider: !If [ShouldCreateMetricsResources, "SHARED_CREDENTIAL_FILE", !Ref "AWS::NoValue"]
       Name: !Ref FleetNameParameter
       NewGameSessionProtectionPolicy: FullProtection
       ResourceCreationLimitPolicy:

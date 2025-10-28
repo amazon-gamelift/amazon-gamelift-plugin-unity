@@ -181,7 +181,7 @@ namespace AmazonGameLift.Editor
             { Strings.SettingsUISdkNextStepLabel, "The SDK settings are configured. You can find an usage example by going to \"(Top Menu Bar) > GameLift > Import Sample Game\", and look at \"Assets\\Scripts\\Server\\GameLiftServer.cs\"."},
             { Strings.LabelOpenSdkIntegrationDoc, "Open SDK Integration Guide"},
             { Strings.LabelOpenSdkApiDoc, "Open SDK API Reference"},
-            
+
             { Strings.TabLanding, "Amazon GameLift" },
             { Strings.TabContainers, "Managed Containers" },
             { Strings.TabCredentials, "AWS Account Access" },
@@ -248,7 +248,7 @@ namespace AmazonGameLift.Editor
             { Strings.UserProfilePageAwsConfigurationFileTooltip, "Open file to view or update the selected profile's settings"},
             { Strings.UserProfilePageCompletedBootstrapHelpLink, "What is bootstrapping?"},
             { Strings.UserProfilePageBootstrapErrorText, "An error occurred when trying to bootstrap your S3 bucket."},
-            
+
             { Strings.UserProfilePageBootstrapPopupWindowTitle, "Bootstrap {{PROFILE_NAME}}"},
             { Strings.UserProfilePageBootstrapPopupNoticeStatusBox, "This action creates AWS resources for your account. You might incur charges for resources and " +
                 $"data storage unless your AWS account is eligible for <a href=\"{Urls.AwsFreeTier}\"><color=#D2D2D2><u>AWS Free Tier</u></color></a> benefits."},
@@ -257,11 +257,11 @@ namespace AmazonGameLift.Editor
             { Strings.UserProfilePageBootstrapPopupBucketText, "S3 bucket name"},
             { Strings.UserProfilePageBootstrapPopupCancelButton, "Cancel"},
             { Strings.UserProfilePageBootstrapPopupContinueButton, "Bootstrap profile"},
-            
+
             { Strings.UserProfilePageStatusBoxSuccessText, "Profile configuration and bootstrapping complete."},
             { Strings.UserProfilePageStatusBoxWarningText, "Profile configuration is incomplete, as bootstrapping is not completed."},
             { Strings.UserProfilePageStatusBoxErrorText, "An error occurred when trying to create your profile."},
-            
+
             { Strings.HelpfulResourceSetupAccountTitle, "Set up an AWS account" },
             { Strings.HelpfulResourceSetupAccountDescription, "Learn more about setting up an AWS account and user for use with Amazon GameLift." },
             { Strings.HelpfulResourcePluginGuideTitle, "Plugin guide: Create a user profile" },
@@ -337,7 +337,7 @@ namespace AmazonGameLift.Editor
             { Strings.AnywherePageStatusBoxDefaultComputeErrorText, "An error occurred when trying to register a compute."},
             { Strings.AnywherePageStatusBoxDefaultFleetErrorText, "An error occurred when trying to create a fleet."},
             { Strings.AnywherePageStatusBoxNotBootstrappedWarning, "Profile configuration is incomplete, as bootstrapping is not completed, navigate to AWS User Profiles for next steps."},
-            
+
             { Strings.ManagedEC2Title, "Host with Managed EC2"},
             { Strings.ManagedEC2Description, "Managed EC2 fleets use Amazon EC2 instances to host your game servers.\nAmazon GameLift manages the instances and removes the burden of hardware and software management from hosting your games."},
             { Strings.ManagedEC2IntegrateTitle, "Set up your game with Amazon GameLift"},
@@ -416,7 +416,7 @@ namespace AmazonGameLift.Editor
             { Strings.ManagedEC2ConfigureClientLabel, "Configure client"},
             { Strings.ManagedEC2ConfigureClientButton, "Apply Managed EC2 settings"},
             { Strings.ManagedEC2StatusBoxNotBootstrappedWarning, "Profile configuration is incomplete, as bootstrapping is not completed, navigate to AWS User Profiles for next steps."},
-            
+
             { Strings.HelpPageTitle, "Learning Resources" },
             { Strings.HelpPageDescription, "Learn how to integrate and deploy games for hosting on GameLift. The GameLift service manages game server deployment, operation, and scaling. You can deploy custom-built game servers or use GameLift Realtime Servers to configure lightweight game servers for your game." },
             { Strings.HelpPageReportIssueLink, "Report Issues" },
@@ -431,11 +431,11 @@ namespace AmazonGameLift.Editor
             { Strings.HelpPageFlexMatchTitle, "Amazon GameLift FlexMatch" },
             { Strings.HelpPageFlexMatchDescription, "Amazon GameLift FlexMatch is a customizable matchmaking service for multiplayer games. With FlexMatch, you can build a custom set of rules that defines what a multiplayer match looks like for your game, and determines how to evaluate and select compatible players for each match." },
             { Strings.HelpPageFlexMatchLink, "Learn More" },
-            
+
             { Strings.InfoLinkDocumentationLink, "Documentation" },
             { Strings.InfoLinkForumLink, "AWS GameTech Forum" },
             { Strings.InfoLinkReportIssuesLink, "Report Issues" },
-            
+
             { Strings.ProfileSelectorDropdownLabel, "AWS Account Profile" },
             { Strings.ProfileSelectorBucketNameLabel, "S3 Bucket Name" },
             { Strings.ProfileSelectorRegionLabel, "AWS Region" },
@@ -443,7 +443,7 @@ namespace AmazonGameLift.Editor
             { Strings.BootstrapStatusActive, "Active" },
             { Strings.BootstrapStatusInactive, "Inactive" },
             { Strings.BootstrapStatusNoBucketCreated, "No bucket created" },
-            
+
             { Strings.ViewLogsStatusBoxUrlTextButton, "View Logs"},
             { Strings.ViewS3LogsStatusBoxUrlTextButton, "View S3 Console"},
 
@@ -539,7 +539,12 @@ namespace AmazonGameLift.Editor
                 $" <a href=\"{Urls.AwsFreeTier}\"><color=#D2D2D2><u>AWS Free Tier</u></color></a> benefits." },
             { Strings.ContainersPageRegionUnsupportedStatusBoxTemplate,
                 "Region {0} does not support container fleets. Select a different profile or create a new one with a" +
-                " region that supports container fleets." }
+                " region that supports container fleets." },
+            { Strings.MetricsInfoStatusBoxText,
+                "Telemetry metrics provide detailed data for your game servers using the OpenTelemetry (OTEL) collector. " +
+                "This helps monitor performance, resource usage and custom application metrics. Unless you are eligible to select AWS Free Tier benefits, " +
+                "charges are incurred to your AWS account based upon the scenario you select.\n" +
+                "This checkbox only handles AWS permissions. Follow METRICS.md in the plugin repository for complete setup instructions to enable telemetry metrics." }
         };
 
         public string GetError(string errorCode = null)

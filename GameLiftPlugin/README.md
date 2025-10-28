@@ -107,6 +107,16 @@ Follow instructions in [Unity Docs](https://docs.unity3d.com/Manual/cus-tests.ht
 
 After enabling testing, the project tests can be run via [Unity Test Runner](https://docs.unity3d.com/2017.4/Documentation/Manual/testing-editortestsrunner.html).
 
+## Metrics
+
+This telemetry metrics solution enables the feature to collect and ship telemetry metrics from your game servers hosted on Amazon GameLift Servers to AWS services for monitoring and observability. For detailed setup and usage instructions, see [METRICS.md](../TelemetryMetrics/METRICS.md).
+
+You can enable server metrics (performance, players/sessions, memory, and network) by adding `GameLiftMetricsProcessor` to a scene and creating a `GameLiftMetricsSettings` asset. For setup and full details, see:
+
+- Metrics overview and configuration: [CUSTOM_METRICS.md](../TelemetryMetrics/CUSTOM_METRICS.md)
+- Default tags and out‑of‑the‑box metrics: [default_tags_and_metrics.md](../TelemetryMetrics/default_tags_and_metrics.md)
+- Network instrumentation (bytes/packets/connection counts): [network_stats.md](../TelemetryMetrics/network_stats.md)
+
 ## FAQ
 
 ### What Unity versions are supported?

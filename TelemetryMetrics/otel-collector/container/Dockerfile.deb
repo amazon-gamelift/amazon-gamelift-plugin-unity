@@ -1,0 +1,49 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+FROM debian:bookworm AS base
+
+# Install dependencies and supervisor
+RUN apt-get update && \
+    apt-get install -y supervisor curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Add OpenTelemetry Collector DEB and install
+ADD ./gl-otel-collector.deb /local/gl-otel-collector.deb
+RUN apt-get update && \
+    dpkg -i /local/gl-otel-collector.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy OpenTelemetry Collector config
+COPY ./gamelift-base.yaml /opt/aws/gl-otel-collector/etc/gamelift-base.yaml
+COPY ./gamelift-container.yaml /opt/aws/gl-otel-collector/etc/gamelift-container.yaml
+
+# Set up supervisor, Ensure the path for the game is correct
+COPY ./supervisord.conf /etc/supervisord.conf
+
+# Copy scripts and watcher
+COPY ./container-credentials.sh ./supervisor-watcher.py /local/
+RUN chmod +x /local/*.sh
+
+FROM base AS game
+
+ADD https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb /packages-microsoft-prod.deb
+
+RUN dpkg -i /packages-microsoft-prod.deb && \
+    rm /packages-microsoft-prod.deb && \
+    apt-get update && \
+    apt-get install -y dotnet-sdk-8.0 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Add game files
+ADD ./game /local/game/
+
+# Copy the game startup script
+COPY ./entrypoint-game.sh /local/
+RUN chmod +x /local/*.sh
+
+# Copy .env file for environment variables
+COPY ./.env /opt/aws/gl-otel-collector/etc/.env
+
+ENTRYPOINT ["/bin/bash", "-c", "set -a; source /opt/aws/gl-otel-collector/etc/.env; set +a; exec usr/bin/supervisord -c /etc/supervisord.conf"]
+

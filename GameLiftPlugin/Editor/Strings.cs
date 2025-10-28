@@ -8,7 +8,7 @@ namespace AmazonGameLift.Editor
     /// </summary>
     public static class Strings
     {
-        public const string LabelPasswordShow = "LabelPasswordShow"; 
+        public const string LabelPasswordShow = "LabelPasswordShow";
         public const string LabelPasswordHide = "LabelPasswordHide";
         public const string LabelBootstrapS3Console = "LabelBootstrapS3Console";
         public const string LabelBootstrapCreateMode = "LabelBootstrapCreateMode";
@@ -181,7 +181,7 @@ namespace AmazonGameLift.Editor
         public const string UserProfilePageAccountNewProfileCancelButton = "UserProfilePageAccountNewProfileCancelButton";
         public const string UserProfilePageAccountNewProfileHelpLink = "UserProfilePageAccountNewProfileHelpLink";
         public const string UserProfilePageCompletedBootstrapHelpLink = "UserProfilePageCompletedBootstrapHelpLink";
-        
+
         public const string UserProfilePageTableTitle = "UserProfilePageTableTitle";
         public const string UserProfilePageTableDescription = "UserProfilePageTableDescription";
         public const string UserProfilePageAwsConfigurationFileLabel = "UserProfilePageAwsConfigurationFileLabel";
@@ -189,14 +189,14 @@ namespace AmazonGameLift.Editor
         public const string UserProfilePageBootstrapButton = "UserProfilePageBootstrapButton";
         public const string UserProfilePageBootstrapErrorText = "UserProfilePageBootstrapErrorText";
         public const string UserProfilePageSetProfileButton = "UserProfilePageSetProfileButton";
-        
+
         public const string UserProfilePageBootstrapPopupWindowTitle = "UserProfilePageBootstrapPopupWindowTitle";
         public const string UserProfilePageBootstrapPopupNoticeStatusBox = "UserProfilePageBootstrapPopupNoticeStatusBox";
         public const string UserProfilePageBootstrapPopupDescription = "UserProfilePageBootstrapPopupDescription";
         public const string UserProfilePageBootstrapPopupBucketText = "UserProfilePageBootstrapPopupBucketText";
         public const string UserProfilePageBootstrapPopupCancelButton = "UserProfilePageBootstrapPopupCancelButton";
         public const string UserProfilePageBootstrapPopupContinueButton = "UserProfilePageBootstrapPopupContinueButton";
-        
+
         public const string UserProfilePageStatusBoxSuccessText = "UserProfilePageStatusBoxSuccessText";
         public const string UserProfilePageStatusBoxWarningText = "UserProfilePageStatusBoxWarningText";
         public const string UserProfilePageStatusBoxErrorText = "UserProfilePageStatusBoxErrorText";
@@ -343,7 +343,7 @@ namespace AmazonGameLift.Editor
         public const string BootstrapStatusActive = "BootstrapStatusActive";
         public const string BootstrapStatusInactive = "BootstrapStatusInactive";
         public const string BootstrapStatusNoBucketCreated = "BootstrapStatusNoBucketCreated";
-        
+
         public const string ViewLogsStatusBoxUrlTextButton = "ViewLogsStatusBoxUrlTextButton";
         public const string ViewS3LogsStatusBoxUrlTextButton = "ViewS3LogsStatusBoxUrlTextButton";
 
@@ -404,5 +404,7 @@ namespace AmazonGameLift.Editor
         public const string ContainersPageMissingWslDockerStatusBoxText = "ContainersPageMissingWslDockerStatusBoxText";
         public const string ContainersPageDeploymentNoticeStatusBoxText = "ContainersPageDeploymentNoticeStatusBoxText";
         public const string ContainersPageRegionUnsupportedStatusBoxTemplate = "ContainersPageRegionUnsupportedStatusBoxTemplate";
+        
+        public const string MetricsInfoStatusBoxText = "MetricsInfoStatusBoxText";
     }
 }

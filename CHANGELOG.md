@@ -1,4 +1,6 @@
 CHANGELOG
+# 3.2.0 (10/28/2025)
+- Adds support for publishing built-in and custom telemetry metrics, with pre-built dashboards for visualizing usage data.
 
 # 3.1.0 (05/29/2025)
 - Adds or improves client-side validation in all server SDK actions.

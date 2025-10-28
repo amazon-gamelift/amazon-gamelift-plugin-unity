@@ -34,6 +34,8 @@
 
         public DeploymentScenarios ContainerDeploymentScenario { get; set; }
 
+        public bool ContainerEnableMetrics { get; set; }
+
         public string ContainerGameServerBuildPath { get; set; }
         public string ContainerGameServerExecutable { get; set; }
         /**
@@ -77,6 +79,8 @@
         public string LaunchParameters { get; set; }
         
         public string BuildOperatingSystem { get; set; }
+        
+        public bool EnableMetrics { get; set; }
         
         public string DeploymentBuildFilePath { get; set; }
         
