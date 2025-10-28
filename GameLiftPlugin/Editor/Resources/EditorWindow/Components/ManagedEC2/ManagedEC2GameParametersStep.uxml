@@ -10,6 +10,10 @@
         </ui:VisualElement>
         <ui:VisualElement name="ParametersContainerComplete" class="separator separator--vertical">
             <ui:VisualElement class="form-row">
+                <ui:Label name="EnableMetricsLabelComplete" class="form-row__label" text="Enable telemetry metrics"/>
+                <ui:Label name="EnableMetricsDisplay" class="form-row__text-display" text="Telemetry Metrics Status"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="form-row">
                 <ui:Label name="GameNameLabel" class="form-row__label" text="Game name"/>
                 <ui:Label name="GameNameDisplay" class="form-row__text-display" text="Game Name"/>
             </ui:VisualElement>

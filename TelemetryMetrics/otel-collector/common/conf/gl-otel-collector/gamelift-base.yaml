@@ -1,0 +1,81 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Base configuration for GameLift OpenTelemetry Collector
+# Contains shared components used by both EC2 and Container fleet deployments
+# This file should be loaded alongside deployment-specific configs
+
+extensions:
+  # No explicit support for AWS Key ID and Secret so
+  # must be passed implicitly to the SDK by env vars.
+  newsigv4:
+    region: ${env:REGION}
+    shared_credentials_watcher:
+      file_location: ${env:AWS_SHARED_CREDENTIALS_FILE}
+      profile_name: ${env:AWS_PROFILE}
+
+receivers:
+  statsd:
+    endpoint: 0.0.0.0:8125
+    aggregation_interval: 10s
+    enable_metric_type: true
+    enable_ip_only_aggregation: true
+    is_monotonic_counter: true
+    timer_histogram_mapping:
+      - statsd_type: histogram
+        observer_type: gauge
+      - statsd_type: distribution
+        observer_type: gauge
+      - statsd_type: timing
+        observer_type: gauge
+      - statsd_type: timer
+        observer_type: gauge
+  crashreporter:
+    endpoint: 0.0.0.0:8126
+    check_interval: 5s
+
+processors:
+  deltatocumulative:
+  resourcedetection:
+  filter/processowner:
+    error_mode: ignore
+    metrics:
+      datapoint:
+        - 'resource.attributes["process.owner"] != nil and not IsMatch(resource.attributes["process.owner"], ".*gl-user-server.*")'
+
+  attributes/deploymenttype:
+    actions:
+      - key: deployment_type
+        value: ${env:GAMELIFT_COMPUTE_TYPE}
+        action: upsert
+
+  attributes/fleetid:
+    actions:
+      - key: fleet_id
+        value: ${env:GAMELIFT_FLEET_ID}
+        action: upsert
+
+exporters:
+  # Note: Ensure your fleet instance role has the necessary PutLogEvents and
+  # CreateLogStream permissions.
+  awsemf:
+    log_stream_name: "gl-otel"
+    namespace: GameLiftGameServers
+    resource_to_telemetry_conversion:
+      enabled: true
+    detailed_metrics: true
+    log_retention: 30
+    profile: ${env:AWS_PROFILE}
+    region: ${env:REGION}
+    shared_credentials_file:
+      - ${env:AWS_SHARED_CREDENTIALS_FILE}
+
+  prometheusremotewrite:
+    endpoint: ${env:AMP_REMOTE_WRITE_ENDPOINT}
+    auth:
+      authenticator: newsigv4
+    resource_to_telemetry_conversion:
+      enabled: true
+
+service:
+  extensions: [newsigv4]

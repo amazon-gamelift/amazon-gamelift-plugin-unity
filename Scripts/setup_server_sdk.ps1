@@ -1,7 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-$SERVER_SDK_DOWNLOAD_URL = "https://github.com/amazon-gamelift/amazon-gamelift-servers-csharp-server-sdk/releases/download/v5.3.0/GameLift-CSharp-ServerSDK-5.3.0.zip"
+$SERVER_SDK_DOWNLOAD_URL = "https://github.com/amazon-gamelift/amazon-gamelift-servers-csharp-server-sdk/releases/download/v5.4.0/GameLift-CSharp-ServerSDK-5.4.0.zip"
 $CURRENT_DIRECTORY = Get-Location
 $TEMP_FOLDER_PATH = Join-Path $CURRENT_DIRECTORY "Temp"
 $DOWNLOADS_FOLDER_PATH = Join-Path $TEMP_FOLDER_PATH "downloads"

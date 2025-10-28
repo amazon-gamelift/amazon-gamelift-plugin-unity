@@ -1,8 +1,15 @@
 <!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-<ui:UXML xmlns:ui="UnityEngine.UIElements" class="separator separator--vertical">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:gl="AmazonGameLift.Editor" class="separator separator--vertical">
     <Style src="../../common.uss"/>
+
+    <!-- Metrics info and toggle -->
+    <gl:StatusBox class="status-box--info" name="MetricsInfoBox"/>
+    <ui:VisualElement class="form-row">
+        <ui:Label name="ContainerEnableMetricsLabel" class="form-row__label" text="Enable telemetry metrics"/>
+        <ui:Toggle name="ContainerEnableMetricsToggle" class="form-row__input" value="false"/>
+    </ui:VisualElement>
 
     <!-- Server build location input -->
     <ui:VisualElement name="ContainerServerBuildInputRow" class="form-row">
@@ -121,6 +128,7 @@
                 <ui:Label name="ContainerImageTagInvalidMessage" class="error-message-text" text="The container image tag is not valid"/>
             </ui:VisualElement>
         </ui:VisualElement>
+
     </ui:Foldout>
 
 </ui:UXML>

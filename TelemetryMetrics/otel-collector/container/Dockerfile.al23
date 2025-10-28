@@ -1,0 +1,45 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+FROM amazonlinux:2023 AS base
+
+# Install dependencies and supervisor
+RUN yum install -y python3 python3-pip && \
+    pip install supervisor && \
+    yum clean all && rm -fr /var/cache
+
+# Add OpenTelemetry Collector RPM and install
+ADD ./gl-otel-collector.rpm /local/gl-otel-collector.rpm
+RUN rpm -Uvh /local/gl-otel-collector.rpm
+
+# Copy OpenTelemetry Collector config
+COPY ./gamelift-base.yaml /opt/aws/gl-otel-collector/etc/gamelift-base.yaml
+COPY ./gamelift-container.yaml /opt/aws/gl-otel-collector/etc/gamelift-container.yaml
+
+# Set up supervisor, Ensure the path for the game is correct
+COPY ./supervisord.conf /etc/supervisord.conf
+
+# Copy scripts and watcher
+COPY ./container-credentials.sh ./supervisor-watcher.py /local/
+RUN chmod +x /local/*.sh
+
+
+
+FROM base AS game
+
+# Install game dependancies
+RUN yum install -y dotnet && \
+    pip install supervisor && \
+    yum clean all && rm -fr /var/cache
+
+# Add game files
+ADD ./game /local/game/
+
+# Copy the game startup script
+COPY ./entrypoint-game.sh /local/
+RUN chmod +x /local/*.sh
+
+# Copy .env file for environment variables
+COPY ./.env /opt/aws/gl-otel-collector/etc/.env
+
+ENTRYPOINT ["/bin/bash", "-c", "set -a; source /opt/aws/gl-otel-collector/etc/.env; set +a; exec usr/local/bin/supervisord -c /etc/supervisord.conf "]

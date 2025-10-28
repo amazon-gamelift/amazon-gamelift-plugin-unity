@@ -108,6 +108,15 @@ Parameters:
     Type: String
     Description: "Unity engine version being used by the plugin"
 
+  EnableMetricsParameter:
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+    Description: "Enable telemetry metrics collection using OTEL collector"
+
+Conditions:
+  ShouldCreateMetricsResources: !Equals [!Ref EnableMetricsParameter, "true"]
+
 Resources:
   ApiGatewayCloudWatchRole:
     Type: "AWS::IAM::Role"
@@ -533,6 +542,28 @@ Resources:
               - "sts:AssumeRole"
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/GameLiftContainerFleetPolicy"
+      Policies: !If
+        - ShouldCreateMetricsResources
+        - - PolicyName: AMPRemoteWriteAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - aps:RemoteWrite
+                  Resource: !Sub 'arn:aws:aps:*:${AWS::AccountId}:workspace/*'
+          - PolicyName: OTelCollectorEMFExporter
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:PutLogEvents
+                    - logs:CreateLogStream
+                    - logs:CreateLogGroup
+                    - logs:PutRetentionPolicy
+                  Resource: !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:*:log-stream:*'
+        - []
 
   ContainerGroupResource:
     Type: "AWS::GameLift::ContainerGroupDefinition"
@@ -540,7 +571,7 @@ Resources:
       GameServerContainerDefinition: 
         ContainerName: !Ref ContainerImageNameParameter
         ImageUri: !Ref ContainerImageUriParameter
-        ServerSdkVersion: "5.3.0"
+        ServerSdkVersion: "5.4.0"
         PortConfiguration:
           ContainerPortRanges:
             - FromPort: !Ref FleetTcpFromPortParameter
@@ -560,7 +591,9 @@ Resources:
       InstanceConnectionPortRange:
         FromPort: !Ref FleetTcpFromPortParameter
         ToPort: !Ref FleetTcpToPortParameter
-      Description: !Sub ${FleetDescriptionParameter} Using Unity Engine Version ${UnityEngineVersionParameter}
+      Description: !Sub 
+        - "${FleetDescriptionParameter} Using Unity Engine Version ${UnityEngineVersionParameter}${MetricsText}"
+        - MetricsText: !If [ShouldCreateMetricsResources, " with telemetry metrics enabled", ""]
       InstanceInboundPermissions:
         - FromPort: !Ref FleetTcpFromPortParameter
           IpRange: "0.0.0.0/0"

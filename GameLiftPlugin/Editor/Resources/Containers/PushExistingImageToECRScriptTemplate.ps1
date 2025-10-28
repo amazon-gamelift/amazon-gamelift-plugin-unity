@@ -16,7 +16,7 @@ if ($LastExitCode -eq 0)
   {
     echo "Docker image successfully pushed to Amazon ECR."
   }
-else
+else 
   {
     echo "Docker push to Amazon ECR has failed."
   }

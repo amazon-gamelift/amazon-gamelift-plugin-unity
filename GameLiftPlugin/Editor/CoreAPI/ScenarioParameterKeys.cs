@@ -12,5 +12,6 @@ namespace AmazonGameLift.Editor
         public const string FleetName = "FleetNameParameter";
         public const string BuildName = "BuildNameParameter";
         public const string UnityEngineVersion = "UnityEngineVersionParameter";
+        public const string EnableMetrics = "EnableMetricsParameter";
     }
 }

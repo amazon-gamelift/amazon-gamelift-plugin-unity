@@ -22,6 +22,7 @@ namespace AmazonGameLift.Editor
         private Label buildOSText;
         private Label gameServerFolderText;
         private Label gameServerFileText;
+        private Label enableMetricsText;
         private EC2DeploymentSettings _deploymentSettings;
 
         public ManagedEC2GameParametersStep(VisualElement container, StateManager stateManager, EC2DeploymentSettings deploymentSettings, ManagedEC2FleetParameters parameters, EC2DeployStep ec2DeployStep) : base(container, stateManager, "EditorWindow/Components/ManagedEC2/ManagedEC2GameParametersStep")
@@ -43,6 +44,7 @@ namespace AmazonGameLift.Editor
             buildOSText = container.Q<Label>("BuildOSDisplay");
             gameServerFolderText = container.Q<Label>("GameServerFolderDisplay");
             gameServerFileText = container.Q<Label>("GameServerFileDisplay");
+            enableMetricsText = container.Q<Label>("EnableMetricsDisplay");
 
             setParametersButton = container.Q<Button>("SetParametersButton");
             modifyParametersButton = container.Q<Button>("ModifyParametersButton");
@@ -104,6 +106,7 @@ namespace AmazonGameLift.Editor
             buildOSText.text = _deploymentSettings.BuildOperatingSystem;
             gameServerFolderText.text = _deploymentSettings.BuildFolderPath;
             gameServerFileText.text = _deploymentSettings.BuildFilePath;
+            enableMetricsText.text = _deploymentSettings.EnableMetrics ? "Enabled" : "Disabled";
         }
 
         protected sealed override void UpdateGUI()

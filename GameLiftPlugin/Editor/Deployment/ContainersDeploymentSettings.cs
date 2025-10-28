@@ -73,6 +73,8 @@ namespace AmazonGameLift.Editor
 
         public string ContainerECRImageUri { get; set; }
 
+        public bool EnableMetrics { get; set; }
+
         #endregion Scenario parameters
 
         public DeploymentScenarios Scenario
@@ -215,6 +217,7 @@ namespace AmazonGameLift.Editor
 
             Scenario = _stateManager.ContainerDeploymentScenario;
             ContainerECRImageUri = _stateManager.ContainerECRImageUri;
+            EnableMetrics = _stateManager.ContainerEnableMetrics;
         }
 
         public async Task WaitForCurrentDeployment()
@@ -396,7 +399,8 @@ namespace AmazonGameLift.Editor
                 { ContainersScenarioParameterKeys.ContainerGroupDefinitionFromPort, portRangeFromValue },
                 { ContainersScenarioParameterKeys.ContainerGroupDefinitionToPort, portRangeToValue },
                 { ContainersScenarioParameterKeys.GameName, _stateManager.ContainerGameName },
-                { ContainersScenarioParameterKeys.UnityEngineVersion, UnityEngineVersionUtil.CurrentVersion }
+                { ContainersScenarioParameterKeys.UnityEngineVersion, UnityEngineVersionUtil.CurrentVersion },
+                { ContainersScenarioParameterKeys.EnableMetrics, EnableMetrics.ToString().ToLower() }
             };
 
             return parameters;

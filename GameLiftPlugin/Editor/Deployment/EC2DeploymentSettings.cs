@@ -72,6 +72,8 @@ namespace AmazonGameLift.Editor
             set => _ = SetGameNameAsync(value);
         }
 
+        public bool EnableMetrics { get; set; }
+
         public string BuildFolderPath { get; set; }
 
         public string BuildFilePath { get; set; }
@@ -246,6 +248,7 @@ namespace AmazonGameLift.Editor
             BuildFolderPath = null;
 
             Scenario = _stateManager.DeploymentScenario;
+            EnableMetrics = _stateManager.EnableMetrics;
             GameName = _stateManager.DeploymentGameName;
             BuildFolderPath = _stateManager.DeploymentBuildFolderPath;
             BuildFilePath = _stateManager.DeploymentBuildFilePath;
@@ -258,6 +261,7 @@ namespace AmazonGameLift.Editor
         public void Save()
         {
             _stateManager.DeploymentScenario = Scenario;
+            _stateManager.EnableMetrics = EnableMetrics;
             _stateManager.DeploymentBuildFolderPath = BuildFolderPath;
             _stateManager.DeploymentBuildFilePath = BuildFilePath;
             _stateManager.DeploymentGameName = GameName;
@@ -457,7 +461,8 @@ namespace AmazonGameLift.Editor
         {
             return new Dictionary<string, string>
             {
-                { ScenarioParameterKeys.GameName, GameName }
+                { ScenarioParameterKeys.GameName, GameName },
+                { ScenarioParameterKeys.EnableMetrics, EnableMetrics.ToString().ToLower() }
             };
         }
 
@@ -471,7 +476,8 @@ namespace AmazonGameLift.Editor
                 { ScenarioParameterKeys.BuildOperatingSystem, BuildOperatingSystem },
                 { ScenarioParameterKeys.FleetName, FleetName },
                 { ScenarioParameterKeys.BuildName, BuildName },
-                { ScenarioParameterKeys.UnityEngineVersion, UnityEngineVersionUtil.CurrentVersion }
+                { ScenarioParameterKeys.UnityEngineVersion, UnityEngineVersionUtil.CurrentVersion },
+                { ScenarioParameterKeys.EnableMetrics, EnableMetrics.ToString().ToLower() }
             };
             if (!string.IsNullOrWhiteSpace(LaunchParameters))
             {
