@@ -29,9 +29,13 @@ public class Render
         }
 
         // Materials are not all active so we have to load them
+        string materialPath = "Materials/";
+#if UNITY_6000_0_OR_NEWER
+        materialPath = "MaterialsUnity6/";
+#endif
         for (int matNum = 1; matNum <= _materials.Length; matNum++)
         {
-            _materials[matNum - 1] = Resources.Load("Materials/Color" + matNum.ToString().PadLeft(3, '0'), typeof(Material)) as Material;
+            _materials[matNum - 1] = Resources.Load(materialPath + "Color" + matNum.ToString().PadLeft(3, '0'), typeof(Material)) as Material;
             Debug.Assert(_materials[matNum - 1] != null);
         }
 

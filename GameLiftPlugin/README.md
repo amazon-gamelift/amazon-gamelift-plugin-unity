@@ -27,7 +27,9 @@ When deploying a game server to a fleet for hosting, Amazon GameLift Servers use
 ## Prerequisites
 
 * Amazon GameLift Servers plugin for Unity download package. Download a zip file from [the GitHub Releases page](https://github.com/amazon-gamelift/amazon-gamelift-plugin-unity/releases). Or clone the plugin from the [GitHub repo](https://github.com/amazon-gamelift/amazon-gamelift-plugin-unity).
-* A compatible Unity editor (2021.3 LTS, 2022.3 LTS) with Dedicated Server Build Support module for Windows (and Linux if desired).
+* A compatible Unity editor (2021.3 LTS, 2022.3 LTS, 6.0 LTS, 6.3 LTS) with Dedicated Server Build Support module for Windows (and Linux if desired).
+    * **Unity 6.3+ on Amazon Linux 2023:** Unity 6.3 and later require glibc 2.35, but Amazon Linux 2023 includes glibc 2.34. The `install.sh` script located under the `ExtraServerResources` folder in the root directory of the downloaded plugin must be included in the root directory of the game server build. This script builds glibc 2.35 and patches the Unity binaries to use it.
+      * If you already have an `install.sh`, merge the contents of both scripts into a single `install.sh`.
 * (Optional) A C# multiplayer game project with game code.
 * An AWS account with access permissions to use Amazon GameLift Servers, Amazon S3, and AWS CloudFormation. See [Set up programmatic access](https://docs.aws.amazon.com/gamelift/latest/developerguide/setting-up-aws-login.html) with long-term credentials.
 
@@ -63,6 +65,10 @@ Complete the following steps to install and enable the plugin for your multiplay
 4. (Optional) Import the sample project and configure the build settings.
     1. In your Unity project, go to the Amazon GameLift Servers menu and select `Sample Game > Import Sample Game` to import all assets.
     2. After the files are imported, go to the Amazon GameLift Servers menu and select `Sample Game > Initialize Settings`.
+    3. For Unity 6.3 or later, you need to revert to the legacy Input Manager to play the sample game. In the Unity Editor,
+       go to `Edit, Project Settings`. Select the `Player` category, scroll down to `Other Settings` and expand it.
+       Find the `Active Input Handling` dropdown menu and change the selection from`Input System Package (New)` to `Input Manager (Old)`.
+       Restart the Unity Editor if prompted.
 
 ## Contributing to this plugin
 
@@ -123,7 +129,7 @@ You can enable server metrics (performance, players/sessions, memory, and networ
 
 ### What Unity versions are supported?
 
-The Amazon GameLift Servers Plugin for Unity is compatible only with officially supported versions of Unity 2021.3 LTS and 2022.3 LTS for Windows and Mac OS.
+The Amazon GameLift Servers Plugin for Unity is compatible only with officially supported versions of Unity 2021.3 LTS, 2022.3 LTS, 6.0 LTS, and 6.3 LTS for Windows and Mac OS.
 
 ### Where are the logs?
 

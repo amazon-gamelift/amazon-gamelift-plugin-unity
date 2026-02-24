@@ -173,6 +173,8 @@ Resources:
   UserPool:
     Type: "AWS::Cognito::UserPool"
     Properties:
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
       AutoVerifiedAttributes:
         - email
       EmailConfiguration:
@@ -427,7 +429,8 @@ Resources:
       Handler: results_request.handler
       MemorySize: 128
       Role: !GetAtt ResultsRequestLambdaFunctionExecutionRole.Arn
-      Runtime: python3.8
+      Runtime: python3.14
+      Timeout: 10
 
   GameRequestLambdaFunction:
     Type: "AWS::Lambda::Function"
@@ -444,7 +447,8 @@ Resources:
       Handler: game_request.handler
       MemorySize: 128
       Role: !GetAtt GameRequestLambdaFunctionExecutionRole.Arn
-      Runtime: python3.8
+      Runtime: python3.14
+      Timeout: 10
 
   ResultsRequestLambdaFunctionApiGatewayPermission:
     Type: "AWS::Lambda::Permission"

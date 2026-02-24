@@ -8,7 +8,9 @@ The Amazon GameLift Servers SDK for Unity provides libraries to integrate Unity 
 You can find the official Amazon GameLift Servers documentation [here](https://docs.aws.amazon.com/gamelift/latest/developerguide/unity-plug-in.html).
 
 ## Supported Versions
-The Amazon GameLift Servers SDK for Unity is compatible with officially supported versions of Unity 2020.3 LTS, 2021.3 LTS and 2022.3 LTS for Windows and Mac OS, and supports both Unity's .NET Framework and .NET Standard profiles.
+The Amazon GameLift Servers SDK for Unity is compatible with officially supported versions of 2021.3 LTS, 2022.3 LTS, 6.0 LTS, and 6.3 LTS for Windows and Mac OS, and supports both Unity's .NET Framework and .NET Standard profiles.
+* **Unity 6.3+ on Amazon Linux 2023:** Unity 6.3 and later require glibc 2.35, but Amazon Linux 2023 includes glibc 2.34. The `install.sh` script located under the `ExtraServerResources` folder in the root directory of the downloaded plugin must be included in the root directory of the game server build. This script builds glibc 2.35 and patches the Unity binaries to use it.
+  * If you already have an `install.sh`, merge the contents of both scripts into a single `install.sh`.
 
 ## Prerequisites
 1. The Amazon GameLift Servers SDK for Unity depends on some third party DLLs that can be managed by Unity via a third party scoped registry called [UnityNuGet](https://github.com/xoofx/UnityNuGet). This is the simpler and recommended way to access the dependent DLLs. However, the DLLs can be downloaded manually instead of using the scoped registry. Please follow one of the below options to set up dependencies before installing the SDK.

@@ -1,0 +1,80 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+FROM amazonlinux:2023 AS base
+
+# Install dependencies and supervisor
+RUN yum install -y python3 python3-pip && \
+    pip install supervisor && \
+    yum clean all && rm -fr /var/cache
+
+# Add OpenTelemetry Collector RPM and install
+ADD ./gl-otel-collector.rpm /local/gl-otel-collector.rpm
+RUN rpm -Uvh /local/gl-otel-collector.rpm
+
+# Copy OpenTelemetry Collector config
+COPY ./gamelift-base.yaml /opt/aws/gl-otel-collector/etc/gamelift-base.yaml
+COPY ./gamelift-container.yaml /opt/aws/gl-otel-collector/etc/gamelift-container.yaml
+
+# Set up supervisor, Ensure the path for the game is correct
+COPY ./supervisord.conf /etc/supervisord.conf
+
+# Copy scripts and watcher
+COPY ./container-credentials.sh ./supervisor-watcher.py /local/
+RUN chmod +x /local/*.sh
+
+
+
+FROM base AS game
+
+# Install game dependencies and glibc build tools
+RUN yum install -y dotnet bison wget gcc make patchelf tar gzip && \
+    yum clean all && rm -fr /var/cache
+
+# Add game files
+ADD ./game /local/game/
+
+# Build glibc 2.35 and patch Unity binaries (multiarch)
+RUN GLIBC_VERSION="2.35" && \
+    INSTALL_PREFIX="/opt/glibc-${GLIBC_VERSION}" && \
+    ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        INTERPRETER="${INSTALL_PREFIX}/lib/ld-linux-x86-64.so.2"; \
+        EXE_PATTERN="*.x86_64"; \
+        MONO_ARCH="x86_64"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        INTERPRETER="${INSTALL_PREFIX}/lib/ld-linux-aarch64.so.1"; \
+        EXE_PATTERN="*.aarch64"; \
+        MONO_ARCH="aarch64"; \
+    else \
+        echo "ERROR: Unsupported architecture: $ARCH"; exit 1; \
+    fi && \
+    cd /tmp && \
+    wget -q "https://ftp.gnu.org/gnu/glibc/glibc-${GLIBC_VERSION}.tar.gz" && \
+    tar -xzf "glibc-${GLIBC_VERSION}.tar.gz" && \
+    cd "glibc-${GLIBC_VERSION}" && mkdir glibc-build && cd glibc-build && \
+    touch /etc/ld.so.conf && \
+    ../configure --prefix="${INSTALL_PREFIX}" && \
+    make -s all && make -s install && \
+    cd / && rm -rf /tmp/glibc-* && \
+    GAME_DIR="/local/game" && \
+    GLIBC_LIB="${INSTALL_PREFIX}/lib" && \
+    EXECUTABLE=$(find "$GAME_DIR" -maxdepth 1 -name "$EXE_PATTERN" -type f | head -1) && \
+    EXECUTABLE_NAME=$(basename "$EXECUTABLE" | sed "s/\.$ARCH$//") && \
+    DATA_DIR="$GAME_DIR/${EXECUTABLE_NAME}_Data" && \
+    patchelf --set-interpreter "$INTERPRETER" "$EXECUTABLE" && \
+    patchelf --set-rpath "$GLIBC_LIB:$GAME_DIR:/lib64:$DATA_DIR/MonoBleedingEdge/$MONO_ARCH" "$EXECUTABLE" && \
+    patchelf --set-rpath "$GLIBC_LIB:/lib64" "$GAME_DIR/UnityPlayer.so" && \
+    MONO_LIB="$DATA_DIR/MonoBleedingEdge/$MONO_ARCH/libmonobdwgc-2.0.so" && \
+    if [ -f "$MONO_LIB" ]; then patchelf --set-rpath "$GLIBC_LIB:/lib64" "$MONO_LIB"; fi && \
+    GAME_ASSEMBLY="$GAME_DIR/GameAssembly.so" && \
+    if [ -f "$GAME_ASSEMBLY" ]; then patchelf --set-rpath "$GLIBC_LIB:/lib64" "$GAME_ASSEMBLY"; fi
+
+# Copy the game startup script
+COPY ./entrypoint-game.sh /local/
+RUN chmod +x /local/*.sh
+
+# Copy .env file for environment variables
+COPY ./.env /opt/aws/gl-otel-collector/etc/.env
+
+ENTRYPOINT ["/bin/bash", "-c", "set -a; source /opt/aws/gl-otel-collector/etc/.env; set +a; exec usr/local/bin/supervisord -c /etc/supervisord.conf "]

@@ -9,6 +9,7 @@ build.meta
 **/Output~/
 /Out/
 /Temp/
+.DS_Store
 
 # Infra
 *.js

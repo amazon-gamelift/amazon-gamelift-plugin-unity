@@ -15,7 +15,11 @@ namespace AmazonGameLift.Editor
         public const string ServerSdkDllInPackage = "Runtime/Plugins/GameLiftServerSDKNet45.dll";
         public const string ContainersRootInPackage = "Editor/Resources/Containers";
         public const string ContainersOutputFolderName = "Output~";
+#if UNITY_6000_3_OR_NEWER
+        public const string ContainerDockerfileFileName = "SampleDockerfileUnity63";
+#else
         public const string ContainerDockerfileFileName = "SampleDockerfile";
+#endif
         public const string ContainerPushImageScriptFileName = "PushExistingImageToECRScriptTemplate.ps1";
     }
 }

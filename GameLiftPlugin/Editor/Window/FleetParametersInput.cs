@@ -15,6 +15,7 @@ namespace AmazonGameLift.Editor
             { "Amazon Linux 2 (AL2)", OperatingSystem.AMAZON_LINUX_2 },
             { "Amazon Linux 2023 (AL2023)", OperatingSystem.AMAZON_LINUX_2023 },
             { "Windows Server 2016", OperatingSystem.WINDOWS_2016 },
+            { "Windows Server 2022", OperatingSystem.WINDOWS_2022 },
         };
 
         private readonly ManagedEC2FleetParameters _parameters;

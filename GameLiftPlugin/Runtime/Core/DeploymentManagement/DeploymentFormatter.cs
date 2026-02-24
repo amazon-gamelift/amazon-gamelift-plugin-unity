@@ -16,7 +16,7 @@ namespace AmazonGameLiftPlugin.Core.DeploymentManagement
                 throw new ArgumentNullException(nameof(gameFilePathInBuild));
             }
 
-            if (operatingSystem.Equals(OperatingSystem.WINDOWS_2016.ToString()))
+            if (operatingSystem.StartsWith("WINDOWS"))
                 return $"C:\\game\\{gameFilePathInBuild}";
             return $"/local/game/{gameFilePathInBuild.Replace("\\", "/")}";
         }

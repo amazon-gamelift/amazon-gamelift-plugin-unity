@@ -248,6 +248,8 @@ Resources:
   UserPool:
     Type: "AWS::Cognito::UserPool"
     Properties:
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
       AutoVerifiedAttributes:
         - email
       EmailConfiguration:
@@ -432,7 +434,8 @@ Resources:
       Handler: flexmatch_status_poller.handler
       MemorySize: 128
       Role: !GetAtt FlexMatchStatusPollerLambdaFunctionExecutionRole.Arn
-      Runtime: python3.8
+      Runtime: python3.14
+      Timeout: 10
 
   GameRequestApiMethod:
     Type: "AWS::ApiGateway::Method"
@@ -463,7 +466,8 @@ Resources:
       Handler: matchmaker_event_handler.handler
       MemorySize: 128
       Role: !GetAtt MatchmakerEventHandlerLambdaFunctionExecutionRole.Arn
-      Runtime: python3.8
+      Runtime: python3.14
+      Timeout: 10
 
   ResultsRequestApiMethod:
     Type: "AWS::ApiGateway::Method"
@@ -493,7 +497,8 @@ Resources:
       Handler: results_request.handler
       MemorySize: 128
       Role: !GetAtt ResultsRequestLambdaFunctionExecutionRole.Arn
-      Runtime: python3.8
+      Runtime: python3.14
+      Timeout: 10
 
   WebACLAssociation:
     Type: "AWS::WAFv2::WebACLAssociation"
@@ -518,10 +523,30 @@ Resources:
         - Arn: !GetAtt FlexMatchStatusPollerLambdaFunction.Arn
           Id: !Sub ${GameNameParameter}FlexMatchStatusPollerScheduledRule
 
+  MatchmakerEventTopicKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      Description: KMS key for FlexMatch SNS notifications
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: "kms:*"
+            Resource: "*"
+          - Effect: Allow
+            Principal:
+              Service: gamelift.amazonaws.com
+            Action:
+              - "kms:Decrypt"
+              - "kms:GenerateDataKey"
+            Resource: "*"
+
   MatchmakerEventTopic:
     Type: "AWS::SNS::Topic"
     Properties:
-      KmsMasterKeyId: alias/aws/sns
+      KmsMasterKeyId: !Ref MatchmakerEventTopicKey
       Subscription:
         - Endpoint: !GetAtt MatchmakerEventHandlerLambdaFunction.Arn
           Protocol: lambda
@@ -686,7 +711,8 @@ Resources:
       Handler: game_request.handler
       MemorySize: 128
       Role: !GetAtt GameRequestLambdaFunctionExecutionRole.Arn
-      Runtime: python3.8
+      Runtime: python3.14
+      Timeout: 10
 
   GameRequestLambdaFunctionApiGatewayPermission:
     Type: "AWS::Lambda::Permission"

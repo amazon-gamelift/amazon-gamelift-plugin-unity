@@ -358,7 +358,15 @@ You can build the container image using either Amazon Linux 2023 or Debian:
 
 **Amazon Linux 2023**
 
-To build the Amazon Linux 2023-based image:
+To build the Amazon Linux 2023-based image for Unity 6.3:
+
+```sh
+cd telemetry-metrics/out
+# Build the image (replace <your-tag> with your desired image tag)
+docker build -f DockerfileUnity63.al23 -t <your-tag> .
+```
+
+For older Unity versions:
 
 ```sh
 cd telemetry-metrics/out
