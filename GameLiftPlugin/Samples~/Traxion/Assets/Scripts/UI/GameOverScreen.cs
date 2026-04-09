@@ -19,9 +19,9 @@ public class GameOverScreen : MonoBehaviour
     [SerializeField] private Image _winnerBanner;
 
     [Header("Score entries")]
-    [SerializeField] private Text[]  _finalScoreTexts  = new Text[NeonBlitzConfig.MaxPlayers];
-    [SerializeField] private Text[]  _finalRankTexts   = new Text[NeonBlitzConfig.MaxPlayers];
-    [SerializeField] private Image[] _finalScoreIcons  = new Image[NeonBlitzConfig.MaxPlayers];
+    [SerializeField] private Text[]  _finalScoreTexts  = new Text[TraxionConfig.MaxPlayers];
+    [SerializeField] private Text[]  _finalRankTexts   = new Text[TraxionConfig.MaxPlayers];
+    [SerializeField] private Image[] _finalScoreIcons  = new Image[TraxionConfig.MaxPlayers];
 
     [Header("Buttons")]
     [SerializeField] private Button _playAgainButton;
@@ -55,7 +55,7 @@ public class GameOverScreen : MonoBehaviour
     public void Hide()  => gameObject.SetActive(false);
 
     /// <summary>Populate the screen from the final game state.</summary>
-    public void Populate(NeonBlitzGameState state)
+    public void Populate(TraxionGameState state)
     {
         // Winner banner
         int wid = state.winnerId;
@@ -71,7 +71,7 @@ public class GameOverScreen : MonoBehaviour
         // Sort players by score descending
         var order = SortByScore(state);
 
-        for (int rank = 0; rank < NeonBlitzConfig.MaxPlayers; rank++)
+        for (int rank = 0; rank < TraxionConfig.MaxPlayers; rank++)
         {
             int i = order[rank];
             var p = state.players[i];
@@ -97,7 +97,7 @@ public class GameOverScreen : MonoBehaviour
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private static int[] SortByScore(NeonBlitzGameState state)
+    private static int[] SortByScore(TraxionGameState state)
     {
         int[] idx = { 0, 1, 2, 3 };
         System.Array.Sort(idx, (a, b) => state.players[b].score - state.players[a].score);

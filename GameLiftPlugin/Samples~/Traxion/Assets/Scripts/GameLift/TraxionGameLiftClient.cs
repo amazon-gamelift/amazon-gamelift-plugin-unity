@@ -10,13 +10,13 @@ using AmazonGameLift.Runtime;
 using UnityEngine;
 
 /// <summary>
-/// Fetches a <see cref="NeonBlitzConnectionInfo"/> from Amazon GameLift on the
+/// Fetches a <see cref="TraxionConnectionInfo"/> from Amazon GameLift on the
 /// client so the player can connect to a game server.
 ///
-/// Falls back to a local-server connection (localhost:<see cref="NeonBlitzConfig.DefaultPort"/>)
+/// Falls back to a local-server connection (localhost:<see cref="TraxionConfig.DefaultPort"/>)
 /// when GameLift is not configured — useful during development.
 /// </summary>
-public class NeonBlitzGameLiftClient : MonoBehaviour
+public class TraxionGameLiftClient : MonoBehaviour
 {
     // ── Inspector ─────────────────────────────────────────────────────────────
     [Tooltip("Leave null to auto-locate the GameLiftCoreApi component in the scene.")]
@@ -36,21 +36,21 @@ public class NeonBlitzGameLiftClient : MonoBehaviour
     // ── Public API ────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Asynchronously obtain connection details for a Neon Blitz session.
+    /// Asynchronously obtain connection details for a Traxion session.
     /// Returns (true, info) on success; (false, null) on failure.
     /// </summary>
-    public async Task<(bool success, NeonBlitzConnectionInfo info)> GetConnectionInfo(
+    public async Task<(bool success, TraxionConnectionInfo info)> GetConnectionInfo(
         string playerName,
         CancellationToken ct = default)
     {
         if (!IsGameLiftAvailable)
         {
             // Local-testing fallback
-            Debug.Log("[NeonBlitz Client] GameLift not available — using localhost");
-            return (true, new NeonBlitzConnectionInfo
+            Debug.Log("[Traxion Client] GameLift not available — using localhost");
+            return (true, new TraxionConnectionInfo
             {
                 ipAddress       = "localhost",
-                port            = NeonBlitzConfig.DefaultPort,
+                port            = TraxionConfig.DefaultPort,
                 playerSessionId = "",
                 playerName      = playerName,
             });
@@ -61,11 +61,11 @@ public class NeonBlitzGameLiftClient : MonoBehaviour
             var response = await _gameLiftApi.GetConnectionInfo(ct);
             if (!response.Success)
             {
-                Debug.LogWarning($"[NeonBlitz Client] GetConnectionInfo failed: {response.ErrorMessage}");
+                Debug.LogWarning($"[Traxion Client] GetConnectionInfo failed: {response.ErrorMessage}");
                 return (false, null);
             }
 
-            return (true, new NeonBlitzConnectionInfo
+            return (true, new TraxionConnectionInfo
             {
                 ipAddress       = response.IpAddress,
                 port            = response.Port,
@@ -79,7 +79,7 @@ public class NeonBlitzGameLiftClient : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"[NeonBlitz Client] GetConnectionInfo exception: {e}");
+            Debug.LogError($"[Traxion Client] GetConnectionInfo exception: {e}");
             return (false, null);
         }
     }

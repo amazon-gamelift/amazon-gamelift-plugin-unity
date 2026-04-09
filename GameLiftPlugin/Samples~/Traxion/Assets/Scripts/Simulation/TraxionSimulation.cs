@@ -9,18 +9,18 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// All game-logic for Neon Blitz lives here.
+/// All game-logic for Traxion lives here.
 /// Call <see cref="Update"/> every frame; it returns <c>true</c> whenever
 /// the state changed so the network layer knows to broadcast.
 /// </summary>
-public class NeonBlitzSimulation
+public class TraxionSimulation
 {
     // ── State ─────────────────────────────────────────────────────────────────
-    private NeonBlitzGameState _state;
+    private TraxionGameState _state;
 
     // Per-player move timers (modified by speed / freeze power-ups)
-    private readonly float[] _moveInterval  = new float[NeonBlitzConfig.MaxPlayers];
-    private readonly float[] _moveAccum     = new float[NeonBlitzConfig.MaxPlayers];
+    private readonly float[] _moveInterval  = new float[TraxionConfig.MaxPlayers];
+    private readonly float[] _moveAccum     = new float[TraxionConfig.MaxPlayers];
 
     private int  _powerUpSpawnCountdown;
     private int  _nextPowerUpId;
@@ -30,20 +30,20 @@ public class NeonBlitzSimulation
     // per-second survival bonus without a coroutine.
     private int _lastSecond;
 
-    public NeonBlitzGameState State => _state;
+    public TraxionGameState State => _state;
 
     // ── Initialisation ────────────────────────────────────────────────────────
 
-    public NeonBlitzSimulation()
+    public TraxionSimulation()
     {
-        _state = new NeonBlitzGameState();
+        _state = new TraxionGameState();
         ResetMoveIntervals();
     }
 
     private void ResetMoveIntervals()
     {
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
-            _moveInterval[i] = NeonBlitzConfig.BaseMoveInterval;
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
+            _moveInterval[i] = TraxionConfig.BaseMoveInterval;
     }
 
     /// <summary>
@@ -51,23 +51,23 @@ public class NeonBlitzSimulation
     /// </summary>
     public void InitialiseGame(int playerCount)
     {
-        _state = new NeonBlitzGameState
+        _state = new TraxionGameState
         {
             phase          = NeonGamePhase.Countdown,
-            timeRemaining  = NeonBlitzConfig.GameDuration,
-            countdownTimer = NeonBlitzConfig.CountdownDuration,
+            timeRemaining  = TraxionConfig.GameDuration,
+            countdownTimer = TraxionConfig.CountdownDuration,
             tick           = 0,
             winnerId       = -1,
         };
 
-        _powerUpSpawnCountdown = NeonBlitzConfig.PowerUpSpawnEveryNTicks;
+        _powerUpSpawnCountdown = TraxionConfig.PowerUpSpawnEveryNTicks;
         _nextPowerUpId         = 0;
-        _lastSecond            = Mathf.FloorToInt(NeonBlitzConfig.GameDuration);
+        _lastSecond            = Mathf.FloorToInt(TraxionConfig.GameDuration);
 
         var startPos = StartPositions();
         var startDir = StartDirections();
 
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             var p = _state.players[i];
             p.Reset();
@@ -94,8 +94,8 @@ public class NeonBlitzSimulation
     private static Vector2Int[] StartPositions()
     {
         const int M = 3;
-        int W = NeonBlitzConfig.GridWidth  - 1;
-        int H = NeonBlitzConfig.GridHeight - 1;
+        int W = TraxionConfig.GridWidth  - 1;
+        int H = TraxionConfig.GridHeight - 1;
         return new[]
         {
             new Vector2Int(M,   M),
@@ -114,7 +114,7 @@ public class NeonBlitzSimulation
     /// <summary>Queue a direction change.  Blocks 180° reversals.</summary>
     public void QueueDirection(int playerId, NeonDirection dir)
     {
-        if ((uint)playerId >= NeonBlitzConfig.MaxPlayers) return;
+        if ((uint)playerId >= TraxionConfig.MaxPlayers) return;
         var p = _state.players[playerId];
         if (!p.alive) return;
         if (IsOpposite(p.direction, dir)) return;
@@ -124,7 +124,7 @@ public class NeonBlitzSimulation
     /// <summary>Mark a player as disconnected mid-game.</summary>
     public void SetConnected(int playerId, bool connected)
     {
-        if ((uint)playerId >= NeonBlitzConfig.MaxPlayers) return;
+        if ((uint)playerId >= TraxionConfig.MaxPlayers) return;
         var p = _state.players[playerId];
         p.connected = connected;
         if (!connected && p.alive)
@@ -190,9 +190,9 @@ public class NeonBlitzSimulation
         if (curSecond < _lastSecond)
         {
             _lastSecond = curSecond;
-            for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+            for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
                 if (_state.players[i].alive)
-                    _state.players[i].score += NeonBlitzConfig.ScorePerSurvivalSecond;
+                    _state.players[i].score += TraxionConfig.ScorePerSurvivalSecond;
             changed = true;
         }
 
@@ -200,7 +200,7 @@ public class NeonBlitzSimulation
         changed |= TickPowerUpTimers(dt);
 
         // Advance each player's trail
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             if (!_state.players[i].alive) continue;
             _moveAccum[i] += dt;
@@ -218,7 +218,7 @@ public class NeonBlitzSimulation
             if (_powerUpSpawnCountdown <= 0)
             {
                 TrySpawnPowerUp();
-                _powerUpSpawnCountdown = NeonBlitzConfig.PowerUpSpawnEveryNTicks;
+                _powerUpSpawnCountdown = TraxionConfig.PowerUpSpawnEveryNTicks;
             }
         }
 
@@ -273,7 +273,7 @@ public class NeonBlitzSimulation
 
     private bool TryPickUp(int playerId, int x, int y)
     {
-        for (int i = 0; i < NeonBlitzConfig.MaxActivePowerUps; i++)
+        for (int i = 0; i < TraxionConfig.MaxActivePowerUps; i++)
         {
             var pu = _state.powerUps[i];
             if (!pu.active || pu.x != x || pu.y != y) continue;
@@ -289,12 +289,12 @@ public class NeonBlitzSimulation
     {
         var p = _state.players[id];
         p.activePowerUp = type;
-        p.powerUpTimer  = NeonBlitzConfig.PowerUpDuration;
+        p.powerUpTimer  = TraxionConfig.PowerUpDuration;
 
         switch (type)
         {
             case NeonPowerUpType.Speed:
-                _moveInterval[id] = NeonBlitzConfig.BaseMoveInterval / NeonBlitzConfig.SpeedBoostFactor;
+                _moveInterval[id] = TraxionConfig.BaseMoveInterval / TraxionConfig.SpeedBoostFactor;
                 break;
 
             case NeonPowerUpType.Shield:
@@ -302,9 +302,9 @@ public class NeonBlitzSimulation
                 break;
 
             case NeonPowerUpType.Freeze:
-                for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+                for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
                     if (i != id && _state.players[i].alive)
-                        _moveInterval[i] = NeonBlitzConfig.BaseMoveInterval / NeonBlitzConfig.FreezeFactor;
+                        _moveInterval[i] = TraxionConfig.BaseMoveInterval / TraxionConfig.FreezeFactor;
                 break;
 
             case NeonPowerUpType.Bomb:
@@ -318,7 +318,7 @@ public class NeonBlitzSimulation
     private void DetonateBomb(int id)
     {
         var p  = _state.players[id];
-        int r  = NeonBlitzConfig.BombBlastRadius;
+        int r  = TraxionConfig.BombBlastRadius;
         for (int dy = -r; dy <= r; dy++)
         for (int dx = -r; dx <= r; dx++)
         {
@@ -329,7 +329,7 @@ public class NeonBlitzSimulation
             {
                 _state.SetCell(cx, cy, 0);
                 int victim = cell - 1;
-                if ((uint)victim < NeonBlitzConfig.MaxPlayers)
+                if ((uint)victim < TraxionConfig.MaxPlayers)
                     _state.players[victim].trailCellCount =
                         Math.Max(0, _state.players[victim].trailCellCount - 1);
             }
@@ -339,7 +339,7 @@ public class NeonBlitzSimulation
     private bool TickPowerUpTimers(float dt)
     {
         bool changed = false;
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             var p = _state.players[i];
             if (p.activePowerUp == NeonPowerUpType.None || p.powerUpTimer <= 0f) continue;
@@ -360,13 +360,13 @@ public class NeonBlitzSimulation
         switch (type)
         {
             case NeonPowerUpType.Speed:
-                _moveInterval[id] = NeonBlitzConfig.BaseMoveInterval;
+                _moveInterval[id] = TraxionConfig.BaseMoveInterval;
                 break;
 
             case NeonPowerUpType.Freeze:
-                for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+                for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
                     if (i != id && _state.players[i].activePowerUp != NeonPowerUpType.Speed)
-                        _moveInterval[i] = NeonBlitzConfig.BaseMoveInterval;
+                        _moveInterval[i] = TraxionConfig.BaseMoveInterval;
                 break;
         }
     }
@@ -375,15 +375,15 @@ public class NeonBlitzSimulation
     {
         // Find a free slot
         int slot = -1;
-        for (int i = 0; i < NeonBlitzConfig.MaxActivePowerUps; i++)
+        for (int i = 0; i < TraxionConfig.MaxActivePowerUps; i++)
             if (!_state.powerUps[i].active) { slot = i; break; }
         if (slot < 0) return;
 
         // Find an empty cell (max 30 attempts)
         for (int attempt = 0; attempt < 30; attempt++)
         {
-            int x = _rng.Next(2, NeonBlitzConfig.GridWidth  - 2);
-            int y = _rng.Next(2, NeonBlitzConfig.GridHeight - 2);
+            int x = _rng.Next(2, TraxionConfig.GridWidth  - 2);
+            int y = _rng.Next(2, TraxionConfig.GridHeight - 2);
             if (_state.GetCell(x, y) != 0) continue;
 
             var pu    = _state.powerUps[slot];
@@ -403,9 +403,9 @@ public class NeonBlitzSimulation
         _state.players[id].alive = false;
 
         // Bonus to every surviving player
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
             if (i != id && _state.players[i].alive)
-                _state.players[i].score += NeonBlitzConfig.ScoreElimination;
+                _state.players[i].score += TraxionConfig.ScoreElimination;
 
         CheckWinCondition();
     }
@@ -414,7 +414,7 @@ public class NeonBlitzSimulation
     {
         int aliveCount = 0;
         int lastAlive  = -1;
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
             if (_state.players[i].connected && _state.players[i].alive)
             { aliveCount++; lastAlive = i; }
 
@@ -422,7 +422,7 @@ public class NeonBlitzSimulation
         {
             if (lastAlive >= 0)
             {
-                _state.players[lastAlive].score += NeonBlitzConfig.ScoreWin;
+                _state.players[lastAlive].score += TraxionConfig.ScoreWin;
                 _state.winnerId = lastAlive;
             }
             EndGame();
@@ -432,19 +432,19 @@ public class NeonBlitzSimulation
     private void EndGame()
     {
         // Territory bonus: count trail cells
-        int[] territory = new int[NeonBlitzConfig.MaxPlayers];
+        int[] territory = new int[TraxionConfig.MaxPlayers];
         foreach (int cell in _state.grid)
-            if (cell > 0 && cell <= NeonBlitzConfig.MaxPlayers)
+            if (cell > 0 && cell <= TraxionConfig.MaxPlayers)
                 territory[cell - 1]++;
 
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
-            _state.players[i].score += territory[i] * NeonBlitzConfig.ScorePerTerritoryCell;
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
+            _state.players[i].score += territory[i] * TraxionConfig.ScorePerTerritoryCell;
 
         // Determine winner by score if not already set
         if (_state.winnerId < 0)
         {
             int best = -1;
-            for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+            for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
                 if (_state.players[i].connected && _state.players[i].score > best)
                     { best = _state.players[i].score; _state.winnerId = i; }
         }

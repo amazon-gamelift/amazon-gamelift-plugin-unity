@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: MIT-0
 
 /// <summary>
-/// All tunable constants for Neon Blitz. Adjust to balance gameplay feel.
+/// All tunable constants for Traxion. Adjust to balance gameplay feel.
 /// </summary>
-public static class NeonBlitzConfig
+public static class TraxionConfig
 {
     // ── Grid ─────────────────────────────────────────────────────────────────
     public const int GridWidth  = 22;

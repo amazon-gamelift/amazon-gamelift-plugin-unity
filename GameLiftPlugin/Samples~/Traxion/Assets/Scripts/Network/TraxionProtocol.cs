@@ -12,7 +12,7 @@ using System.Text;
 /// Identical to the SampleGame <c>NetworkProtocol</c> so both can share a
 /// server fleet if desired.
 /// </summary>
-public static class NeonBlitzProtocol
+public static class TraxionProtocol
 {
     public static void Send(TcpClient client, string message)
     {
@@ -48,13 +48,13 @@ public static class NeonBlitzProtocol
 /// Connection handshake payload — sent by the client immediately after TCP connect.
 /// </summary>
 [Serializable]
-public class NeonBlitzConnectionInfo
+public class TraxionConnectionInfo
 {
     public string ipAddress;
     public int    port;
     public string playerSessionId;
     public string playerName;
 
-    public static NeonBlitzConnectionInfo FromJson(string json) =>
-        UnityEngine.JsonUtility.FromJson<NeonBlitzConnectionInfo>(json);
+    public static TraxionConnectionInfo FromJson(string json) =>
+        UnityEngine.JsonUtility.FromJson<TraxionConnectionInfo>(json);
 }

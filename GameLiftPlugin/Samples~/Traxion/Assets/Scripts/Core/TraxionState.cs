@@ -63,12 +63,12 @@ public class NeonPowerUpPickup
 // ── Full arena snapshot (serialised over network) ─────────────────────────────
 
 [Serializable]
-public class NeonBlitzGameState
+public class TraxionGameState
 {
     // Match metadata
     public NeonGamePhase  phase            = NeonGamePhase.Lobby;
-    public float          timeRemaining    = NeonBlitzConfig.GameDuration;
-    public float          countdownTimer   = NeonBlitzConfig.CountdownDuration;
+    public float          timeRemaining    = TraxionConfig.GameDuration;
+    public float          countdownTimer   = TraxionConfig.CountdownDuration;
     public ulong          tick;
     public int            localPlayerId    = -1;
     public int            winnerId         = -1;
@@ -86,26 +86,26 @@ public class NeonBlitzGameState
     /// </summary>
     public int[] grid;
 
-    public NeonBlitzGameState()
+    public TraxionGameState()
     {
-        players  = new NeonPlayerState[NeonBlitzConfig.MaxPlayers];
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        players  = new NeonPlayerState[TraxionConfig.MaxPlayers];
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
             players[i] = new NeonPlayerState { playerId = i };
 
-        powerUps = new NeonPowerUpPickup[NeonBlitzConfig.MaxActivePowerUps];
-        for (int i = 0; i < NeonBlitzConfig.MaxActivePowerUps; i++)
+        powerUps = new NeonPowerUpPickup[TraxionConfig.MaxActivePowerUps];
+        for (int i = 0; i < TraxionConfig.MaxActivePowerUps; i++)
             powerUps[i] = new NeonPowerUpPickup();
 
-        grid = new int[NeonBlitzConfig.GridWidth * NeonBlitzConfig.GridHeight];
+        grid = new int[TraxionConfig.GridWidth * TraxionConfig.GridHeight];
         winnerId = -1;
     }
 
     // ── Grid helpers ─────────────────────────────────────────────────────────
 
-    public int  GetCell(int x, int y)           => grid[y * NeonBlitzConfig.GridWidth + x];
-    public void SetCell(int x, int y, int value) => grid[y * NeonBlitzConfig.GridWidth + x] = value;
-    public bool InBounds(int x, int y)           => x >= 0 && x < NeonBlitzConfig.GridWidth
-                                                         && y >= 0 && y < NeonBlitzConfig.GridHeight;
+    public int  GetCell(int x, int y)           => grid[y * TraxionConfig.GridWidth + x];
+    public void SetCell(int x, int y, int value) => grid[y * TraxionConfig.GridWidth + x] = value;
+    public bool InBounds(int x, int y)           => x >= 0 && x < TraxionConfig.GridWidth
+                                                         && y >= 0 && y < TraxionConfig.GridHeight;
 }
 
 // ── Wire messages ─────────────────────────────────────────────────────────────

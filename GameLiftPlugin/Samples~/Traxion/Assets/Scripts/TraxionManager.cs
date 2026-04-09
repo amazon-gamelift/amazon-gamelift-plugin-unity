@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// Central MonoBehaviour that owns every other Neon Blitz subsystem.
+/// Central MonoBehaviour that owns every other Traxion subsystem.
 ///
-/// SERVER build:   drives simulation tick, owns NeonBlitzNetworkServer.
-/// CLIENT build:   drives UI state machine, owns NeonBlitzNetworkClient,
+/// SERVER build:   drives simulation tick, owns TraxionNetworkServer.
+/// CLIENT build:   drives UI state machine, owns TraxionNetworkClient,
 ///                 receives state snapshots from the server, feeds them to
 ///                 renderer + HUD.
 ///
-/// Both builds reference NeonBlitzGameLiftServer / NeonBlitzGameLiftClient
+/// Both builds reference TraxionGameLiftServer / TraxionGameLiftClient
 /// respectively (the unused half is compiled away by #if guards).
 /// </summary>
-public class NeonBlitzManager : MonoBehaviour
+public class TraxionManager : MonoBehaviour
 {
     // ── Inspector — shared ────────────────────────────────────────────────────
     [Header("Scene references")]
@@ -24,30 +24,30 @@ public class NeonBlitzManager : MonoBehaviour
 
     // ── Inspector — client only ───────────────────────────────────────────────
 #if !UNITY_SERVER
-    [SerializeField] private NeonBlitzRenderer  _renderer;
-    [SerializeField] private NeonBlitzHUD       _hud;
+    [SerializeField] private TraxionRenderer  _renderer;
+    [SerializeField] private TraxionHUD       _hud;
     [SerializeField] private LobbyScreen        _lobbyScreen;
     [SerializeField] private GameOverScreen     _gameOverScreen;
     [SerializeField] private TouchSwipeInput    _swipeInput;
-    [SerializeField] private NeonBlitzAudio     _audio;
-    [SerializeField] private NeonBlitzGameLiftClient _gameLiftClient;
+    [SerializeField] private TraxionAudio     _audio;
+    [SerializeField] private TraxionGameLiftClient _gameLiftClient;
 #endif
 
     // ── Inspector — server only ───────────────────────────────────────────────
 #if UNITY_SERVER
-    [SerializeField] private NeonBlitzGameLiftServer _gameLiftServer;
+    [SerializeField] private TraxionGameLiftServer _gameLiftServer;
 #endif
 
     // ── Runtime — server ──────────────────────────────────────────────────────
 #if UNITY_SERVER
-    private NeonBlitzSimulation    _sim;
-    private NeonBlitzNetworkServer _server;
+    private TraxionSimulation    _sim;
+    private TraxionNetworkServer _server;
 #endif
 
     // ── Runtime — client ──────────────────────────────────────────────────────
 #if !UNITY_SERVER
-    private NeonBlitzNetworkClient         _client;
-    private NeonBlitzGameState             _latestState;
+    private TraxionNetworkClient         _client;
+    private TraxionGameState             _latestState;
     private int                            _localPlayerId = -1;
     private CancellationTokenSource        _cts;
     private NeonGamePhase                  _prevPhase = NeonGamePhase.Lobby;
@@ -94,19 +94,19 @@ public class NeonBlitzManager : MonoBehaviour
 
     private void StartServer()
     {
-        int port = NeonBlitzConfig.DefaultPort;
+        int port = TraxionConfig.DefaultPort;
 
         // Initialise GameLift (optional — gracefully no-ops when not available)
         if (_gameLiftServer != null && _gameLiftServer.Initialise())
             port = _gameLiftServer.ServerPort;
 
-        _sim    = new NeonBlitzSimulation();
-        _server = new NeonBlitzNetworkServer(this, _sim, port);
+        _sim    = new TraxionSimulation();
+        _server = new TraxionNetworkServer(this, _sim, port);
 
-        Debug.Log("[NeonBlitz Manager] Server started");
+        Debug.Log("[Traxion Manager] Server started");
     }
 
-    // Called by NeonBlitzNetworkServer
+    // Called by TraxionNetworkServer
     public bool AcceptPlayerSession(string sessionId) =>
         _gameLiftServer != null ? _gameLiftServer.AcceptPlayerSession(sessionId) : true;
 
@@ -127,7 +127,7 @@ public class NeonBlitzManager : MonoBehaviour
     private async void StartClient()
     {
         _cts    = new CancellationTokenSource();
-        _client = new NeonBlitzNetworkClient(this);
+        _client = new TraxionNetworkClient(this);
 
         SetupLobbyScreen();
 
@@ -183,10 +183,10 @@ public class NeonBlitzManager : MonoBehaviour
 
     // ── State from server ─────────────────────────────────────────────────────
 
-    /// <summary>Called by NeonBlitzNetworkClient when a STATE message arrives.</summary>
+    /// <summary>Called by TraxionNetworkClient when a STATE message arrives.</summary>
     public void ApplyServerState(string json)
     {
-        var state = JsonUtility.FromJson<NeonBlitzGameState>(json);
+        var state = JsonUtility.FromJson<TraxionGameState>(json);
         if (state == null) return;
 
         // First state tells us our player ID
@@ -197,7 +197,7 @@ public class NeonBlitzManager : MonoBehaviour
         HandlePhaseTransition(state);
     }
 
-    private void HandlePhaseTransition(NeonBlitzGameState state)
+    private void HandlePhaseTransition(TraxionGameState state)
     {
         if (state.phase == _prevPhase) return;
         var oldPhase = _prevPhase;
@@ -257,7 +257,7 @@ public class NeonBlitzManager : MonoBehaviour
 
     // ── Game-over screen ──────────────────────────────────────────────────────
 
-    private void ShowGameOver(NeonBlitzGameState state)
+    private void ShowGameOver(TraxionGameState state)
     {
         if (_gameOverScreen == null) return;
         _gameOverScreen.Populate(state);
@@ -289,7 +289,7 @@ public class NeonBlitzManager : MonoBehaviour
 
     public void OnConnectionRejected(string reason)
     {
-        Debug.LogWarning($"[NeonBlitz Manager] Rejected: {reason}");
+        Debug.LogWarning($"[Traxion Manager] Rejected: {reason}");
         _lobbyScreen?.Show();
         _lobbyScreen?.SetStatusText($"Rejected: {reason}", Color.red);
         _lobbyScreen?.SetReadyInteractable(true);

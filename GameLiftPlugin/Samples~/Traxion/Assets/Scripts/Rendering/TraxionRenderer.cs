@@ -7,7 +7,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Renders the Neon Blitz arena using a flat grid of <see cref="SpriteRenderer"/>s.
+/// Renders the Traxion arena using a flat grid of <see cref="SpriteRenderer"/>s.
 ///
 /// Design goals:
 ///   • No external assets required — all visuals are procedural.
@@ -19,7 +19,7 @@ using UnityEngine;
 /// field in the Inspector (a 1×1 white Sprite) or the component will
 /// auto-generate one at runtime.
 /// </summary>
-public class NeonBlitzRenderer : MonoBehaviour
+public class TraxionRenderer : MonoBehaviour
 {
     // ── Inspector ─────────────────────────────────────────────────────────────
     [Header("Layout")]
@@ -80,7 +80,7 @@ public class NeonBlitzRenderer : MonoBehaviour
     // ── Public API ────────────────────────────────────────────────────────────
 
     /// <summary>Full repaint from a game-state snapshot.</summary>
-    public void Render(NeonBlitzGameState state)
+    public void Render(TraxionGameState state)
     {
         if (!_initialised) return;
         PaintGrid(state);
@@ -98,8 +98,8 @@ public class NeonBlitzRenderer : MonoBehaviour
 
     private void BuildGrid()
     {
-        int W = NeonBlitzConfig.GridWidth;
-        int H = NeonBlitzConfig.GridHeight;
+        int W = TraxionConfig.GridWidth;
+        int H = TraxionConfig.GridHeight;
         _cells = new SpriteRenderer[W, H];
 
         float step   = _cellSize + _cellPadding;
@@ -139,17 +139,17 @@ public class NeonBlitzRenderer : MonoBehaviour
 
     private void BuildPowerUpRenderers()
     {
-        _puRenderers = new SpriteRenderer[NeonBlitzConfig.MaxActivePowerUps];
+        _puRenderers = new SpriteRenderer[TraxionConfig.MaxActivePowerUps];
         var parent   = new GameObject("PowerUps").transform;
         parent.SetParent(transform, false);
 
         float step    = _cellSize + _cellPadding;
-        float W       = NeonBlitzConfig.GridWidth;
-        float H       = NeonBlitzConfig.GridHeight;
+        float W       = TraxionConfig.GridWidth;
+        float H       = TraxionConfig.GridHeight;
         float originX = -(W - 1) * step * 0.5f;
         float originY = -(H - 1) * step * 0.5f;
 
-        for (int i = 0; i < NeonBlitzConfig.MaxActivePowerUps; i++)
+        for (int i = 0; i < TraxionConfig.MaxActivePowerUps; i++)
         {
             var go = new GameObject($"PowerUp_{i}");
             go.transform.SetParent(parent, false);
@@ -165,10 +165,10 @@ public class NeonBlitzRenderer : MonoBehaviour
 
     // ── Paint helpers ─────────────────────────────────────────────────────────
 
-    private void PaintGrid(NeonBlitzGameState state)
+    private void PaintGrid(TraxionGameState state)
     {
-        int W = NeonBlitzConfig.GridWidth;
-        int H = NeonBlitzConfig.GridHeight;
+        int W = TraxionConfig.GridWidth;
+        int H = TraxionConfig.GridHeight;
 
         for (int y = 0; y < H; y++)
         for (int x = 0; x < W; x++)
@@ -180,15 +180,15 @@ public class NeonBlitzRenderer : MonoBehaviour
         }
     }
 
-    private void PaintPowerUps(NeonBlitzGameState state)
+    private void PaintPowerUps(TraxionGameState state)
     {
         float step    = _cellSize + _cellPadding;
-        float W       = NeonBlitzConfig.GridWidth;
-        float H       = NeonBlitzConfig.GridHeight;
+        float W       = TraxionConfig.GridWidth;
+        float H       = TraxionConfig.GridHeight;
         float originX = -(W - 1) * step * 0.5f;
         float originY = -(H - 1) * step * 0.5f;
 
-        for (int i = 0; i < NeonBlitzConfig.MaxActivePowerUps; i++)
+        for (int i = 0; i < TraxionConfig.MaxActivePowerUps; i++)
         {
             var pu = state.powerUps[i];
             var sr = _puRenderers[i];
@@ -210,15 +210,15 @@ public class NeonBlitzRenderer : MonoBehaviour
         }
     }
 
-    private void PaintHeads(NeonBlitzGameState state)
+    private void PaintHeads(TraxionGameState state)
     {
         float step    = _cellSize + _cellPadding;
-        float W       = NeonBlitzConfig.GridWidth;
-        float H       = NeonBlitzConfig.GridHeight;
+        float W       = TraxionConfig.GridWidth;
+        float H       = TraxionConfig.GridHeight;
         float originX = -(W - 1) * step * 0.5f;
         float originY = -(H - 1) * step * 0.5f;
 
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             var p = state.players[i];
             if (!p.alive) continue;
@@ -241,8 +241,8 @@ public class NeonBlitzRenderer : MonoBehaviour
 
     private void PaintIfInBounds(int x, int y, Color c)
     {
-        if (x < 0 || x >= NeonBlitzConfig.GridWidth)  return;
-        if (y < 0 || y >= NeonBlitzConfig.GridHeight) return;
+        if (x < 0 || x >= TraxionConfig.GridWidth)  return;
+        if (y < 0 || y >= TraxionConfig.GridHeight) return;
         _cells[x, y].color = c;
     }
 
@@ -258,8 +258,8 @@ public class NeonBlitzRenderer : MonoBehaviour
 
     private IEnumerator DoPulse(int x, int y)
     {
-        if (x < 0 || x >= NeonBlitzConfig.GridWidth)  yield break;
-        if (y < 0 || y >= NeonBlitzConfig.GridHeight) yield break;
+        if (x < 0 || x >= TraxionConfig.GridWidth)  yield break;
+        if (y < 0 || y >= TraxionConfig.GridHeight) yield break;
 
         var sr = _cells[x, y];
         Vector3 orig = sr.transform.localScale;

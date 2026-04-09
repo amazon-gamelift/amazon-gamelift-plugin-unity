@@ -1,4 +1,4 @@
-# NEON BLITZ — Multiplayer Tron Arena
+# TRAXION — Multiplayer Tron Arena
 
 > **The greatest smartphone game** — a fast-paced, real-time competitive arena
 > game for 2–4 players, built on Amazon GameLift.
@@ -38,43 +38,43 @@ Four pickups spawn on the grid during the match:
 ## Architecture
 
 ```
-NeonBlitz/
+Traxion/
 └── Assets/Scripts/
     ├── Core/
-    │   ├── NeonBlitzConfig.cs      ← All tunable constants
-    │   └── NeonBlitzState.cs       ← Serialisable game-state data structures
+    │   ├── TraxionConfig.cs      ← All tunable constants
+    │   └── TraxionState.cs       ← Serialisable game-state data structures
     ├── Simulation/
-    │   └── NeonBlitzSimulation.cs  ← Authoritative game logic (SERVER only)
+    │   └── TraxionSimulation.cs  ← Authoritative game logic (SERVER only)
     ├── Network/
-    │   ├── NeonBlitzProtocol.cs    ← Length-prefixed TCP framing
-    │   ├── NeonBlitzNetworkServer.cs
-    │   └── NeonBlitzNetworkClient.cs
+    │   ├── TraxionProtocol.cs    ← Length-prefixed TCP framing
+    │   ├── TraxionNetworkServer.cs
+    │   └── TraxionNetworkClient.cs
     ├── GameLift/
-    │   ├── NeonBlitzGameLiftServer.cs  ← GameLift Server SDK wrapper
-    │   └── NeonBlitzGameLiftClient.cs  ← GameLift Core API wrapper
+    │   ├── TraxionGameLiftServer.cs  ← GameLift Server SDK wrapper
+    │   └── TraxionGameLiftClient.cs  ← GameLift Core API wrapper
     ├── Input/
     │   └── TouchSwipeInput.cs      ← Swipe + WASD/arrow fallback
     ├── Rendering/
-    │   └── NeonBlitzRenderer.cs    ← Procedural neon grid (no art assets needed)
+    │   └── TraxionRenderer.cs    ← Procedural neon grid (no art assets needed)
     ├── UI/
-    │   ├── NeonBlitzHUD.cs         ← In-game timer, scores, power-up bar
+    │   ├── TraxionHUD.cs         ← In-game timer, scores, power-up bar
     │   ├── LobbyScreen.cs          ← Pre-match player slots + READY button
     │   └── GameOverScreen.cs       ← Final scores, winner banner, Play Again
     ├── Audio/
-    │   └── NeonBlitzAudio.cs       ← 100 % procedural sound synthesis
-    ├── NeonBlitzManager.cs         ← Central orchestrator (server + client)
-    └── NeonBlitzBootstrap.cs       ← Server-build entry point
+    │   └── TraxionAudio.cs       ← 100 % procedural sound synthesis
+    ├── TraxionManager.cs         ← Central orchestrator (server + client)
+    └── TraxionBootstrap.cs       ← Server-build entry point
 ```
 
 **Data flow (client):**
 
 ```
-TouchSwipeInput ──► NeonBlitzManager ──► NeonBlitzNetworkClient ──► [TCP] ──► Server
+TouchSwipeInput ──► TraxionManager ──► TraxionNetworkClient ──► [TCP] ──► Server
                            ▲                                                      │
-                           │                       NeonBlitzSimulation            │
-                    STATE snapshot ◄──────────── NeonBlitzNetworkServer ◄─────────┘
+                           │                       TraxionSimulation            │
+                    STATE snapshot ◄──────────── TraxionNetworkServer ◄─────────┘
                            │
-               NeonBlitzRenderer + NeonBlitzHUD
+               TraxionRenderer + TraxionHUD
 ```
 
 ---
@@ -82,29 +82,29 @@ TouchSwipeInput ──► NeonBlitzManager ──► NeonBlitzNetworkClient ─�
 ## Setup
 
 ### Client scene
-1. Create a new scene (`NeonBlitzGame`).
-2. Add an **Empty GameObject** named `NeonBlitzRoot` and attach:
-   - `NeonBlitzManager`
-   - `NeonBlitzRenderer`
-   - `NeonBlitzAudio`
+1. Create a new scene (`TraxionGame`).
+2. Add an **Empty GameObject** named `TraxionRoot` and attach:
+   - `TraxionManager`
+   - `TraxionRenderer`
+   - `TraxionAudio`
    - `TouchSwipeInput`
-   - `NeonBlitzGameLiftClient`
+   - `TraxionGameLiftClient`
 3. Create a **Canvas** and add:
-   - `NeonBlitzHUD`
+   - `TraxionHUD`
    - `LobbyScreen`
    - `GameOverScreen`
-4. Wire all Inspector references on `NeonBlitzManager`.
+4. Wire all Inspector references on `TraxionManager`.
 5. Set **Player Settings → Scripting Backend** to IL2CPP for mobile.
-6. Add `NEON_BLITZ` to Scripting Define Symbols if you want to isolate the
+6. Add `TRAXION` to Scripting Define Symbols if you want to isolate the
    assembly from other samples.
 
 ### Server build
 1. Enable **Dedicated Server** build target.
 2. The `UNITY_SERVER` scripting define is set automatically.
-3. `NeonBlitzBootstrap` handles GameLift initialisation; no extra steps needed.
+3. `TraxionBootstrap` handles GameLift initialisation; no extra steps needed.
 
 ### Local testing (no AWS account required)
-- Leave `NeonBlitzGameLiftClient._gameLiftApi` unassigned.
+- Leave `TraxionGameLiftClient._gameLiftApi` unassigned.
 - The client automatically connects to `localhost:7778`.
 - Start the server build first, then connect two client windows.
 
@@ -112,7 +112,7 @@ TouchSwipeInput ──► NeonBlitzManager ──► NeonBlitzNetworkClient ─�
 
 ## Tuning
 
-Open `NeonBlitzConfig.cs` to adjust:
+Open `TraxionConfig.cs` to adjust:
 
 - **Grid size** — `GridWidth` / `GridHeight` (portrait: keep Height > Width)
 - **Base speed** — `BaseMoveInterval` (lower = faster)
@@ -126,8 +126,8 @@ Open `NeonBlitzConfig.cs` to adjust:
 
 | What to add | Where |
 |-------------|-------|
-| New power-up | Add value to `NeonPowerUpType`, handle in `NeonBlitzSimulation.ApplyPowerUp` |
-| Shrinking grid | Add border-collapse logic in `NeonBlitzSimulation.TickPlaying` |
+| New power-up | Add value to `NeonPowerUpType`, handle in `TraxionSimulation.ApplyPowerUp` |
+| Shrinking grid | Add border-collapse logic in `TraxionSimulation.TickPlaying` |
 | AI bots | Implement a server-side bot controller calling `QueueDirection` |
 | Leaderboard | Post final scores to Amazon DynamoDB via Lambda after `GameOver` |
 | Spectator mode | Add a "spectator" client type that receives STATE but never sends INPUT |

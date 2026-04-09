@@ -18,8 +18,8 @@ public class LobbyScreen : MonoBehaviour
 {
     // ── Inspector ─────────────────────────────────────────────────────────────
     [Header("Player slot indicators (0..MaxPlayers-1)")]
-    [SerializeField] private Image[]  _slotIcons      = new Image[NeonBlitzConfig.MaxPlayers];
-    [SerializeField] private Text[]   _slotLabels     = new Text[NeonBlitzConfig.MaxPlayers];
+    [SerializeField] private Image[]  _slotIcons      = new Image[TraxionConfig.MaxPlayers];
+    [SerializeField] private Text[]   _slotLabels     = new Text[TraxionConfig.MaxPlayers];
 
     [Header("Controls")]
     [SerializeField] private Button   _readyButton;
@@ -58,7 +58,7 @@ public class LobbyScreen : MonoBehaviour
 
     public void SetPlayerSlots(bool[] connected, string[] names)
     {
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             bool isConnected = i < connected.Length && connected[i];
 

@@ -9,28 +9,28 @@ using System.Net.Sockets;
 using UnityEngine;
 
 /// <summary>
-/// TCP server that drives the Neon Blitz simulation.
-/// Accepts up to <see cref="NeonBlitzConfig.MaxPlayers"/> clients, collects
+/// TCP server that drives the Traxion simulation.
+/// Accepts up to <see cref="TraxionConfig.MaxPlayers"/> clients, collects
 /// their direction inputs every frame, advances the simulation, and broadcasts
-/// the resulting <see cref="NeonBlitzGameState"/> snapshot back to all clients.
+/// the resulting <see cref="TraxionGameState"/> snapshot back to all clients.
 /// </summary>
-public class NeonBlitzNetworkServer
+public class TraxionNetworkServer
 {
     // ── Fields ────────────────────────────────────────────────────────────────
 
-    private readonly NeonBlitzManager  _manager;
-    private readonly NeonBlitzSimulation _sim;
+    private readonly TraxionManager  _manager;
+    private readonly TraxionSimulation _sim;
     private readonly TcpListener       _listener;
-    private readonly TcpClient[]       _clients        = new TcpClient[NeonBlitzConfig.MaxPlayers];
-    private readonly bool[]            _ready          = new bool[NeonBlitzConfig.MaxPlayers];
-    private readonly string[]          _playerSessions = new string[NeonBlitzConfig.MaxPlayers];
+    private readonly TcpClient[]       _clients        = new TcpClient[TraxionConfig.MaxPlayers];
+    private readonly bool[]            _ready          = new bool[TraxionConfig.MaxPlayers];
+    private readonly string[]          _playerSessions = new string[TraxionConfig.MaxPlayers];
 
     private int ConnectedCount
     {
         get
         {
             int n = 0;
-            for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+            for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
                 if (_clients[i] != null) n++;
             return n;
         }
@@ -38,13 +38,13 @@ public class NeonBlitzNetworkServer
 
     // ── Construction ──────────────────────────────────────────────────────────
 
-    public NeonBlitzNetworkServer(NeonBlitzManager manager, NeonBlitzSimulation sim, int port)
+    public TraxionNetworkServer(TraxionManager manager, TraxionSimulation sim, int port)
     {
         _manager  = manager;
         _sim      = sim;
         _listener = new TcpListener(IPAddress.Any, port);
         _listener.Start();
-        Debug.Log($"[NeonBlitz Server] Listening on port {port}");
+        Debug.Log($"[Traxion Server] Listening on port {port}");
     }
 
     // ── Per-frame update ──────────────────────────────────────────────────────
@@ -66,17 +66,17 @@ public class NeonBlitzNetworkServer
 
         TcpClient incoming = _listener.AcceptTcpClient();
 
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             if (_clients[i] != null) continue;
 
             _clients[i] = incoming;
-            Debug.Log($"[NeonBlitz Server] Player {i} connected");
+            Debug.Log($"[Traxion Server] Player {i} connected");
             return;
         }
 
         // Game is full — reject
-        try   { NeonBlitzProtocol.Send(incoming, "REJECT:game full"); }
+        try   { TraxionProtocol.Send(incoming, "REJECT:game full"); }
         catch { /* best-effort */ }
         incoming.Close();
     }
@@ -85,11 +85,11 @@ public class NeonBlitzNetworkServer
 
     private void ReceiveMessages()
     {
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             if (_clients[i] == null) continue;
 
-            string[] msgs = NeonBlitzProtocol.Receive(_clients[i]);
+            string[] msgs = TraxionProtocol.Receive(_clients[i]);
             foreach (string msg in msgs)
                 Dispatch(i, msg);
         }
@@ -110,7 +110,7 @@ public class NeonBlitzNetworkServer
             case "END":        HandleEnd();                       break;
             case "DISCONNECT": HandleDisconnect(playerIdx);       break;
             default:
-                Debug.LogWarning($"[NeonBlitz Server] Unknown message: {verb}");
+                Debug.LogWarning($"[Traxion Server] Unknown message: {verb}");
                 break;
         }
     }
@@ -119,10 +119,10 @@ public class NeonBlitzNetworkServer
 
     private void HandleConnect(int playerIdx, string json)
     {
-        Debug.Log($"[NeonBlitz Server] CONNECT player {playerIdx}");
+        Debug.Log($"[Traxion Server] CONNECT player {playerIdx}");
 
         // Validate player session via GameLift
-        var info = NeonBlitzConnectionInfo.FromJson(json);
+        var info = TraxionConnectionInfo.FromJson(json);
         if (!_manager.AcceptPlayerSession(info.playerSessionId))
         {
             Send(playerIdx, "DISCONNECT:session rejected");
@@ -137,14 +137,14 @@ public class NeonBlitzNetworkServer
     private void HandleReady(int playerIdx)
     {
         _ready[playerIdx] = true;
-        Debug.Log($"[NeonBlitz Server] Player {playerIdx} ready");
+        Debug.Log($"[Traxion Server] Player {playerIdx} ready");
 
         // Start game once every connected + ready client has confirmed
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
             if (_clients[i] != null && !_ready[i]) return;
 
         int count = ConnectedCount;
-        if (count >= NeonBlitzConfig.MinPlayersToStart)
+        if (count >= TraxionConfig.MinPlayersToStart)
         {
             _sim.InitialiseGame(count);
             BroadcastState();
@@ -159,9 +159,9 @@ public class NeonBlitzNetworkServer
 
     private void HandleEnd()
     {
-        Debug.Log("[NeonBlitz Server] END requested — terminating session");
+        Debug.Log("[Traxion Server] END requested — terminating session");
         Broadcast("DISCONNECT:");
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
             Disconnect(i);
         _manager.TerminateSession();
     }
@@ -181,7 +181,7 @@ public class NeonBlitzNetworkServer
 
     private void BroadcastState()
     {
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             if (_clients[i] == null) continue;
             string json = _sim.Serialise(i);
@@ -191,7 +191,7 @@ public class NeonBlitzNetworkServer
 
     private void Broadcast(string msg)
     {
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
             Send(i, msg);
     }
 
@@ -200,11 +200,11 @@ public class NeonBlitzNetworkServer
         if (_clients[playerIdx] == null) return;
         try
         {
-            NeonBlitzProtocol.Send(_clients[playerIdx], msg);
+            TraxionProtocol.Send(_clients[playerIdx], msg);
         }
         catch (Exception e) when (e is SocketException || e is InvalidOperationException)
         {
-            Debug.LogWarning($"[NeonBlitz Server] Send to player {playerIdx} failed: {e.Message}");
+            Debug.LogWarning($"[Traxion Server] Send to player {playerIdx} failed: {e.Message}");
             Disconnect(playerIdx);
         }
     }
@@ -233,7 +233,7 @@ public class NeonBlitzNetworkServer
     public void Shutdown()
     {
         Broadcast("DISCONNECT:");
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
             Disconnect(i);
         try { _listener.Stop(); } catch { /* best-effort */ }
     }

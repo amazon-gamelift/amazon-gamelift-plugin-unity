@@ -7,7 +7,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Procedurally generates all Neon Blitz sound effects using Unity's
+/// Procedurally generates all Traxion sound effects using Unity's
 /// <see cref="AudioSource"/> and synthesised waveforms — no audio assets
 /// required.
 ///
@@ -19,9 +19,9 @@ using UnityEngine;
 ///   • Match start — ascending fanfare
 ///   • Match end   — resolving chord
 ///
-/// Attach to the same GameObject as <see cref="NeonBlitzManager"/>.
+/// Attach to the same GameObject as <see cref="TraxionManager"/>.
 /// </summary>
-public class NeonBlitzAudio : MonoBehaviour
+public class TraxionAudio : MonoBehaviour
 {
     // ── Inspector ─────────────────────────────────────────────────────────────
     [Range(0f, 1f)] [SerializeField] private float _masterVolume = 0.6f;

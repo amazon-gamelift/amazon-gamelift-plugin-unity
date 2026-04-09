@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// <summary>
 /// In-game heads-up display.
 ///
-/// Canvas hierarchy expected (create in Editor or via <see cref="NeonBlitzBootstrap"/>):
+/// Canvas hierarchy expected (create in Editor or via <see cref="TraxionBootstrap"/>):
 ///   Canvas
 ///     HUD
 ///       TimerText   — countdown / match timer
@@ -22,15 +22,15 @@ using UnityEngine.UI;
 /// All Text references are wired via Inspector fields; the component degrades
 /// gracefully when fields are left null (nothing crashes, just missing text).
 /// </summary>
-public class NeonBlitzHUD : MonoBehaviour
+public class TraxionHUD : MonoBehaviour
 {
     // ── Inspector ─────────────────────────────────────────────────────────────
     [Header("Timer")]
     [SerializeField] private Text _timerText;
 
     [Header("Score entries (0..3)")]
-    [SerializeField] private Text[]  _scoreTexts   = new Text[NeonBlitzConfig.MaxPlayers];
-    [SerializeField] private Image[] _scoreIcons   = new Image[NeonBlitzConfig.MaxPlayers];
+    [SerializeField] private Text[]  _scoreTexts   = new Text[TraxionConfig.MaxPlayers];
+    [SerializeField] private Image[] _scoreIcons   = new Image[TraxionConfig.MaxPlayers];
 
     [Header("Phase / message")]
     [SerializeField] private Text  _phaseText;
@@ -40,7 +40,7 @@ public class NeonBlitzHUD : MonoBehaviour
     [SerializeField] private Text  _powerUpText;
     [SerializeField] private Image _powerUpIcon;
 
-    // ── Player colours (must match NeonBlitzRenderer) ────────────────────────
+    // ── Player colours (must match TraxionRenderer) ────────────────────────
     private static readonly Color[] s_playerColors =
     {
         Color.HSVToRGB(0.50f, 1f, 1f),
@@ -59,7 +59,7 @@ public class NeonBlitzHUD : MonoBehaviour
 
     // ── Public API ────────────────────────────────────────────────────────────
 
-    public void Refresh(NeonBlitzGameState state)
+    public void Refresh(TraxionGameState state)
     {
         UpdateTimer(state);
         UpdateScores(state);
@@ -69,7 +69,7 @@ public class NeonBlitzHUD : MonoBehaviour
 
     // ── Timer ─────────────────────────────────────────────────────────────────
 
-    private void UpdateTimer(NeonBlitzGameState state)
+    private void UpdateTimer(TraxionGameState state)
     {
         if (_timerText == null) return;
 
@@ -98,9 +98,9 @@ public class NeonBlitzHUD : MonoBehaviour
 
     // ── Scores ────────────────────────────────────────────────────────────────
 
-    private void UpdateScores(NeonBlitzGameState state)
+    private void UpdateScores(TraxionGameState state)
     {
-        for (int i = 0; i < NeonBlitzConfig.MaxPlayers; i++)
+        for (int i = 0; i < TraxionConfig.MaxPlayers; i++)
         {
             var p = state.players[i];
 
@@ -127,10 +127,10 @@ public class NeonBlitzHUD : MonoBehaviour
 
     // ── Power-up indicator ────────────────────────────────────────────────────
 
-    private void UpdatePowerUpIndicator(NeonBlitzGameState state)
+    private void UpdatePowerUpIndicator(TraxionGameState state)
     {
         int localId = state.localPlayerId;
-        if (localId < 0 || localId >= NeonBlitzConfig.MaxPlayers) return;
+        if (localId < 0 || localId >= TraxionConfig.MaxPlayers) return;
         var p = state.players[localId];
 
         bool hasPowerUp = p.activePowerUp != NeonPowerUpType.None && p.powerUpTimer > 0f;
@@ -146,7 +146,7 @@ public class NeonBlitzHUD : MonoBehaviour
 
     // ── Phase message ─────────────────────────────────────────────────────────
 
-    private void UpdatePhaseMessage(NeonBlitzGameState state)
+    private void UpdatePhaseMessage(TraxionGameState state)
     {
         if (_phaseText == null) return;
 

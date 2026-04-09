@@ -9,18 +9,18 @@ using Aws.GameLift.Server.Model;
 using UnityEngine;
 
 /// <summary>
-/// Wraps the Amazon GameLift Server SDK for Neon Blitz server builds.
+/// Wraps the Amazon GameLift Server SDK for Traxion server builds.
 ///
-/// Call <see cref="Initialise"/> once from <see cref="NeonBlitzBootstrap"/>.
-/// The <see cref="NeonBlitzNetworkServer"/> uses <see cref="AcceptPlayerSession"/>
+/// Call <see cref="Initialise"/> once from <see cref="TraxionBootstrap"/>.
+/// The <see cref="TraxionNetworkServer"/> uses <see cref="AcceptPlayerSession"/>
 /// and <see cref="RemovePlayerSession"/> to gate connections, and calls
 /// <see cref="TerminateGameSession"/> when the match ends.
 /// </summary>
-public class NeonBlitzGameLiftServer : MonoBehaviour
+public class TraxionGameLiftServer : MonoBehaviour
 {
     // ── Properties ────────────────────────────────────────────────────────────
     public bool IsConnected { get; private set; }
-    public int  ServerPort  { get; private set; } = NeonBlitzConfig.DefaultPort;
+    public int  ServerPort  { get; private set; } = TraxionConfig.DefaultPort;
 
     // ── Initialise ────────────────────────────────────────────────────────────
 
@@ -29,7 +29,7 @@ public class NeonBlitzGameLiftServer : MonoBehaviour
         var outcome = GameLiftServerAPI.InitSDK();
         if (!outcome.Success)
         {
-            Debug.LogError($"[NeonBlitz GameLift] InitSDK failed: {outcome.Error}");
+            Debug.LogError($"[Traxion GameLift] InitSDK failed: {outcome.Error}");
             return false;
         }
 
@@ -39,18 +39,18 @@ public class NeonBlitzGameLiftServer : MonoBehaviour
             onProcessTerminate:   OnProcessTerminate,
             onHealthCheck:        OnHealthCheck,
             port:                 ServerPort,
-            logParameters:        new LogParameters(new[] { "/local/game/logs/NeonBlitz.log" })
+            logParameters:        new LogParameters(new[] { "/local/game/logs/Traxion.log" })
         );
 
         var readyOutcome = GameLiftServerAPI.ProcessReady(processParams);
         if (!readyOutcome.Success)
         {
-            Debug.LogError($"[NeonBlitz GameLift] ProcessReady failed: {readyOutcome.Error}");
+            Debug.LogError($"[Traxion GameLift] ProcessReady failed: {readyOutcome.Error}");
             return false;
         }
 
         IsConnected = true;
-        Debug.Log($"[NeonBlitz GameLift] ProcessReady — listening on port {ServerPort}");
+        Debug.Log($"[Traxion GameLift] ProcessReady — listening on port {ServerPort}");
         return true;
     }
 
@@ -62,7 +62,7 @@ public class NeonBlitzGameLiftServer : MonoBehaviour
 
         var outcome = GameLiftServerAPI.AcceptPlayerSession(playerSessionId);
         if (!outcome.Success)
-            Debug.LogWarning($"[NeonBlitz GameLift] AcceptPlayerSession failed: {outcome.Error}");
+            Debug.LogWarning($"[Traxion GameLift] AcceptPlayerSession failed: {outcome.Error}");
         return outcome.Success;
     }
 
@@ -72,7 +72,7 @@ public class NeonBlitzGameLiftServer : MonoBehaviour
 
         var outcome = GameLiftServerAPI.RemovePlayerSession(playerSessionId);
         if (!outcome.Success)
-            Debug.LogWarning($"[NeonBlitz GameLift] RemovePlayerSession failed: {outcome.Error}");
+            Debug.LogWarning($"[Traxion GameLift] RemovePlayerSession failed: {outcome.Error}");
     }
 
     public void TerminateGameSession()
@@ -80,7 +80,7 @@ public class NeonBlitzGameLiftServer : MonoBehaviour
         if (!IsConnected) return;
         var outcome = GameLiftServerAPI.TerminateGameSession();
         if (!outcome.Success)
-            Debug.LogWarning($"[NeonBlitz GameLift] TerminateGameSession failed: {outcome.Error}");
+            Debug.LogWarning($"[Traxion GameLift] TerminateGameSession failed: {outcome.Error}");
         IsConnected = false;
     }
 
@@ -88,7 +88,7 @@ public class NeonBlitzGameLiftServer : MonoBehaviour
 
     private void OnStartGameSession(GameSession session)
     {
-        Debug.Log($"[NeonBlitz GameLift] StartGameSession — id:{session.GameSessionId}");
+        Debug.Log($"[Traxion GameLift] StartGameSession — id:{session.GameSessionId}");
 
         // Extract custom port if supplied as a game-session property
         foreach (var prop in session.GameProperties)
@@ -102,12 +102,12 @@ public class NeonBlitzGameLiftServer : MonoBehaviour
 
     private void OnUpdateGameSession(UpdatedGameSession session)
     {
-        Debug.Log("[NeonBlitz GameLift] UpdateGameSession");
+        Debug.Log("[Traxion GameLift] UpdateGameSession");
     }
 
     private void OnProcessTerminate()
     {
-        Debug.Log("[NeonBlitz GameLift] ProcessTerminate — shutting down");
+        Debug.Log("[Traxion GameLift] ProcessTerminate — shutting down");
         Application.Quit();
     }
 

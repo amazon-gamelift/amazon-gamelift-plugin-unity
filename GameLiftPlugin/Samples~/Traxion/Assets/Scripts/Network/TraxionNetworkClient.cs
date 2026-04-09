@@ -8,21 +8,21 @@ using System.Net.Sockets;
 using UnityEngine;
 
 /// <summary>
-/// Manages the client-side TCP connection to the Neon Blitz game server.
+/// Manages the client-side TCP connection to the Traxion game server.
 /// Sends player inputs and receives authoritative state snapshots.
 /// </summary>
-public class NeonBlitzNetworkClient
+public class TraxionNetworkClient
 {
     // ── Fields ────────────────────────────────────────────────────────────────
 
-    private readonly NeonBlitzManager _manager;
+    private readonly TraxionManager _manager;
     private TcpClient                 _client;
 
     public bool IsConnected  => _client != null;
 
     // ── Construction ──────────────────────────────────────────────────────────
 
-    public NeonBlitzNetworkClient(NeonBlitzManager manager)
+    public TraxionNetworkClient(TraxionManager manager)
     {
         _manager = manager;
     }
@@ -32,20 +32,20 @@ public class NeonBlitzNetworkClient
     /// <summary>
     /// Attempt a TCP connection.  Returns <c>true</c> on success.
     /// </summary>
-    public bool TryConnect(NeonBlitzConnectionInfo info)
+    public bool TryConnect(TraxionConnectionInfo info)
     {
         try
         {
             _client = new TcpClient(info.ipAddress, info.port);
             string payload = JsonUtility.ToJson(info);
-            NeonBlitzProtocol.Send(_client, $"CONNECT:{payload}");
-            Debug.Log($"[NeonBlitz Client] Connected to {info.ipAddress}:{info.port}");
+            TraxionProtocol.Send(_client, $"CONNECT:{payload}");
+            Debug.Log($"[Traxion Client] Connected to {info.ipAddress}:{info.port}");
             return true;
         }
         catch (Exception e)
         {
             _client = null;
-            Debug.LogWarning($"[NeonBlitz Client] Connect failed: {e.Message}");
+            Debug.LogWarning($"[Traxion Client] Connect failed: {e.Message}");
             return false;
         }
     }
@@ -72,7 +72,7 @@ public class NeonBlitzNetworkClient
     {
         if (_client == null) return;
 
-        string[] msgs = NeonBlitzProtocol.Receive(_client);
+        string[] msgs = TraxionProtocol.Receive(_client);
         foreach (string msg in msgs)
             Dispatch(msg);
     }
@@ -92,21 +92,21 @@ public class NeonBlitzNetworkClient
             case "REJECT":     HandleReject(body);                break;
             case "DISCONNECT": HandleServerDisconnect();          break;
             default:
-                Debug.LogWarning($"[NeonBlitz Client] Unknown message: {verb}");
+                Debug.LogWarning($"[Traxion Client] Unknown message: {verb}");
                 break;
         }
     }
 
     private void HandleReject(string reason)
     {
-        Debug.LogWarning($"[NeonBlitz Client] Connection rejected: {reason}");
+        Debug.LogWarning($"[Traxion Client] Connection rejected: {reason}");
         CloseSocket();
         _manager.OnConnectionRejected(reason);
     }
 
     private void HandleServerDisconnect()
     {
-        Debug.Log("[NeonBlitz Client] Server disconnected.");
+        Debug.Log("[Traxion Client] Server disconnected.");
         CloseSocket();
         _manager.OnServerDisconnected();
     }
@@ -118,11 +118,11 @@ public class NeonBlitzNetworkClient
         if (_client == null) return;
         try
         {
-            NeonBlitzProtocol.Send(_client, msg);
+            TraxionProtocol.Send(_client, msg);
         }
         catch (Exception e) when (e is SocketException || e is InvalidOperationException)
         {
-            Debug.LogWarning($"[NeonBlitz Client] Send failed: {e.Message}");
+            Debug.LogWarning($"[Traxion Client] Send failed: {e.Message}");
             CloseSocket();
             _manager.OnServerDisconnected();
         }
