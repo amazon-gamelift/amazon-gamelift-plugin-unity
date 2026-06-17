@@ -596,7 +596,7 @@ Resources:
       GameServerContainerDefinition: 
         ContainerName: !Ref ContainerImageNameParameter
         ImageUri: !Ref ContainerImageUriParameter
-        ServerSdkVersion: "5.4.0"
+        ServerSdkVersion: "5.5.0"
         PortConfiguration:
           ContainerPortRanges:
             - FromPort: !Ref FleetTcpFromPortParameter
