@@ -1,5 +1,8 @@
 CHANGELOG
 
+# 3.3.0 (06/18/2026)
+- Adds the ListContainersNetworkInfo() server SDK action to retrieve network information for all containers running on the same instance of a managed container fleet, enabling container-to-container discovery.
+
 # 3.2.1 (02/24/2026)
 - Adds support for Unity 6.3 LTS to the plugin and server SDK.
 - Adds Windows Server 2022 as a new operating system option in the deployment UI for managed EC2 fleets.
