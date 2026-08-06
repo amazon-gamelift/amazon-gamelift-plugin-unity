@@ -25,7 +25,11 @@ namespace Aws.GameLift.Unity.Metrics
     {
         private const string LogPrefix = "GameLiftMetrics";
         private static GameLiftLogger s_instance;
+#if ENABLE_IL2CPP
+        private static readonly ILog s_log = new Aws.GameLift.Server.UnityDebugLog();
+#else
         private static readonly ILog s_log = LogManager.GetLogger(typeof(GameLiftLogger));
+#endif
         public enum LogLevel { Error = 0, Warning = 1, Info = 2, Debug = 3 }
         private static LogLevel s_currentLevel = LogLevel.Error; // default quiet
 
