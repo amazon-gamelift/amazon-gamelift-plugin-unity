@@ -10,6 +10,7 @@
 *
 */
 
+#if !ENABLE_IL2CPP
 #if UNITY_EDITOR || UNITY_SERVER
 using log4net.Config;
 using UnityEngine;
@@ -29,4 +30,5 @@ namespace Aws.GameLift.Unity
         }
     }
 }
+#endif
 #endif

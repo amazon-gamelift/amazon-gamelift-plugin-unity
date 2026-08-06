@@ -1,5 +1,10 @@
 CHANGELOG
 
+# 3.3.1 (08/05/2026)
+- Fixes server SDK logging in IL2CPP builds.
+- Upgrades bundled third-party dependencies.
+- Updates the server SDK to version 5.5.1.
+
 # 3.3.0 (06/18/2026)
 - Adds the ListContainersNetworkInfo() server SDK action to retrieve network information for all containers running on the same instance of a managed container fleet, enabling container-to-container discovery.
 
