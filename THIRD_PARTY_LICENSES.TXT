@@ -247,18 +247,37 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------
 
-**  Microsoft.IdentityModel.JsonWebTokens; version 6.11.1 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+**  Microsoft.IdentityModel.Abstractions; version 6.34.0 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT
 License (the "License");
-**  Microsoft.IdentityModel.Logging; version 6.11.1 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+**  Microsoft.IdentityModel.JsonWebTokens; version 6.34.0 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT
 License (the "License");
-**  Microsoft.IdentityModel.Tokens; version 6.11.1 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+**  Microsoft.IdentityModel.Logging; version 6.34.0 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT
 License (the "License");
-**  System.IdentityModel.Tokens.Jwt; version 6.11.1 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+**  Microsoft.IdentityModel.Tokens; version 6.34.0 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT
 License (the "License");
+**  System.IdentityModel.Tokens.Jwt; version 6.34.0 -- https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT
+License (the "License");
+**  Microsoft.Bcl.AsyncInterfaces; version 1.1.0 -- https://www.nuget.org/packages/Microsoft.Bcl.AsyncInterfaces/
+© Microsoft Corporation. All rights reserved.
+**  System.Buffers; version 4.5.1 -- https://www.nuget.org/packages/System.Buffers/
+© Microsoft Corporation. All rights reserved.
+**  System.Memory; version 4.5.4 -- https://www.nuget.org/packages/System.Memory/
+© Microsoft Corporation. All rights reserved.
+**  System.Numerics.Vectors; version 4.5.0 -- https://www.nuget.org/packages/System.Numerics.Vectors/
+© Microsoft Corporation. All rights reserved.
+**  System.Runtime.CompilerServices.Unsafe; version 4.7.1 -- https://www.nuget.org/packages/System.Runtime.CompilerServices.Unsafe/
+© Microsoft Corporation. All rights reserved.
+**  System.Text.Encodings.Web; version 4.7.2 -- https://www.nuget.org/packages/System.Text.Encodings.Web/
+© Microsoft Corporation. All rights reserved.
+**  System.Text.Json; version 4.7.2 -- https://www.nuget.org/packages/System.Text.Json/
+© Microsoft Corporation. All rights reserved.
+**  System.ValueTuple; version 4.5.0 -- https://www.nuget.org/packages/System.ValueTuple/
+© Microsoft Corporation. All rights reserved.
 **  System.Threading.Tasks.Extensions; version 4.2.0.1 -- https://www.nuget.org/packages/System.Threading.Tasks.Extensions/
 © Microsoft Corporation. All rights reserved.
  
