@@ -12,5 +12,10 @@ namespace AmazonGameLiftPlugin.Core.Shared.Logging
         {
             Log.Error(ex, message);
         }
+
+        public static void LogError(string message)
+        {
+            Log.Error(message);
+        }
     }
 }

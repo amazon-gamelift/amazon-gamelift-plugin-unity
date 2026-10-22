@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 using AmazonGameLiftPlugin.Core.Latency.Models;
 using AmazonGameLiftPlugin.Core.LatencyMeasurement;
@@ -18,12 +16,25 @@ namespace AmazonGameLiftPlugin.Core.Latency
     {
         private readonly IPingWrapper _pingWrapper;
         private readonly int _pingCount;
-        private const int DefaultPingCount = 5;
+        private readonly int _pingIntervalMs;
+        private const int DefaultPingCount = 3;
 
-        public LatencyService(IPingWrapper pingWrapper, int pingCount = DefaultPingCount)
+        // Amazon GameLift Servers exposes a UDP ping beacon per hosting location. See:
+        // https://docs.aws.amazon.com/gameliftservers/latest/developerguide/reference-udp-ping-beacons.html
+        private const int PingBeaconPort = 7770;
+
+        // Ping beacons rate-limit to a few requests per second per location. Space the
+        // samples out so a burst is not throttled and reported as lost.
+        private const int DefaultPingIntervalMs = 1000;
+
+        public LatencyService(
+            IPingWrapper pingWrapper,
+            int pingCount = DefaultPingCount,
+            int pingIntervalMs = DefaultPingIntervalMs)
         {
             _pingWrapper = pingWrapper;
             _pingCount = pingCount <= 0 ? DefaultPingCount : pingCount;
+            _pingIntervalMs = pingIntervalMs < 0 ? DefaultPingIntervalMs : pingIntervalMs;
         }
 
         public async Task<GetLatenciesResponse> GetLatencies(GetLatenciesRequest request)
@@ -38,18 +49,15 @@ namespace AmazonGameLiftPlugin.Core.Latency
                     });
                 }
 
-                var regionLatencyMap = new Dictionary<string, long>();
+                IEnumerable<Task<KeyValuePair<string, long>?>> regionLatencyCalculationTasks =
+                    request.Regions.Select(CalculateLatencyForRegion);
 
-                var regionLatencyCalculationTasks = new List<Task>();
+                KeyValuePair<string, long>?[] regionLatencies =
+                    await Task.WhenAll(regionLatencyCalculationTasks);
 
-                foreach (string region in request.Regions)
-                {
-                    regionLatencyCalculationTasks.Add(
-                            CalculateLatencyForRegion(regionLatencyMap, region)
-                        );
-                }
-
-                await Task.WhenAll(regionLatencyCalculationTasks);
+                var regionLatencyMap = regionLatencies
+                    .Where(entry => entry.HasValue)
+                    .ToDictionary(entry => entry.Value.Key, entry => entry.Value.Value);
 
                 return Response.Ok(new GetLatenciesResponse
                 {
@@ -68,44 +76,56 @@ namespace AmazonGameLiftPlugin.Core.Latency
             }
         }
 
-        private string GetEc2EndpointFromRegion(string region) => $"ec2.{region}.amazonaws.com";
+        // UDP ping beacon host for a region. China partition regions use a different DNS
+        // suffix from the standard partition.
+        private static string GetPingBeaconEndpointFromRegion(string region) =>
+            region != null && region.StartsWith("cn-")
+                ? $"gamelift-ping.{region}.api.amazonwebservices.com.cn"
+                : $"gamelift-ping.{region}.api.aws";
 
-        private async Task CalculateLatencyForRegion(
-            Dictionary<string, long> regionLatencyMap,
-            string region)
+        // Returns the region and its average round-trip latency, or null when the beacon
+        // could not be reached so the region is omitted from the result.
+        private async Task<KeyValuePair<string, long>?> CalculateLatencyForRegion(string region)
         {
             try
             {
-                string address = GetEc2EndpointFromRegion(region);
+                string host = GetPingBeaconEndpointFromRegion(region);
 
-                List<Task<PingResult>> pingTasks = PingAddress(address, _pingCount);
+                var roundtripTimes = new List<long>();
 
-                PingResult[] pingResults = await Task.WhenAll(pingTasks.ToArray());
+                for (int counter = 0; counter < _pingCount; counter++)
+                {
+                    if (counter > 0 && _pingIntervalMs > 0)
+                    {
+                        await Task.Delay(_pingIntervalMs);
+                    }
 
-                long averagePingInMs = pingResults.Sum(x => x.RoundtripTime) / _pingCount;
+                    PingResult pingResult = await _pingWrapper.SendPingAsync(host, PingBeaconPort);
 
-                regionLatencyMap.Add(region, averagePingInMs);
+                    if (pingResult.Success)
+                    {
+                        roundtripTimes.Add(pingResult.RoundtripTime);
+                    }
+                }
+
+                if (roundtripTimes.Count == 0)
+                {
+                    // No samples succeeded for this region; omit it so matchmaking is not
+                    // given a fabricated latency for an unreachable location.
+                    Logger.LogError($"No ping beacon responses received for region {region}; skipping.");
+                    return null;
+                }
+
+                long averagePingInMs = roundtripTimes.Sum() / roundtripTimes.Count;
+
+                return new KeyValuePair<string, long>(region, averagePingInMs);
             }
-            catch (PingException ex)
+            catch (Exception ex)
             {
+                // Log and skip this region if measuring it fails unexpectedly.
                 Logger.LogError(ex, ex.Message);
+                return null;
             }
-            catch (SocketException ex)
-            {
-                Logger.LogError(ex, ex.Message);
-            }
-        }
-
-        private List<Task<PingResult>> PingAddress(string address, int pingCount)
-        {
-            var pingReplyTasks = new List<Task<PingResult>>();
-
-            for (int counter = 0; counter < pingCount; counter++)
-            {
-                pingReplyTasks.Add(_pingWrapper.SendPingAsync(address));
-            }
-
-            return pingReplyTasks;
         }
     }
 }

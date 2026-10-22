@@ -13,7 +13,7 @@ namespace Aws.GameLift.Unity
         {
             // Configure log4net with the provided xml file that supports console and file output
             // Note: this overrides the basic configuration that executes first on "AfterAssembliesLoaded"
-            var configPathname = $"{Application.dataPath}/Samples/Amazon GameLift Server SDK/5.5.1/Log4Net Config/log4net.config";
+            var configPathname = $"{Application.dataPath}/Samples/Amazon GameLift Server SDK/5.5.2/Log4Net Config/log4net.config";
             XmlConfigurator.Configure(new FileInfo(configPathname));
         }
     }
