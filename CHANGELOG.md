@@ -1,5 +1,9 @@
 CHANGELOG
 
+# 3.3.2 (10/22/2026)
+- Uses UDP ping beacons to measure latency to Amazon GameLift Servers hosting locations.
+- Updates the server SDK to version 5.5.2, which includes security improvements to the WebSocket connection to Amazon GameLift Servers.
+
 # 3.3.1 (08/05/2026)
 - Fixes server SDK logging in IL2CPP builds.
 - Upgrades bundled third-party dependencies.
